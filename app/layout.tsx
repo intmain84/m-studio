@@ -26,8 +26,8 @@ export default function RootLayout({
         <div
           style={{
             backgroundImage: "url('/noise.gif')",
-            backgroundSize: "70px",
-            opacity: 0.5,
+            backgroundSize: "90px",
+            opacity: 0.35,
             height: "100dvh",
             width: "100dvw",
             position: "fixed",
