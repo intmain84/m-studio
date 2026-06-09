@@ -1,43 +1,25 @@
 "use client";
 
 import { slides } from "@/content/homepage/slides";
-import Autoplay from "embla-carousel-autoplay";
-import Fade from "embla-carousel-fade";
-import useEmblaCarousel from "embla-carousel-react";
 import Image from "next/image";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, EffectFade } from "swiper/modules";
+import type { Swiper as SwiperType } from "swiper";
+import "swiper/css";
+import "swiper/css/effect-fade";
 
 const AUTOPLAY_DELAY = 5000;
 
 export default function HeroSlider() {
-  const autoplay = useRef(
-    Autoplay({ delay: AUTOPLAY_DELAY, stopOnInteraction: false }),
-  );
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [
-    Fade(),
-    autoplay.current,
-  ]);
+  const swiperRef = useRef<SwiperType | null>(null);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [progressKey, setProgressKey] = useState(0);
-
-  const onSelect = useCallback(() => {
-    if (!emblaApi) return;
-    setSelectedIndex(emblaApi.selectedScrollSnap());
-    setProgressKey((k) => k + 1);
-  }, [emblaApi]);
-
-  useEffect(() => {
-    if (!emblaApi) return;
-    emblaApi.on("select", onSelect);
-    return () => {
-      emblaApi.off("select", onSelect);
-    };
-  }, [emblaApi, onSelect]);
 
   useEffect(() => {
     const observer = new MutationObserver(() => {
       if (document.body.style.overflow !== "hidden") {
-        autoplay.current.reset();
+        swiperRef.current?.autoplay.start();
         setProgressKey((k) => k + 1);
       }
     });
@@ -48,62 +30,75 @@ export default function HeroSlider() {
     return () => observer.disconnect();
   }, []);
 
-  const scrollTo = useCallback(
-    (index: number) => {
-      emblaApi?.scrollTo(index);
-      autoplay.current.reset();
-    },
-    [emblaApi],
-  );
-
   const activeSlide = slides[selectedIndex];
 
   return (
     <section className="relative h-dvh w-full overflow-hidden">
-      <div ref={emblaRef} className="absolute h-full w-full">
-        <div className="flex h-full">
-          {slides.map((slide, i) => (
-            <div key={i} className="relative flex-[0_0_100%] h-full min-w-0">
-              <Image
-                src={slide.image}
-                alt={slide.title}
-                fill
-                className="object-cover"
-                priority={i === 0}
-              />
-            </div>
-          ))}
-        </div>
-      </div>
+      <Swiper
+        modules={[Autoplay, EffectFade]}
+        effect="fade"
+        loop
+        autoplay={{ delay: AUTOPLAY_DELAY, disableOnInteraction: false }}
+        onSwiper={(swiper) => {
+          swiperRef.current = swiper;
+        }}
+        onSlideChange={(swiper) => {
+          setSelectedIndex(swiper.realIndex);
+          setProgressKey((k) => k + 1);
+        }}
+        className="absolute h-full w-full z-0!"
+      >
+        {slides.map((slide, i) => (
+          <SwiperSlide key={i} className="relative h-full">
+            <Image
+              src={slide.image}
+              alt={slide.title}
+              fill
+              className="object-cover"
+              priority={i === 0}
+            />
+          </SwiperSlide>
+        ))}
+      </Swiper>
 
       {/* Gradient overlay */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            "linear-gradient(262deg, rgba(0,0,0,0.00) 57.65%, rgba(0,0,0,0.73) 97.18%)",
+            "linear-gradient(262deg, rgba(0,0,0,0.00) 57.65%, rgba(0,0,0,0.3) 120.18%)",
         }}
       />
 
       {/* Content */}
-      <div className="flex flex-col justify-between relative z-1000 h-full max-w-[80%] m-auto pt-33.25 pb-19.5">
-        <h1 className="text-[107px] font-medium text-white uppercase leading-[100%] mb-3 whitespace-pre-line">
-          {activeSlide.title}
-        </h1>
-        <div className="relative">
-          <div>
-            <p className="text-white max-w-xs text-sm leading-relaxed whitespace-pre-line">
+      <div
+        key={selectedIndex}
+        className="absolute inset-0 flex flex-col z-10 h-full px-4 mx-auto justify-end animate-fade-in pointer-events-none md:justify-between pb-4 md:pb-19.5 md:max-w-[80%] md:pt-33.25"
+      >
+        <div className="relative md:h-full">
+          <div className="grid grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-1 md:grid-rows-[1fr_auto_auto] md:h-full">
+            <h1
+              className={`font-medium text-white uppercase leading-[100%] md:mb-3 whitespace-pre-line ${selectedIndex === 0 ? "text-[32px] md:text-[74px]" : "text-[56px] md:text-[107px]"}`}
+            >
+              {activeSlide.title}
+            </h1>
+            <p className="text-white max-w-xs text-sm leading-relaxed whitespace-pre-line md:max-w-67.5">
               {activeSlide.text}
             </p>
-            <button>Book Session</button>
+            <button
+              className={`col-span-2 md:col-span-1 text-background py-4 px-5 pointer-events-auto md:max-w-67.5 ${activeSlide.progressColor === "light" ? "bg-foreground text-background" : "bg-background text-foreground"}`}
+            >
+              Book Session
+            </button>
           </div>
+
           {/* Dots */}
-          <div className="absolute bottom-0 right-50 flex gap-2">
+          <div className="flex justify-center gap-2 mt-8 pointer-events-auto md:mt-0 md:absolute md:bottom-0 md:right-50">
             {slides.map((_, i) => (
               <button
                 key={i}
-                onClick={() => scrollTo(i)}
-                className={`rounded-full transition-all duration-300 ${
+                onClick={() => swiperRef.current?.slideToLoop(i)}
+                className={`cursor-pointer rounded-full transition-all duration-300 ${
                   i === selectedIndex
                     ? "w-5 h-5 bg-background border-foreground border-3"
                     : "w-5 h-5 bg-foreground border-background border-[1.5px]"
@@ -115,10 +110,10 @@ export default function HeroSlider() {
       </div>
 
       {/* Progress bar */}
-      <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/20">
+      <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/20 z-10">
         <div
           key={progressKey}
-          className="h-full"
+          className={`h-full ${activeSlide.progressColor === "light" ? "bg-foreground text-background" : "bg-background text-foreground"}`}
           style={{
             backgroundColor: activeSlide.progressColor,
             animation: `progress ${AUTOPLAY_DELAY}ms linear forwards`,
@@ -130,6 +125,13 @@ export default function HeroSlider() {
         @keyframes progress {
           from { width: 0% }
           to { width: 100% }
+        }
+        @keyframes fade-in {
+          from { opacity: 0 }
+          to { opacity: 1 }
+        }
+        .animate-fade-in {
+          animation: fade-in 0.5s ease forwards;
         }
       `}</style>
     </section>
