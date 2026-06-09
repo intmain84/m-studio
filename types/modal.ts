@@ -1,1 +1,1 @@
-export type ModalType = "login" | "register" | "callback" | null;
+export type ModalType = "book" | "register" | "callback" | null;

@@ -2,12 +2,12 @@
 
 :root {
   /* Base */
-  --background: #d5d0c7;
-  --surface: #f8fafc;
+  --background: #0f0f11;
+  --surface: #fff;
 
   /* Text */
-  --foreground: #281c1a;
-  --foreground-muted: rgba(40, 28, 26, 0.6);
+  --foreground: #fff;
+  --foreground-muted: #fff;
 
   /* Primary */
   --primary: #281c1a;
