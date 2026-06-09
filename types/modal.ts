@@ -1,0 +1,1 @@
+export type ModalType = "login" | "register" | "callback" | null;
