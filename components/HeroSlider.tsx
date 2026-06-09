@@ -41,7 +41,10 @@ export default function HeroSlider() {
         setProgressKey((k) => k + 1);
       }
     });
-    observer.observe(document.body, { attributes: true, attributeFilter: ["style"] });
+    observer.observe(document.body, {
+      attributes: true,
+      attributeFilter: ["style"],
+    });
     return () => observer.disconnect();
   }, []);
 

@@ -38,9 +38,10 @@ export default function Navbar({ setModal }: NavbarProps) {
     // TEMPLATE: К Nav добавить классы пэддинга
     <header
       className={`flex flex-col transition-transform duration-200 ease-in-out fixed top-0 inset-x-0 z-100000 h-15 
-        ${isVisible ? "translate-y-0" : "-translate-y-full"}`}
+        ${isVisible ? "translate-y-0" : "-translate-y-full"}
+        ${hasScrolled ? "bg-linear-to-b from-black/70 to-transparent backdrop-blur-md" : "bg-transparent"}`}
     >
-      <nav className="relative flex items-center justify-between px-4 md:px-5 lg:px-8 h-full z-10000 bg-background">
+      <nav className="relative flex items-center justify-between px-4 md:px-5 lg:px-8 h-full z-10000">
         {/* HAMBURGER MENU */}
         <button
           onClick={() => setIsOpen((prev) => !prev)}
