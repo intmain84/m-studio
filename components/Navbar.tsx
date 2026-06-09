@@ -37,10 +37,11 @@ export default function Navbar({ setModal }: NavbarProps) {
   return (
     // TEMPLATE: К Nav добавить классы пэддинга
     <header
-      className={`flex flex-col transition-transform duration-200 ease-in-out fixed top-0 inset-x-0 z-50 h-15 
+      className={`flex flex-col transition-transform duration-200 ease-in-out fixed top-0 inset-x-0 z-100000 h-15 
         ${isVisible ? "translate-y-0" : "-translate-y-full"}`}
     >
-      <nav className="relative flex items-center justify-between px-4 md:px-5 lg:px-8 h-full z-50 bg-background">
+      <nav className="relative flex items-center justify-between px-4 md:px-5 lg:px-8 h-full z-10000 bg-background">
+        {/* HAMBURGER MENU */}
         <button
           onClick={() => setIsOpen((prev) => !prev)}
           className="flex flex-col h-10 w-10 justify-center items-center gap-2 cursor-pointer "
@@ -59,22 +60,26 @@ export default function Navbar({ setModal }: NavbarProps) {
           <Logo />
         </Link>
 
+        {/* ADDITIONAL LINKS */}
         <div className="flex gap-8">
-          <a href="#">Gift Certificate</a>
+          <a href="#" className="hidden md:block">
+            Gift Certificate
+          </a>
           <Link href="#" onClick={() => setModal?.("book")}>
-            Book now
+            <span className="md:hidden">Book</span>
+            <span className="hidden md:inline">Book now</span>
           </Link>
         </div>
       </nav>
 
-      {/* DROPDOWN MENU */}
+      {/* FULLSCREEN MENU */}
       <div
-        className={`fixed left-0 right-0 grid grid-cols-2 z-2 p-8 pt-20 bg-background h-dvh w-full transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+        className={`fixed left-0 right-0 grid md:grid-cols-2 z-9999 p-8 pt-20 bg-background h-dvh w-full transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
           isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
       >
         <div
-          className="flex flex-col justify-center px-4 md:px-5 lg:px-8 max-w-md mx-auto"
+          className="flex flex-col justify-center px-4 md:px-5 lg:px-8 max-w-md md:mx-auto"
           onMouseLeave={() => setHoveredIndex(null)}
         >
           {links.map((link, i) => (
@@ -93,13 +98,13 @@ export default function Navbar({ setModal }: NavbarProps) {
               }}
             >
               <span className="text-[0.75rem] mt-1.5">0{i + 1}</span>
-              <span className="relative z-10 text-[2.5rem] leading-none">
+              <span className="text-[1.5rem] md:text-[2.5rem] leading-none relative z-10">
                 {link.name}
               </span>
             </Link>
           ))}
         </div>
-        <div className="relative overflow-hidden">
+        <div className="relative overflow-hidden hidden md:block">
           {links.map((link, i) => (
             <Image
               key={link.image}
