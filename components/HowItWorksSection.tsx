@@ -5,32 +5,81 @@ import ContainerLarge from "./common/ContainerLarge";
 import PaddingGlobal from "./common/PaddingGlobal";
 import SpacerLarge from "./common/SpacerLarge";
 
-// Illustration assets (from Figma — replace with permanent assets)
 const selfIllustrations = [
-  "https://www.figma.com/api/mcp/asset/19058f43-0d5f-4a3b-b32d-c96a511b68fe",
-  "https://www.figma.com/api/mcp/asset/351effff-0378-45f8-9076-a01edea890ec",
-  "https://www.figma.com/api/mcp/asset/8ce5d552-ff61-4b20-bfd3-c79bd80d5755",
-  "https://www.figma.com/api/mcp/asset/2df49202-e178-4d42-999d-7dba90eea091",
-  "https://www.figma.com/api/mcp/asset/2c631fed-67bd-4c6d-92b5-04cb7d8b5ad7",
+  "/how-it-works/step-01.svg",
+  "/how-it-works/step-02.svg",
+  "/how-it-works/step-03.svg",
+  "/how-it-works/step-04.svg",
+  "/how-it-works/step-05.svg",
 ];
 
 type Step = { img: string; label: string; desc: string; num: string };
 
 const stepsData: Record<"self" | "main", Step[]> = {
   self: [
-    { img: selfIllustrations[0], label: "Book", desc: "your private slot online through our intuitive system.", num: "01" },
-    { img: selfIllustrations[1], label: "Arrive", desc: "at the studio and enter your dedicated space.", num: "02" },
-    { img: selfIllustrations[2], label: "Capture", desc: "your best angles using the wireless remote shutter.", num: "03" },
-    { img: selfIllustrations[3], label: "Receive", desc: "your high-resolution digital gallery via a secure link.", num: "04" },
-    { img: selfIllustrations[4], label: "Download", desc: "your photos within 14 days after the photo shoot.", num: "05" },
+    {
+      img: selfIllustrations[0],
+      label: "Book",
+      desc: "your private slot online through our intuitive system.",
+      num: "01",
+    },
+    {
+      img: selfIllustrations[1],
+      label: "Arrive",
+      desc: "at the studio and enter your dedicated space.",
+      num: "02",
+    },
+    {
+      img: selfIllustrations[2],
+      label: "Capture",
+      desc: "your best angles using the wireless remote shutter.",
+      num: "03",
+    },
+    {
+      img: selfIllustrations[3],
+      label: "Receive",
+      desc: "your high-resolution digital gallery via a secure link.",
+      num: "04",
+    },
+    {
+      img: selfIllustrations[4],
+      label: "Download",
+      desc: "your photos within 14 days after the photo shoot.",
+      num: "05",
+    },
   ],
   main: [
     // TODO: replace with Main Room specific content
-    { img: selfIllustrations[0], label: "Book", desc: "your private slot online through our intuitive system.", num: "01" },
-    { img: selfIllustrations[1], label: "Arrive", desc: "at the studio and enter your dedicated space.", num: "02" },
-    { img: selfIllustrations[2], label: "Capture", desc: "your best angles using the wireless remote shutter.", num: "03" },
-    { img: selfIllustrations[3], label: "Receive", desc: "your high-resolution digital gallery via a secure link.", num: "04" },
-    { img: selfIllustrations[4], label: "Download", desc: "your photos within 14 days after the photo shoot.", num: "05" },
+    {
+      img: selfIllustrations[0],
+      label: "Book",
+      desc: "your private slot online through our intuitive system.",
+      num: "01",
+    },
+    {
+      img: selfIllustrations[1],
+      label: "Arrive",
+      desc: "at the studio and enter your dedicated space.",
+      num: "02",
+    },
+    {
+      img: selfIllustrations[2],
+      label: "Capture",
+      desc: "your best angles using the wireless remote shutter.",
+      num: "03",
+    },
+    {
+      img: selfIllustrations[3],
+      label: "Receive",
+      desc: "your high-resolution digital gallery via a secure link.",
+      num: "04",
+    },
+    {
+      img: selfIllustrations[4],
+      label: "Download",
+      desc: "your photos within 14 days after the photo shoot.",
+      num: "05",
+    },
   ],
 };
 
@@ -41,26 +90,20 @@ const rooms: Record<RoomKey, string> = {
   main: "Main Room",
 };
 
-function StepCard({ step, mobile = false }: { step: Step; mobile?: boolean }) {
+function StepCard({ step }: { step: Step }) {
   return (
-    <div
-      className={`flex flex-col ${mobile ? "w-[144px] gap-6" : "gap-8"}`}
-    >
+    <div className="flex flex-col gap-6 lg:gap-8 w-[150px] shrink-0 lg:w-auto lg:shrink lg:min-w-0">
       <img
         src={step.img}
         alt={step.label}
-        className={
-          mobile
-            ? "w-[144px] h-[144px] object-contain shrink-0"
-            : "w-full aspect-square object-contain"
-        }
+        className="w-[150px] h-[150px] lg:w-full lg:h-auto lg:aspect-square object-contain shrink-0"
       />
-      <p className={`leading-[1.1] grow ${mobile ? "text-xs" : "text-sm"}`}>
+      <p className="text-xs lg:text-sm leading-[1.1] grow">
         <span className="text-white">{step.label} </span>
         <span className="text-foreground-muted">{step.desc}</span>
       </p>
-      <div className="border border-white/20 flex items-center justify-center rounded-full w-[50px] h-[50px] shrink-0">
-        <span className={`text-white leading-[1.1] ${mobile ? "text-xs" : "text-sm"}`}>
+      <div className="border border-white/20 flex items-center justify-center rounded-full w-12.5 h-12.5 shrink-0">
+        <span className="text-xs lg:text-sm text-white leading-[1.1]">
           {step.num}
         </span>
       </div>
@@ -101,23 +144,16 @@ export default function HowItWorksSection() {
             })}
           </div>
 
-          {/* Desktop steps — 5-column grid */}
-          <div className="hidden lg:grid lg:grid-cols-5 lg:gap-8">
-            {steps.map((step) => (
-              <StepCard key={step.num} step={step} />
-            ))}
+          {/* Steps — flex scroll on mobile, 5-column grid on desktop */}
+          <div className="overflow-x-auto lg:overflow-visible [&::-webkit-scrollbar]:hidden scrollbar-none">
+            <div className="flex gap-6 lg:gap-8 lg:grid lg:grid-cols-5 w-max lg:w-auto">
+              {steps.map((step) => (
+                <StepCard key={step.num} step={step} />
+              ))}
+            </div>
           </div>
         </ContainerLarge>
       </PaddingGlobal>
-
-      {/* Mobile steps — horizontal scroll */}
-      <div className="lg:hidden overflow-x-auto [&::-webkit-scrollbar]:hidden [scrollbar-width:none]">
-        <div className="flex gap-6 px-4 pb-2 w-max">
-          {steps.map((step) => (
-            <StepCard key={step.num} step={step} mobile />
-          ))}
-        </div>
-      </div>
     </section>
   );
 }
