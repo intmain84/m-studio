@@ -32,13 +32,16 @@ type RoomKey = keyof typeof rooms;
 
 function PrevIcon() {
   return (
-    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+    <svg
+      width="21"
+      height="20"
+      viewBox="0 0 21 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
       <path
-        d="M12.5 15L7.5 10L12.5 5"
-        stroke="white"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
+        d="M0.292892 9.29289C-0.0976315 9.68342 -0.0976315 10.3166 0.292892 10.7071L6.65685 17.0711C7.04738 17.4616 7.68054 17.4616 8.07107 17.0711C8.46159 16.6805 8.46159 16.0474 8.07107 15.6569L2.41421 10L8.07107 4.34315C8.46159 3.95262 8.46159 3.31946 8.07107 2.92893C7.68054 2.53841 7.04738 2.53841 6.65685 2.92893L0.292892 9.29289ZM21 10V9L1 9V10V11L21 11V10Z"
+        fill="white"
       />
     </svg>
   );
@@ -46,13 +49,16 @@ function PrevIcon() {
 
 function NextIcon() {
   return (
-    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+    <svg
+      width="21"
+      height="20"
+      viewBox="0 0 21 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
       <path
-        d="M7.5 5L12.5 10L7.5 15"
-        stroke="white"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
+        d="M20.7071 9.29289C21.0976 9.68342 21.0976 10.3166 20.7071 10.7071L14.3431 17.0711C13.9526 17.4616 13.3195 17.4616 12.9289 17.0711C12.5384 16.6805 12.5384 16.0474 12.9289 15.6569L18.5858 10L12.9289 4.34315C12.5384 3.95262 12.5384 3.31946 12.9289 2.92893C13.3195 2.53841 13.9526 2.53841 14.3431 2.92893L20.7071 9.29289ZM0 10L0 9L20 9V10V11L0 11L0 10Z"
+        fill="white"
       />
     </svg>
   );
@@ -135,13 +141,13 @@ export default function GallerySection() {
 
         <button
           onClick={() => swiperRef.current?.slidePrev()}
-          className="hidden md:flex absolute left-8 top-1/2 -translate-y-1/2 z-10 items-center justify-center p-6 rounded-full backdrop-blur-[10px] bg-white/10 border border-white/20 cursor-pointer"
+          className="hidden md:flex absolute left-8 top-1/2 -translate-y-1/2 z-10 items-center justify-center p-6 rounded-full backdrop-blur-[10px] bg-white/10 border border-white/20 cursor-pointer transition-all duration-300 hover:bg-white/20"
         >
           <PrevIcon />
         </button>
         <button
           onClick={() => swiperRef.current?.slideNext()}
-          className="hidden md:flex absolute right-8 top-1/2 -translate-y-1/2 z-10 items-center justify-center p-6 rounded-full backdrop-blur-[10px] bg-white/10 border border-white/20 cursor-pointer"
+          className="hidden md:flex absolute right-8 top-1/2 -translate-y-1/2 z-10 items-center justify-center p-6 rounded-full backdrop-blur-[10px] bg-white/10 hover:bg-white/20 border border-white/20 cursor-pointer transition-all duration-300"
         >
           <NextIcon />
         </button>
