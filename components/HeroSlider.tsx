@@ -2,6 +2,7 @@
 
 import { slides } from "@/content/homepage/slides";
 import Image from "next/image";
+import Button from "./Button";
 import { useEffect, useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, EffectFade } from "swiper/modules";
@@ -85,11 +86,12 @@ export default function HeroSlider() {
             <p className="text-white max-w-xs text-sm leading-relaxed whitespace-pre-line md:max-w-67.5">
               {activeSlide.text}
             </p>
-            <button
-              className={`col-span-2 md:col-span-1 text-background py-4 px-5 pointer-events-auto md:max-w-67.5 ${activeSlide.progressColor === "light" ? "bg-foreground text-background" : "bg-background text-foreground"}`}
+            <Button
+              variant={activeSlide.progressColor as "light" | "dark"}
+              className="col-span-2 md:col-span-1 pointer-events-auto md:max-w-67.5"
             >
               Book Session
-            </button>
+            </Button>
           </div>
 
           {/* Dots */}
@@ -98,10 +100,10 @@ export default function HeroSlider() {
               <button
                 key={i}
                 onClick={() => swiperRef.current?.slideToLoop(i)}
-                className={`cursor-pointer rounded-full transition-all duration-300 ${
+                className={`cursor-pointer rounded-full transition-all duration-300 w-4 h-4 md:w-5 md:h-5 ${
                   i === selectedIndex
-                    ? "w-5 h-5 bg-background border-foreground border-3"
-                    : "w-5 h-5 bg-foreground border-background border-[1.5px]"
+                    ? "bg-background border-foreground border-3"
+                    : "bg-foreground border-background border-[1.5px]"
                 }`}
               />
             ))}

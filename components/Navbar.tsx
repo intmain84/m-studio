@@ -1,15 +1,11 @@
 "use client";
 
 import { useScrollVisibility } from "@/hooks/useScrollVisibility";
-import { ModalType } from "@/types/modal";
+import { useModal } from "@/context/ModalContext";
 import Link from "next/link";
 import Logo from "./Logo";
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-
-type NavbarProps = {
-  setModal?: (modal: ModalType) => void;
-};
 
 const links = [
   { name: "About studio", href: "#", image: "/menu/about.jpg" },
@@ -21,7 +17,8 @@ const links = [
   { name: "Contacts", href: "#", image: "/menu/contacts.jpg" },
 ];
 
-export default function Navbar({ setModal }: NavbarProps) {
+export default function Navbar() {
+  const { setModal, setRoom } = useModal();
   const { isVisible, hasScrolled } = useScrollVisibility(); // Show/hide Navbar based on scroll position
   const [isOpen, setIsOpen] = useState(false);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
@@ -37,7 +34,7 @@ export default function Navbar({ setModal }: NavbarProps) {
   return (
     // TEMPLATE: К Nav добавить классы пэддинга
     <header
-      className={`flex flex-col transition-transform duration-200 ease-in-out fixed top-0 inset-x-0 z-100000 h-15 
+      className={`flex flex-col transition-transform duration-200 ease-in-out fixed top-0 inset-x-0 z-100 h-15 
         ${isVisible ? "translate-y-0" : "-translate-y-full"}
         ${hasScrolled ? "bg-linear-to-b from-black/70 to-transparent backdrop-blur-md" : "bg-transparent"}`}
     >
@@ -66,7 +63,13 @@ export default function Navbar({ setModal }: NavbarProps) {
           <a href="#" className="hidden md:block">
             Gift Certificate
           </a>
-          <Link href="#" onClick={() => setModal?.("book")}>
+          <Link
+            href="#"
+            onClick={() => {
+              setRoom(null);
+              setModal("book");
+            }}
+          >
             <span className="md:hidden">Book</span>
             <span className="hidden md:inline">Book now</span>
           </Link>

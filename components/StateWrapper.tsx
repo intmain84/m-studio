@@ -1,19 +1,17 @@
 "use client";
 
 import Navbar from "./Navbar";
-import { ModalType } from "@/types/modal";
-import { useState } from "react";
+import { ModalProvider } from "@/context/ModalContext";
 import CallbackModal from "./modals/CallbackModal";
 
 const StateWrapper = ({ children }: { children: React.ReactNode }) => {
-  const [modal, setModal] = useState<ModalType | null>(null);
   return (
-    <>
-      <Navbar setModal={setModal} />
+    <ModalProvider>
+      <Navbar />
       <main className="flex-1">{children}</main>
       <footer>Footer</footer>
-      <CallbackModal open={modal === "book"} setModal={setModal} />
-    </>
+      <CallbackModal />
+    </ModalProvider>
   );
 };
 

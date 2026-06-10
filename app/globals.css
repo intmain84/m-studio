@@ -1,36 +1,32 @@
 @import "tailwindcss";
 
 :root {
-  /* Base */
+  /* Backgrounds */
   --background: #0f0f11;
-  --surface: #fff;
+  --surface: #161618;
 
   /* Text */
-  --foreground: #fff;
-  --foreground-muted: #fff;
+  --foreground: #ffffff;
+  --foreground-muted: #858585;
 
   /* Primary */
   --primary: #281c1a;
   --primary-foreground: #ffffff;
 
   /* Border */
-  --border: #e5e7eb;
+  --border: rgba(255, 255, 255, 0.12);
 
-  /* Success */
-  --success-background: #16a34a;
-  --success-text: #ffffff;
-
-  /* Warning */
-  --warning-background: #f59e0b;
-  --warning-text: #111827;
-
-  /* Danger */
-  --danger-background: #dc2626;
-  --danger-text: #ffffff;
+  /* States */
+  --success: #16a34a;
+  --success-foreground: #ffffff;
+  --warning: #f59e0b;
+  --warning-foreground: #111827;
+  --danger: #dc2626;
+  --danger-foreground: #ffffff;
 }
 
 @theme inline {
-  /* Base */
+  /* Backgrounds */
   --color-background: var(--background);
   --color-surface: var(--surface);
 
@@ -45,17 +41,13 @@
   /* Border */
   --color-border: var(--border);
 
-  /* Success */
-  --color-success-background: var(--success-background);
-  --color-success-text: var(--success-text);
-
-  /* Warning */
-  --color-warning-background: var(--warning-background);
-  --color-warning-text: var(--warning-text);
-
-  /* Danger */
-  --color-danger-background: var(--danger-background);
-  --color-danger-text: var(--danger-text);
+  /* States */
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-danger: var(--danger);
+  --color-danger-foreground: var(--danger-foreground);
 
   /* Fonts */
   --font-sans: var(--font-main);

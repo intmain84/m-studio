@@ -1,73 +1,95 @@
 "use client";
 import { Dialog } from "radix-ui";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import BaseModal from "./BaseModal";
 import FormInput from "../FormInput";
-
-type CallbackModalProps = {
-  open: boolean;
-  setModal: (open: null) => void;
-  className?: string;
-};
+import { useModal } from "@/context/ModalContext";
 
 type FormData = {
   name: string;
   phone: string;
 };
 
-const CallbackModal = ({ open, setModal, className }: CallbackModalProps) => {
-  const [serverError, setServerError] = useState(""); // Error state for server response
-  const [serverSuccess, setServerSuccess] = useState(""); // Success state for server response
+const CallbackModal = () => {
+  const { modal, setModal, room, setRoom } = useModal();
+  const open = modal === "book";
+
+  const [step, setStep] = useState<"room" | "form">(room ? "form" : "room");
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [serverError, setServerError] = useState("");
+
+  useEffect(() => {
+    if (open) {
+      setStep(room ? "form" : "room");
+      setIsSuccess(false);
+      setServerError("");
+    }
+  }, [open, room]);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>({
-    defaultValues: {
-      phone: "+", // Pre-fill phone with "+" to guide users
-    },
+    defaultValues: { phone: "+" },
   });
 
   const onSubmit = async (data: FormData) => {
     try {
       setServerError("");
-      setServerSuccess("");
-
       const response = await fetch("https://your-webhook-url.com", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...data, room }),
       });
-
-      if (!response.ok) {
-        throw new Error("Failed to submit form");
-      }
-
-      setServerSuccess("Your request has been submitted successfully!");
-    } catch (error) {
+      if (!response.ok) throw new Error();
+      setIsSuccess(true);
+    } catch {
       setServerError("Oops! Something went wrong. Please try again later.");
     }
   };
 
   return (
-    <BaseModal open={open} setModal={setModal}>
-      {serverSuccess && <span className="text-green-500">{serverSuccess}</span>}
-
-      {!serverSuccess && (
+    <BaseModal open={open}>
+      {step === "room" && (
         <div>
           <Dialog.Title className="text-2xl font-bold mb-4">
-            Request a Callback
+            Choose a room
+          </Dialog.Title>
+          <div className="flex gap-4">
+            <button
+              className="flex-1 border py-6"
+              onClick={() => {
+                setRoom("self");
+                setStep("form");
+              }}
+            >
+              Self Room
+            </button>
+            <button
+              className="flex-1 border py-6"
+              onClick={() => {
+                setRoom("main");
+                setStep("form");
+              }}
+            >
+              Main Room
+            </button>
+          </div>
+        </div>
+      )}
+
+      {step === "form" && (
+        <div>
+          <Dialog.Title className="text-2xl font-bold mb-4">
+            Book Session{" "}
+            {room && `— ${room === "self" ? "Self Room" : "Main Room"}`}
           </Dialog.Title>
           <Dialog.Description className="mb-4">
-            Please fill out the form below and we will get back to you as soon
-            as possible.
+            Fill out the form and we will get back to you.
           </Dialog.Description>
-
           <form
             className="flex flex-col gap-4"
             onSubmit={handleSubmit(onSubmit)}
@@ -77,9 +99,8 @@ const CallbackModal = ({ open, setModal, className }: CallbackModalProps) => {
               placeholder="Your Name"
               error={errors.name?.message}
               registration={register("name", { required: "Name is required" })}
-              className={"border p-2"}
+              className="border p-2"
             />
-
             <FormInput
               type="tel"
               placeholder="Your Phone"
@@ -91,17 +112,25 @@ const CallbackModal = ({ open, setModal, className }: CallbackModalProps) => {
                   message: "Phone must start with + and contain only numbers",
                 },
               })}
-              className={"border p-2"}
+              className="border p-2"
             />
-            {serverError && <span className="text-red-500">{serverError}</span>}
-
+            {serverError && <span className="text-danger">{serverError}</span>}
             <button
               type="submit"
-              className="bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition"
+              className="bg-primary text-primary-foreground py-2 rounded transition"
             >
               Submit
             </button>
           </form>
+        </div>
+      )}
+
+      {isSuccess && (
+        <div>
+          <Dialog.Title className="text-2xl font-bold mb-4">Done!</Dialog.Title>
+          <p className="text-success">
+            Your request has been submitted successfully!
+          </p>
         </div>
       )}
     </BaseModal>

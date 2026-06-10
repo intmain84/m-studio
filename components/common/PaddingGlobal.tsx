@@ -1,9 +1,7 @@
-import ContainerLarge from "./ContainerLarge";
-
 // Define padding classes for different screen sizes
 const paddings = {
   mobile: "px-4",
-  md: "md:px-5",
+  md: "md:px-8",
   lg: "lg:px-8",
 };
 

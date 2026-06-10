@@ -1,18 +1,19 @@
-// This is a base modal component that can be used for login, registration, or callback modals. It uses Radix UI's Dialog component
 "use client";
 import { Dialog } from "radix-ui";
+import { useModal } from "@/context/ModalContext";
 
 type BaseModalProps = {
   children: React.ReactNode;
   open: boolean;
-  setModal: (open: null) => void;
 };
 
-const BaseModal = ({ children, open, setModal }: BaseModalProps) => {
+const BaseModal = ({ children, open }: BaseModalProps) => {
+  const { setModal } = useModal();
+
   return (
     <Dialog.Root open={open} onOpenChange={() => setModal(null)}>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 bg-black bg-opacity-50 z-9999" />
+        <Dialog.Overlay className="fixed inset-0 bg-background bg-opacity-50 z-9999" />
         <Dialog.Content
           className="
             fixed
@@ -22,8 +23,8 @@ const BaseModal = ({ children, open, setModal }: BaseModalProps) => {
             -translate-y-1/2
             w-[400px]
             h-[400px]
-            bg-white
-            z-10000
+            bg-background
+            z-1000000
           "
         >
           <div>{children}</div>
