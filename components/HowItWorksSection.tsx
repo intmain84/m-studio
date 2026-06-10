@@ -52,14 +52,14 @@ const stepsData: Record<"self" | "main", Step[]> = {
     // TODO: replace with Main Room specific content
     {
       img: selfIllustrations[0],
-      label: "Book",
+      label: "KKK",
       desc: "your private slot online through our intuitive system.",
       num: "01",
     },
     {
       img: selfIllustrations[1],
-      label: "Arrive",
-      desc: "at the studio and enter your dedicated space.",
+      label: "Villareal",
+      desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
       num: "02",
     },
     {
@@ -71,7 +71,7 @@ const stepsData: Record<"self" | "main", Step[]> = {
     {
       img: selfIllustrations[3],
       label: "Receive",
-      desc: "your high-resolution digital gallery via a secure link.",
+      desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
       num: "04",
     },
     {
