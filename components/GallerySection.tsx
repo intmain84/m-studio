@@ -67,9 +67,19 @@ function NextIcon() {
 export default function GallerySection() {
   const [activeRoom, setActiveRoom] = useState<RoomKey>("self");
   const [activeIndex, setActiveIndex] = useState(0);
+  const [visible, setVisible] = useState(true);
   const swiperRef = useRef<SwiperType | null>(null);
 
   const images = rooms[activeRoom].images;
+
+  function switchRoom(key: RoomKey) {
+    setVisible(false);
+    setTimeout(() => {
+      setActiveRoom(key);
+      setActiveIndex(0);
+      setVisible(true);
+    }, 200);
+  }
 
   return (
     <section className="flex flex-col">
@@ -85,10 +95,7 @@ export default function GallerySection() {
               return (
                 <button
                   key={key}
-                  onClick={() => {
-                    setActiveRoom(key);
-                    setActiveIndex(0);
-                  }}
+                  onClick={() => switchRoom(key)}
                   className={`flex-1 md:flex-none px-6 py-4 text-sm md:text-base leading-[1.1] cursor-pointer transition-colors duration-200 ${
                     isActive
                       ? "bg-white text-[#0f0f11]"
@@ -103,7 +110,7 @@ export default function GallerySection() {
         </ContainerLarge>
       </PaddingGlobal>
 
-      <div className="px-2 relative">
+      <div className={`px-2 relative transition-opacity duration-200 ${visible ? "opacity-100" : "opacity-0"}`}>
         <Swiper
           key={activeRoom}
           loop

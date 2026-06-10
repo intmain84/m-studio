@@ -113,7 +113,16 @@ function StepCard({ step }: { step: Step }) {
 
 export default function HowItWorksSection() {
   const [activeRoom, setActiveRoom] = useState<RoomKey>("self");
+  const [visible, setVisible] = useState(true);
   const steps = stepsData[activeRoom];
+
+  function switchRoom(key: RoomKey) {
+    setVisible(false);
+    setTimeout(() => {
+      setActiveRoom(key);
+      setVisible(true);
+    }, 200);
+  }
 
   return (
     <section>
@@ -131,7 +140,7 @@ export default function HowItWorksSection() {
               return (
                 <button
                   key={key}
-                  onClick={() => setActiveRoom(key)}
+                  onClick={() => switchRoom(key)}
                   className={`flex-1 lg:flex-none px-6 py-4 text-sm lg:text-base leading-[1.1] cursor-pointer transition-colors duration-200 ${
                     isActive
                       ? "bg-white text-[#0f0f11]"
@@ -145,7 +154,7 @@ export default function HowItWorksSection() {
           </div>
 
           {/* Steps — flex scroll on mobile, 5-column grid on desktop */}
-          <div className="overflow-x-auto lg:overflow-visible [&::-webkit-scrollbar]:hidden scrollbar-none">
+          <div className={`overflow-x-auto lg:overflow-visible [&::-webkit-scrollbar]:hidden scrollbar-none transition-opacity duration-200 ${visible ? "opacity-100" : "opacity-0"}`}>
             <div className="flex gap-6 lg:gap-8 lg:grid lg:grid-cols-5 w-max lg:w-auto">
               {steps.map((step) => (
                 <StepCard key={step.num} step={step} />
