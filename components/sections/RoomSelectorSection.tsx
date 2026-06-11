@@ -2,13 +2,13 @@
 
 import { useModal } from "@/context/ModalContext";
 import { useEffect, useState } from "react";
-import PaddingGlobal from "./common/PaddingGlobal";
-import ContainerLarge from "./common/ContainerLarge";
-import SpacerLarge from "./common/SpacerLarge";
+import PaddingGlobal from "../common/PaddingGlobal";
+import ContainerLarge from "../common/ContainerLarge";
+import SpacerLarge from "../common/SpacerLarge";
 
 type Room = "self" | "main" | null;
 
-export default function RoomSelector() {
+export default function RoomSelectorSection() {
   const [hovered, setHovered] = useState<Room>(null);
   const [isTouch, setIsTouch] = useState(false);
   const { setModal, setRoom } = useModal();
@@ -56,7 +56,7 @@ export default function RoomSelector() {
             </div>
 
             {/* Center content */}
-            <div className="relative md:static shrink-0 w-full md:w-68 text-center h-55 md:min-h-0 flex flex-col items-center justify-center md:block">
+            <div className="relative md:static shrink-0 w-68 text-center min-h-55 md:min-h-0 flex flex-col items-center justify-center md:block">
               {/* Mobile: top line indicator (self) */}
               <div
                 className={`md:hidden absolute top-0 left-1/2 -translate-x-1/2 w-px bg-white transition-all duration-500 ${hovered === "self" ? "h-10" : "h-0"}`}

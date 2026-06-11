@@ -3,8 +3,8 @@ type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
 };
 
 const variantStyles = {
-  light: "bg-foreground text-background hover:bg-background hover:text-foreground",
-  dark: "bg-background text-foreground hover:bg-foreground hover:text-background",
+  light: "bg-foreground text-background hover:bg-[#DCDCDC]",
+  dark: "bg-background text-foreground hover:bg-[#DCDCDC] hover:text-background",
 };
 
 export default function Button({
@@ -15,7 +15,7 @@ export default function Button({
 }: ButtonProps) {
   return (
     <button
-      className={`py-4 px-5 cursor-pointer transition-all duration-300 ${variantStyles[variant]} ${className}`}
+      className={`py-4 px-5 cursor-pointer transition-all duration-300 text-sm ${variantStyles[variant]} ${className}`}
       {...props}
     >
       {children}

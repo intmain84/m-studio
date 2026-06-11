@@ -9,7 +9,6 @@ const StateWrapper = ({ children }: { children: React.ReactNode }) => {
     <ModalProvider>
       <Navbar />
       <main className="flex-1">{children}</main>
-      <footer>Footer</footer>
       <CallbackModal />
     </ModalProvider>
   );

@@ -1,19 +1,25 @@
-import HeroSlider from "@/components/HeroSlider";
-import RoomSelector from "@/components/RoomSelector";
-import FeaturesSection from "@/components/FeaturesSection";
-import FAQSection from "@/components/FAQSection";
-import GallerySection from "@/components/GallerySection";
-import HowItWorksSection from "@/components/HowItWorksSection";
+import HeroSliderSection from "@/components/sections/HeroSliderSection";
+import RoomSelectorSection from "@/components/sections/RoomSelectorSection";
+import FeaturesSection from "@/components/sections/FeaturesSection";
+import FAQSection from "@/components/sections/FAQSection";
+import GallerySection from "@/components/sections/GallerySection";
+import SpacesSection from "@/components/sections/SpacesSection";
+import HowItWorksSection from "@/components/sections/HowItWorksSection";
+import ContactsSection from "@/components/sections/ContactsSection";
 
 export default function Home() {
   return (
     <>
-      <HeroSlider />
-      <RoomSelector />
+      <HeroSliderSection />
+      <RoomSelectorSection />
       <FeaturesSection />
       <GallerySection />
+      <SpacesSection />
       <HowItWorksSection />
       <FAQSection />
+      <ContactsSection />
     </>
   );
 }
+
+

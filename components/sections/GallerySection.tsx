@@ -5,9 +5,9 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import type { Swiper as SwiperType } from "swiper";
 import Image from "next/image";
 import "swiper/css";
-import SpacerLarge from "./common/SpacerLarge";
-import PaddingGlobal from "./common/PaddingGlobal";
-import ContainerLarge from "./common/ContainerLarge";
+import SpacerLarge from "../common/SpacerLarge";
+import PaddingGlobal from "../common/PaddingGlobal";
+import ContainerLarge from "../common/ContainerLarge";
 
 const rooms = {
   self: {

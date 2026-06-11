@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import ContainerLarge from "./common/ContainerLarge";
-import PaddingGlobal from "./common/PaddingGlobal";
-import SpacerLarge from "./common/SpacerLarge";
+import ContainerLarge from "../common/ContainerLarge";
+import PaddingGlobal from "../common/PaddingGlobal";
+import SpacerLarge from "../common/SpacerLarge";
 
 const faqs = [
   {
