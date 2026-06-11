@@ -2,6 +2,9 @@
 
 import { useModal } from "@/context/ModalContext";
 import { useEffect, useState } from "react";
+import PaddingGlobal from "./common/PaddingGlobal";
+import ContainerLarge from "./common/ContainerLarge";
+import SpacerLarge from "./common/SpacerLarge";
 
 type Room = "self" | "main" | null;
 
@@ -15,121 +18,159 @@ export default function RoomSelector() {
   }, []);
 
   return (
-    <section className="relative flex items-center justify-between w-full h-dvh bg-background overflow-hidden flex-col md:flex-row py-16 md:py-0 md:px-[calc(20.83%-7.9375rem)]">
-      {/* Self Room circle */}
-      <button
-        className="shrink-0 size-43 md:size-63.5 rounded-full border flex items-center justify-center cursor-pointer transition-colors duration-500"
-        style={{
-          borderColor:
-            hovered === "self"
-              ? "rgba(255,255,255,1)"
-              : "rgba(255,255,255,0.2)",
-        }}
-        onMouseEnter={() => setHovered("self")}
-        onMouseLeave={() => setHovered(null)}
-        onClick={() => {
-          if (isTouch) {
-            setHovered("self");
-          } else {
-            setRoom("self");
-            setModal("book");
-          }
-        }}
-      >
-        SELF ROOM
-      </button>
+    <section>
+      <SpacerLarge />
+      <PaddingGlobal>
+        <ContainerLarge>
+          <div className="relative flex items-center w-full overflow-hidden flex-col justify-center md:flex-row md:justify-between px-0 md:px-[calc(20.83%-7.9375rem)]">
+            {/* Self Room circle */}
+            <button
+              className="shrink-0 size-43 md:size-63.5 rounded-full border flex items-center justify-center cursor-pointer transition-colors duration-500"
+              style={{
+                borderColor:
+                  hovered === "self"
+                    ? "rgba(255,255,255,1)"
+                    : "rgba(255,255,255,0.2)",
+              }}
+              onMouseEnter={() => {
+                if (!isTouch) setHovered("self");
+              }}
+              onMouseLeave={() => {
+                if (!isTouch) setHovered(null);
+              }}
+              onClick={() => {
+                if (isTouch) {
+                  setHovered("self");
+                } else {
+                  setRoom("self");
+                  setModal("book");
+                }
+              }}
+            >
+              SELF ROOM
+            </button>
 
-      {/* Top/Left line */}
-      <div className="relative flex-1 flex flex-col md:flex-row justify-start md:justify-start items-center md:items-center md:h-px">
-        <div
-          className="absolute top-0 md:top-auto md:left-0 w-px md:w-auto md:h-px transition-all duration-500"
-          style={isTouch
-            ? { height: hovered === "self" ? "50%" : "0", background: "#fff" }
-            : { width: hovered === "self" ? "50%" : "0", background: "#fff" }
-          }
-        >
-          <div
-            className={`absolute size-1.5 rounded-full bg-foreground transition-opacity duration-300 ${hovered === "self" ? "opacity-100" : "opacity-0"}`}
-            style={isTouch
-              ? { bottom: 0, left: "50%", transform: "translateX(-50%)" }
-              : { right: 0, top: "50%", transform: "translateY(-50%)" }
-            }
-          />
-        </div>
-      </div>
+            {/* Left line — desktop only */}
+            <div className="hidden md:flex relative flex-1 justify-start items-center h-px">
+              <div
+                className="absolute left-0 h-px transition-all duration-500"
+                style={{
+                  width: hovered === "self" ? "50%" : "0",
+                  background: "#fff",
+                }}
+              >
+                <div
+                  className={`absolute right-0 top-1/2 -translate-y-1/2 size-1.5 rounded-full bg-foreground transition-opacity duration-300 ${hovered === "self" ? "opacity-100" : "opacity-0"}`}
+                />
+              </div>
+            </div>
 
-      {/* Center content */}
-      <div className="shrink-0 text-center w-68">
-        <p
-          className={`hidden md:block text-[3.5rem] text-foreground uppercase leading-[1.1] transition-opacity duration-300 ${hovered === null ? "opacity-100" : "opacity-0"}`}
-        >
-          [Choose your space]
-        </p>
-        <p
-          className={`absolute inset-0 m-auto text-sm text-foreground leading-[1.1] transition-opacity duration-300 w-68 h-fit ${hovered === "self" ? "opacity-100" : "opacity-0"}`}
-        >
-          A completely private space with just you, a large mirror, and a
-          clicker in your hand.
-          <br />
-          <br />
-          Premium camera and professional lighting are already perfectly tuned
-          for high-end results.
-        </p>
-        <p
-          className={`absolute inset-0 m-auto text-sm text-foreground leading-[1.1] transition-opacity duration-300 w-68 h-fit ${hovered === "main" ? "opacity-100" : "opacity-0"}`}
-        >
-          A versatile professional studio designed for commercial shoots and
-          editorial projects.
-          <br />
-          <br />
-          High-ceiling space equipped with pro-grade gear to bring your most
-          complex visions to life.
-        </p>
-      </div>
+            {/* Center content */}
+            {/*
+        Mobile: relative + fixed min-height so the gap between buttons
+        equals the tallest text block. Descriptions are absolute inside.
+        Desktop: static so absolute descriptions position relative to section.
+      */}
+            <div className="relative md:static shrink-0 w-68 text-center min-h-55 md:min-h-0 flex flex-col items-center justify-center md:block">
+              {/* Mobile: top line indicator (self) */}
+              <div
+                className="md:hidden absolute top-0 left-1/2 -translate-x-1/2 w-px transition-all duration-500"
+                style={{
+                  height: hovered === "self" ? "2.5rem" : "0",
+                  background: "#fff",
+                }}
+              >
+                <div
+                  className={`absolute bottom-0 left-1/2 -translate-x-1/2 size-1.5 rounded-full bg-foreground transition-opacity duration-300 ${hovered === "self" ? "opacity-100" : "opacity-0"}`}
+                />
+              </div>
 
-      {/* Bottom/Right line */}
-      <div className="relative flex-1 flex flex-col md:flex-row justify-end md:justify-end items-center md:items-center md:h-px">
-        <div
-          className="absolute bottom-0 md:bottom-auto md:right-0 w-px md:w-auto md:h-px transition-all duration-500"
-          style={isTouch
-            ? { height: hovered === "main" ? "50%" : "0", background: "#fff" }
-            : { width: hovered === "main" ? "50%" : "0", background: "#fff" }
-          }
-        >
-          <div
-            className={`absolute size-1 rounded-full bg-foreground transition-opacity duration-300 ${hovered === "main" ? "opacity-100" : "opacity-0"}`}
-            style={isTouch
-              ? { top: 0, left: "50%", transform: "translateX(-50%)" }
-              : { left: 0, top: "50%", transform: "translateY(-50%)" }
-            }
-          />
-        </div>
-      </div>
+              <p
+                className={`text-2xl md:text-[3.5rem] text-foreground uppercase leading-[1.1] transition-opacity duration-300 ${hovered === null ? "opacity-100" : "opacity-0"}`}
+              >
+                [Choose your space]
+              </p>
+              <p
+                className={`absolute inset-0 m-auto text-sm text-foreground leading-[1.1] transition-opacity duration-300 w-68 h-fit ${hovered === "self" ? "opacity-100" : "opacity-0"}`}
+              >
+                A completely private space with just you, a large mirror, and a
+                clicker in your hand.
+                <br />
+                <br />
+                Premium camera and professional lighting are already perfectly
+                tuned for high-end results.
+              </p>
+              <p
+                className={`absolute inset-0 m-auto text-sm text-foreground leading-[1.1] transition-opacity duration-300 w-68 h-fit ${hovered === "main" ? "opacity-100" : "opacity-0"}`}
+              >
+                A versatile professional studio designed for commercial shoots
+                and editorial projects.
+                <br />
+                <br />
+                High-ceiling space equipped with pro-grade gear to bring your
+                most complex visions to life.
+              </p>
 
-      {/* Main Room circle */}
-      <button
-        className="shrink-0 size-43 md:size-63.5 rounded-full border flex items-center justify-center cursor-pointer transition-colors duration-500"
-        style={{
-          borderColor:
-            hovered === "main"
-              ? "rgba(255,255,255,1)"
-              : "rgba(255,255,255,0.2)",
-        }}
-        onMouseEnter={() => setHovered("main")}
-        onMouseLeave={() => setHovered(null)}
-        onClick={() => {
-          if (isTouch) {
-            setHovered("main");
-          } else {
-            setRoom("main");
-            setModal("book");
-          }
-        }}
-      >
-        <span className="text-foreground text-[1rem] uppercase leading-[1.1]">
-          MAIN ROOM
-        </span>
-      </button>
+              {/* Mobile: bottom line indicator (main) */}
+              <div
+                className="md:hidden absolute bottom-0 left-1/2 -translate-x-1/2 w-px transition-all duration-500"
+                style={{
+                  height: hovered === "main" ? "2.5rem" : "0",
+                  background: "#fff",
+                }}
+              >
+                <div
+                  className={`absolute top-0 left-1/2 -translate-x-1/2 size-1 rounded-full bg-foreground transition-opacity duration-300 ${hovered === "main" ? "opacity-100" : "opacity-0"}`}
+                />
+              </div>
+            </div>
+
+            {/* Right line — desktop only */}
+            <div className="hidden md:flex relative flex-1 justify-end items-center h-px">
+              <div
+                className="absolute right-0 h-px transition-all duration-500"
+                style={{
+                  width: hovered === "main" ? "50%" : "0",
+                  background: "#fff",
+                }}
+              >
+                <div
+                  className={`absolute left-0 top-1/2 -translate-y-1/2 size-1 rounded-full bg-foreground transition-opacity duration-300 ${hovered === "main" ? "opacity-100" : "opacity-0"}`}
+                />
+              </div>
+            </div>
+
+            {/* Main Room circle */}
+            <button
+              className="shrink-0 size-43 md:size-63.5 rounded-full border flex items-center justify-center cursor-pointer transition-colors duration-500"
+              style={{
+                borderColor:
+                  hovered === "main"
+                    ? "rgba(255,255,255,1)"
+                    : "rgba(255,255,255,0.2)",
+              }}
+              onMouseEnter={() => {
+                if (!isTouch) setHovered("main");
+              }}
+              onMouseLeave={() => {
+                if (!isTouch) setHovered(null);
+              }}
+              onClick={() => {
+                if (isTouch) {
+                  setHovered("main");
+                } else {
+                  setRoom("main");
+                  setModal("book");
+                }
+              }}
+            >
+              <span className="text-foreground text-[1rem] uppercase leading-[1.1]">
+                MAIN ROOM
+              </span>
+            </button>
+          </div>
+        </ContainerLarge>
+      </PaddingGlobal>
     </section>
   );
 }
