@@ -1,19 +1,24 @@
 "use client";
 
 import { useModal } from "@/context/ModalContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type Room = "self" | "main" | null;
 
 export default function RoomSelector() {
   const [hovered, setHovered] = useState<Room>(null);
+  const [isTouch, setIsTouch] = useState(false);
   const { setModal, setRoom } = useModal();
 
+  useEffect(() => {
+    setIsTouch(window.innerWidth < 768);
+  }, []);
+
   return (
-    <section className="relative flex items-center justify-between w-full h-dvh bg-background overflow-hidden px-[calc(20.83%-7.9375rem)]">
+    <section className="relative flex items-center justify-between w-full h-dvh bg-background overflow-hidden flex-col md:flex-row py-16 md:py-0 md:px-[calc(20.83%-7.9375rem)]">
       {/* Self Room circle */}
       <button
-        className="shrink-0 size-63.5 rounded-full border flex items-center justify-center cursor-pointer transition-colors duration-500"
+        className="shrink-0 size-43 md:size-63.5 rounded-full border flex items-center justify-center cursor-pointer transition-colors duration-500"
         style={{
           borderColor:
             hovered === "self"
@@ -23,24 +28,32 @@ export default function RoomSelector() {
         onMouseEnter={() => setHovered("self")}
         onMouseLeave={() => setHovered(null)}
         onClick={() => {
-          setRoom("self");
-          setModal("book");
+          if (isTouch) {
+            setHovered("self");
+          } else {
+            setRoom("self");
+            setModal("book");
+          }
         }}
       >
         SELF ROOM
       </button>
 
-      {/* Left line */}
-      <div className="relative flex-1 flex justify-start items-center h-px">
+      {/* Top/Left line */}
+      <div className="relative flex-1 flex flex-col md:flex-row justify-start md:justify-start items-center md:items-center md:h-px">
         <div
-          className="absolute left-0 h-px transition-all duration-500"
-          style={{
-            width: hovered === "self" ? "50%" : "0",
-            background: "#fff",
-          }}
+          className="absolute top-0 md:top-auto md:left-0 w-px md:w-auto md:h-px transition-all duration-500"
+          style={isTouch
+            ? { height: hovered === "self" ? "50%" : "0", background: "#fff" }
+            : { width: hovered === "self" ? "50%" : "0", background: "#fff" }
+          }
         >
           <div
-            className={`absolute right-0 top-1/2 -translate-y-1/2 size-1.5 rounded-full bg-foreground transition-opacity duration-300 ${hovered === "self" ? "opacity-100" : "opacity-0"}`}
+            className={`absolute size-1.5 rounded-full bg-foreground transition-opacity duration-300 ${hovered === "self" ? "opacity-100" : "opacity-0"}`}
+            style={isTouch
+              ? { bottom: 0, left: "50%", transform: "translateX(-50%)" }
+              : { right: 0, top: "50%", transform: "translateY(-50%)" }
+            }
           />
         </div>
       </div>
@@ -48,7 +61,7 @@ export default function RoomSelector() {
       {/* Center content */}
       <div className="shrink-0 text-center w-68">
         <p
-          className={`text-[3.5rem] text-foreground uppercase leading-[1.1] transition-opacity duration-300 ${hovered === null ? "opacity-100" : "opacity-0"}`}
+          className={`hidden md:block text-[3.5rem] text-foreground uppercase leading-[1.1] transition-opacity duration-300 ${hovered === null ? "opacity-100" : "opacity-0"}`}
         >
           [Choose your space]
         </p>
@@ -74,24 +87,28 @@ export default function RoomSelector() {
         </p>
       </div>
 
-      {/* Right line */}
-      <div className="relative flex-1 flex justify-end items-center h-px">
+      {/* Bottom/Right line */}
+      <div className="relative flex-1 flex flex-col md:flex-row justify-end md:justify-end items-center md:items-center md:h-px">
         <div
-          className="absolute right-0 h-px transition-all duration-500"
-          style={{
-            width: hovered === "main" ? "50%" : "0",
-            background: "#fff",
-          }}
+          className="absolute bottom-0 md:bottom-auto md:right-0 w-px md:w-auto md:h-px transition-all duration-500"
+          style={isTouch
+            ? { height: hovered === "main" ? "50%" : "0", background: "#fff" }
+            : { width: hovered === "main" ? "50%" : "0", background: "#fff" }
+          }
         >
           <div
-            className={`absolute left-0 top-1/2 -translate-y-1/2 size-1 rounded-full bg-foreground transition-opacity duration-300 ${hovered === "main" ? "opacity-100" : "opacity-0"}`}
+            className={`absolute size-1 rounded-full bg-foreground transition-opacity duration-300 ${hovered === "main" ? "opacity-100" : "opacity-0"}`}
+            style={isTouch
+              ? { top: 0, left: "50%", transform: "translateX(-50%)" }
+              : { left: 0, top: "50%", transform: "translateY(-50%)" }
+            }
           />
         </div>
       </div>
 
       {/* Main Room circle */}
       <button
-        className="shrink-0 size-63.5 rounded-full border flex items-center justify-center cursor-pointer transition-colors duration-500"
+        className="shrink-0 size-43 md:size-63.5 rounded-full border flex items-center justify-center cursor-pointer transition-colors duration-500"
         style={{
           borderColor:
             hovered === "main"
@@ -101,8 +118,12 @@ export default function RoomSelector() {
         onMouseEnter={() => setHovered("main")}
         onMouseLeave={() => setHovered(null)}
         onClick={() => {
-          setRoom("main");
-          setModal("book");
+          if (isTouch) {
+            setHovered("main");
+          } else {
+            setRoom("main");
+            setModal("book");
+          }
         }}
       >
         <span className="text-foreground text-[1rem] uppercase leading-[1.1]">
