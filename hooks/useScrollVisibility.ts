@@ -1,3 +1,4 @@
+//The hook for manipulating Navbar visibility on scroll
 "use client";
 
 import { useEffect, useRef, useState } from "react";
