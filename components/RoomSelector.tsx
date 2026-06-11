@@ -25,13 +25,7 @@ export default function RoomSelector() {
           <div className="relative flex items-center w-full overflow-hidden flex-col justify-center md:flex-row md:justify-between px-0 md:px-[calc(20.83%-7.9375rem)]">
             {/* Self Room circle */}
             <button
-              className="shrink-0 size-43 md:size-63.5 rounded-full border flex items-center justify-center cursor-pointer transition-colors duration-500"
-              style={{
-                borderColor:
-                  hovered === "self"
-                    ? "rgba(255,255,255,1)"
-                    : "rgba(255,255,255,0.2)",
-              }}
+              className={`shrink-0 size-43 md:size-63.5 rounded-full border flex items-center justify-center cursor-pointer transition-colors duration-500 ${hovered === "self" ? "border-white" : "border-white/20"}`}
               onMouseEnter={() => {
                 if (!isTouch) setHovered("self");
               }}
@@ -53,11 +47,7 @@ export default function RoomSelector() {
             {/* Left line — desktop only */}
             <div className="hidden md:flex relative flex-1 justify-start items-center h-px">
               <div
-                className="absolute left-0 h-px transition-all duration-500"
-                style={{
-                  width: hovered === "self" ? "50%" : "0",
-                  background: "#fff",
-                }}
+                className={`absolute left-0 h-px bg-white transition-all duration-500 ${hovered === "self" ? "w-1/2" : "w-0"}`}
               >
                 <div
                   className={`absolute right-0 top-1/2 -translate-y-1/2 size-1.5 rounded-full bg-foreground transition-opacity duration-300 ${hovered === "self" ? "opacity-100" : "opacity-0"}`}
@@ -66,19 +56,10 @@ export default function RoomSelector() {
             </div>
 
             {/* Center content */}
-            {/*
-        Mobile: relative + fixed min-height so the gap between buttons
-        equals the tallest text block. Descriptions are absolute inside.
-        Desktop: static so absolute descriptions position relative to section.
-      */}
-            <div className="relative md:static shrink-0 w-68 text-center min-h-55 md:min-h-0 flex flex-col items-center justify-center md:block">
+            <div className="relative md:static shrink-0 w-full md:w-68 text-center h-55 md:min-h-0 flex flex-col items-center justify-center md:block">
               {/* Mobile: top line indicator (self) */}
               <div
-                className="md:hidden absolute top-0 left-1/2 -translate-x-1/2 w-px transition-all duration-500"
-                style={{
-                  height: hovered === "self" ? "2.5rem" : "0",
-                  background: "#fff",
-                }}
+                className={`md:hidden absolute top-0 left-1/2 -translate-x-1/2 w-px bg-white transition-all duration-500 ${hovered === "self" ? "h-10" : "h-0"}`}
               >
                 <div
                   className={`absolute bottom-0 left-1/2 -translate-x-1/2 size-1.5 rounded-full bg-foreground transition-opacity duration-300 ${hovered === "self" ? "opacity-100" : "opacity-0"}`}
@@ -113,14 +94,10 @@ export default function RoomSelector() {
 
               {/* Mobile: bottom line indicator (main) */}
               <div
-                className="md:hidden absolute bottom-0 left-1/2 -translate-x-1/2 w-px transition-all duration-500"
-                style={{
-                  height: hovered === "main" ? "2.5rem" : "0",
-                  background: "#fff",
-                }}
+                className={`md:hidden absolute bottom-0 left-1/2 -translate-x-1/2 w-px bg-white transition-all duration-500 ${hovered === "main" ? "h-10" : "h-0"}`}
               >
                 <div
-                  className={`absolute top-0 left-1/2 -translate-x-1/2 size-1 rounded-full bg-foreground transition-opacity duration-300 ${hovered === "main" ? "opacity-100" : "opacity-0"}`}
+                  className={`absolute top-0 left-1/2 -translate-x-1/2 size-1.5 rounded-full bg-foreground transition-opacity duration-300 ${hovered === "main" ? "opacity-100" : "opacity-0"}`}
                 />
               </div>
             </div>
@@ -128,11 +105,7 @@ export default function RoomSelector() {
             {/* Right line — desktop only */}
             <div className="hidden md:flex relative flex-1 justify-end items-center h-px">
               <div
-                className="absolute right-0 h-px transition-all duration-500"
-                style={{
-                  width: hovered === "main" ? "50%" : "0",
-                  background: "#fff",
-                }}
+                className={`absolute right-0 h-px bg-white transition-all duration-500 ${hovered === "main" ? "w-1/2" : "w-0"}`}
               >
                 <div
                   className={`absolute left-0 top-1/2 -translate-y-1/2 size-1 rounded-full bg-foreground transition-opacity duration-300 ${hovered === "main" ? "opacity-100" : "opacity-0"}`}
@@ -142,13 +115,7 @@ export default function RoomSelector() {
 
             {/* Main Room circle */}
             <button
-              className="shrink-0 size-43 md:size-63.5 rounded-full border flex items-center justify-center cursor-pointer transition-colors duration-500"
-              style={{
-                borderColor:
-                  hovered === "main"
-                    ? "rgba(255,255,255,1)"
-                    : "rgba(255,255,255,0.2)",
-              }}
+              className={`shrink-0 size-43 md:size-63.5 rounded-full border flex items-center justify-center cursor-pointer transition-colors duration-500 ${hovered === "main" ? "border-white" : "border-white/20"}`}
               onMouseEnter={() => {
                 if (!isTouch) setHovered("main");
               }}
