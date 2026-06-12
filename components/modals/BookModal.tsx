@@ -119,13 +119,17 @@ export default function BookModal() {
   const onSubmit = async (data: DetailsForm) => {
     try {
       setServerError("");
-      const tarifLabel = TARIFS.find((t) => t.value === booking.tarif)?.label ?? booking.tarif;
+      const tarifLabel =
+        TARIFS.find((t) => t.value === booking.tarif)?.label ?? booking.tarif;
       const payload = { ...booking, ...data, tarif: tarifLabel };
-      const response = await fetch("https://your-webhook-url.com", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+      const response = await fetch(
+        "https://hooks.backend.ae/webhook/api/the-m/form",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        },
+      );
       if (!response.ok) throw new Error();
       setIsSuccess(true);
     } catch {
@@ -161,23 +165,41 @@ export default function BookModal() {
   return (
     <BaseModal
       open={open}
-      className="md:w-[90vw] md:max-w-312 md:overflow-hidden"
+      className={
+        isSuccess
+          ? "md:w-[35rem]  md:overflow-hidden"
+          : "md:w-[90vw] md:max-w-312 md:overflow-hidden"
+      }
     >
       {isSuccess ? (
-        <div className="flex flex-col items-center justify-center min-h-80 gap-4 p-6 text-center">
-          <Dialog.Title className="text-[1.5rem] md:text-[2.5rem] uppercase leading-[1.1]">
-            Done!
-          </Dialog.Title>
-          <p className="text-foreground-muted text-[0.875rem]">
-            Your request has been submitted successfully!
-          </p>
-          <Button
-            variant="light"
-            className="mt-4"
-            onClick={() => setModal(null)}
+        <div className="h-full md:h-auto flex flex-col items-center justify-center gap-8 md:gap-[2.625rem] px-4 md:p-16 text-center">
+          <Dialog.Title className="sr-only">Success</Dialog.Title>
+          <svg
+            className="size-20 md:size-[5.625rem] shrink-0"
+            viewBox="0 0 90 90"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            Close
-          </Button>
+            <circle cx="45" cy="45" r="44" stroke="white" strokeWidth="1.5" />
+            <path
+              d="M28 46L39 57L62 32"
+              stroke="white"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+          <div className="flex flex-col gap-4">
+            <p className="text-[1.5rem] md:text-[2.5rem] uppercase leading-[1.1] text-white">
+              Success!
+              <br />
+              Check your email
+            </p>
+            <p className="text-[0.75rem] md:text-[0.875rem] leading-[1.1] text-[#858585]">
+              We&apos;ve sent you all the information via email. If you
+              haven&apos;t received the message, please check your spam folder.
+            </p>
+          </div>
         </div>
       ) : currentStep === "space" ? (
         /* ── Select Space: full width, two cards side-by-side on desktop ── */
