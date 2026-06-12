@@ -7,6 +7,7 @@ import Logo from "./Logo";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 
+//Scroll to anchor
 function scrollToAnchor(id: string, duration = 900) {
   const el = document.getElementById(id);
   if (!el) return;
