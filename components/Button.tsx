@@ -1,10 +1,11 @@
 type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
-  variant?: "light" | "dark";
+  variant?: "light" | "dark" | "ghost";
 };
 
 const variantStyles = {
   light: "bg-foreground text-background hover:bg-[#DCDCDC]",
   dark: "bg-background text-foreground hover:bg-[#DCDCDC] hover:text-background",
+  ghost: "bg-transparent text-foreground border border-white/20 hover:bg-foreground/10",
 };
 
 export default function Button({
