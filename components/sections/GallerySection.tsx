@@ -83,7 +83,7 @@ export default function GallerySection() {
 
   return (
     <section className="flex flex-col">
-      <SpacerLarge />
+      <SpacerLarge id="gallery" />
       <PaddingGlobal>
         <ContainerLarge>
           <h2 className="text-[1.5rem] md:text-[3.5rem] text-white uppercase leading-[1.1] mb-6 md:mb-10">
@@ -110,7 +110,9 @@ export default function GallerySection() {
         </ContainerLarge>
       </PaddingGlobal>
 
-      <div className={`px-2 relative transition-opacity duration-200 ${visible ? "opacity-100" : "opacity-0"}`}>
+      <div
+        className={`px-2 relative transition-opacity duration-200 ${visible ? "opacity-100" : "opacity-0"}`}
+      >
         <Swiper
           key={activeRoom}
           loop

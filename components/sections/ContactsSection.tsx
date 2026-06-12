@@ -32,7 +32,7 @@ const contacts = [
 export default function ContactsSection() {
   return (
     <section>
-      <SpacerLarge />
+      <SpacerLarge id="contacts" />
       <PaddingGlobal>
         <ContainerLarge>
           <h2 className="text-2xl md:text-[3.5rem] text-white uppercase leading-[1.1] md:text-center">

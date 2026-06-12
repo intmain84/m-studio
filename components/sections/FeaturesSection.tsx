@@ -72,7 +72,7 @@ function RoomRow({
 export default function FeaturesSection() {
   return (
     <section>
-      <SpacerLarge />
+      <SpacerLarge id="about" />
       <PaddingGlobal>
         <ContainerLarge>
           <div className="flex flex-col gap-14 md:gap-30">

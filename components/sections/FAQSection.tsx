@@ -61,7 +61,7 @@ export default function FAQSection() {
 
   return (
     <section>
-      <SpacerLarge />
+      <SpacerLarge id="faq" />
       <PaddingGlobal>
         <ContainerLarge>
           <div className="flex flex-col md:flex-row">

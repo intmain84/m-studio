@@ -126,7 +126,7 @@ export default function HowItWorksSection() {
 
   return (
     <section>
-      <SpacerLarge />
+      <SpacerLarge id="howitworks" />
       <PaddingGlobal>
         <ContainerLarge>
           <h2 className="text-[1.5rem] lg:text-[3.5rem] text-white uppercase leading-[1.1] mb-6 lg:mb-10">
@@ -154,7 +154,9 @@ export default function HowItWorksSection() {
           </div>
 
           {/* Steps — flex scroll on mobile, 5-column grid on desktop */}
-          <div className={`overflow-x-auto lg:overflow-visible [&::-webkit-scrollbar]:hidden scrollbar-none transition-opacity duration-200 ${visible ? "opacity-100" : "opacity-0"}`}>
+          <div
+            className={`overflow-x-auto lg:overflow-visible [&::-webkit-scrollbar]:hidden scrollbar-none transition-opacity duration-200 ${visible ? "opacity-100" : "opacity-0"}`}
+          >
             <div className="flex gap-6 lg:gap-8 lg:grid lg:grid-cols-5 w-max lg:w-auto">
               {steps.map((step) => (
                 <StepCard key={step.num} step={step} />

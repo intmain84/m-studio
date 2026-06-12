@@ -4,16 +4,35 @@ import { useScrollVisibility } from "@/hooks/useScrollVisibility";
 import { useModal } from "@/context/ModalContext";
 import Link from "next/link";
 import Logo from "./Logo";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 
+function scrollToAnchor(id: string, duration = 900) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const startY = window.scrollY;
+  const targetY = el.getBoundingClientRect().top + startY;
+  const diff = targetY - startY;
+  let start: number | null = null;
+
+  function step(ts: number) {
+    if (!start) start = ts;
+    const t = Math.min((ts - start) / duration, 1);
+    const ease = t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+    window.scrollTo(0, startY + diff * ease);
+    if (t < 1) requestAnimationFrame(step);
+  }
+
+  requestAnimationFrame(step);
+}
+
 const links = [
-  { name: "About studio", href: "#", image: "/menu/about.jpg" },
-  { name: "Spaces", href: "#", image: "/menu/spaces.jpg" },
-  { name: "How it works", href: "#", image: "/menu/how.jpg" },
-  { name: "Gallery", href: "#", image: "/menu/gallery.jpg" },
-  { name: "FAQ", href: "#", image: "/menu/faq.jpg" },
-  { name: "Contacts", href: "#", image: "/menu/contacts.jpg" },
+  { name: "About studio", href: "/#about", image: "/menu/about.jpg" },
+  { name: "Spaces", href: "/#spaces", image: "/menu/spaces.jpg" },
+  { name: "How it works", href: "/#howitworks", image: "/menu/how.jpg" },
+  { name: "Gallery", href: "/#gallery", image: "/menu/gallery.jpg" },
+  { name: "FAQ", href: "/#faq", image: "/menu/faq.jpg" },
+  { name: "Contacts", href: "/#contacts", image: "/menu/contacts.jpg" },
 ];
 
 export default function Navbar() {
@@ -95,7 +114,13 @@ export default function Navbar() {
                   ? "opacity-50"
                   : "opacity-100"
               }`}
-              onClick={() => setIsOpen(false)}
+              onClick={(e) => {
+                setIsOpen(false);
+                if (link.href.startsWith("/#")) {
+                  e.preventDefault();
+                  scrollToAnchor(link.href.slice(2));
+                }
+              }}
               onMouseEnter={() => {
                 setHoveredIndex(i);
                 setActiveImageIndex(i);
