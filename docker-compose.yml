@@ -1,0 +1,23 @@
+services:
+  export:
+    build:
+      context: .
+      target: production
+    volumes:
+      - ./out:/out
+    command: ["sh", "-c", "cp -a /static/. /out/"]
+
+  dev:
+    build:
+      context: .
+      target: dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - node_modules:/app/node_modules
+    profiles:
+      - dev
+
+volumes:
+  node_modules:
