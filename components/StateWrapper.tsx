@@ -2,14 +2,14 @@
 
 import Navbar from "./Navbar";
 import { ModalProvider } from "@/context/ModalContext";
-import CallbackModal from "./modals/CallbackModal";
+import ModalRenderer from "./modals/ModalRenderer";
 
 const StateWrapper = ({ children }: { children: React.ReactNode }) => {
   return (
     <ModalProvider>
       <Navbar />
       <main className="flex-1">{children}</main>
-      <CallbackModal />
+      <ModalRenderer /> {/* Always keep it here */}
     </ModalProvider>
   );
 };

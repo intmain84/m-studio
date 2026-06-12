@@ -10,7 +10,6 @@ import Image from "next/image";
 const links = [
   { name: "About studio", href: "#", image: "/menu/about.jpg" },
   { name: "Spaces", href: "#", image: "/menu/spaces.jpg" },
-  { name: "Privacy", href: "#", image: "/menu/privacy.jpg" },
   { name: "How it works", href: "#", image: "/menu/how.jpg" },
   { name: "Gallery", href: "#", image: "/menu/gallery.jpg" },
   { name: "FAQ", href: "#", image: "/menu/faq.jpg" },
@@ -18,7 +17,7 @@ const links = [
 ];
 
 export default function Navbar() {
-  const { setModal, setRoom } = useModal();
+  const { setModal } = useModal();
   const { isVisible, hasScrolled } = useScrollVisibility(); // Show/hide Navbar based on scroll position
   const [isOpen, setIsOpen] = useState(false);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
@@ -38,7 +37,7 @@ export default function Navbar() {
     <header
       className={`flex flex-col transition-transform duration-200 ease-in-out fixed top-0 inset-x-0 z-100 h-15
         ${navVisible ? "translate-y-0" : "-translate-y-full"}
-        ${hasScrolled ? "bg-linear-to-b from-black/70 to-transparent backdrop-blur-md" : "bg-transparent"}`}
+        ${hasScrolled ? "bg-linear-to-b from-black/70 to-transparent" : "bg-transparent"}`}
     >
       <nav className="relative flex items-center justify-between px-4 md:px-5 lg:px-8 h-full z-10000">
         {/* HAMBURGER MENU */}
@@ -68,8 +67,7 @@ export default function Navbar() {
           <Link
             href="#"
             onClick={() => {
-              setRoom(null);
-              setModal("book");
+              setModal({ type: "book" });
             }}
           >
             <span className="md:hidden">Book</span>

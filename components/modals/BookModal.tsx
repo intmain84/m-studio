@@ -6,27 +6,30 @@ import { useEffect, useState } from "react";
 import BaseModal from "./BaseModal";
 import FormInput from "../FormInput";
 import { useModal } from "@/context/ModalContext";
+import { Room } from "@/types/modal";
 
 type FormData = {
   name: string;
   phone: string;
 };
 
-const CallbackModal = () => {
-  const { modal, setModal, room, setRoom } = useModal();
-  const open = modal === "book";
+const BookModal = () => {
+  const { modal } = useModal();
+  const open = modal?.type === "book"; //This modal opens if it's a "book" modal
 
-  const [step, setStep] = useState<"room" | "form">(room ? "form" : "room");
+  const [room, setRoom] = useState<Room | undefined>(undefined);
+  const [step, setStep] = useState<"room" | "form">("room");
   const [isSuccess, setIsSuccess] = useState(false);
   const [serverError, setServerError] = useState("");
 
   useEffect(() => {
-    if (open) {
-      setStep(room ? "form" : "room");
+    if (modal?.type === "book") {
+      setRoom(modal.room);
+      setStep(modal.room ? "form" : "room");
       setIsSuccess(false);
       setServerError("");
     }
-  }, [open, room]);
+  }, [open]);
 
   const {
     register,
@@ -137,4 +140,4 @@ const CallbackModal = () => {
   );
 };
 
-export default CallbackModal;
+export default BookModal;

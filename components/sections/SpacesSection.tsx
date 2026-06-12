@@ -5,8 +5,18 @@ import Button from "../Button";
 import SpacerLarge from "../common/SpacerLarge";
 import PaddingGlobal from "../common/PaddingGlobal";
 import ContainerLarge from "../common/ContainerLarge";
+import { useModal } from "@/context/ModalContext";
+import { Room } from "@/types/modal";
 
-const spaces = [
+const spaces: Array<{
+  num: string;
+  name: string;
+  description: string;
+  tag: string;
+  tags: string[];
+  image: string;
+  room: Room;
+}> = [
   {
     num: "01",
     name: "SELF ROOM",
@@ -15,6 +25,7 @@ const spaces = [
     tag: "[Total Privacy]",
     tags: ["Solo", "Family", "Love-Story"],
     image: "/spaces/selfroom.webp",
+    room: "self",
   },
   {
     num: "02",
@@ -24,6 +35,7 @@ const spaces = [
     tag: "[Total Privacy]",
     tags: ["Business Portrait", "Comp Cards", "Brand Content"],
     image: "/spaces/mainroom.webp",
+    room: "main",
   },
 ];
 
@@ -34,10 +46,11 @@ function SpaceCard({
   tag,
   tags,
   image,
-}: (typeof spaces)[number]) {
+  onClick,
+}: (typeof spaces)[number] & { onClick: () => void }) {
   return (
     <div
-      onClick={() => {}}
+      onClick={onClick}
       className="flex-1 flex flex-col cursor-pointer group"
     >
       {/* Image with overlay */}
@@ -98,6 +111,8 @@ function SpaceCard({
 }
 
 export default function SpacesSection() {
+  const { setModal } = useModal();
+
   return (
     <section>
       <SpacerLarge />
@@ -111,7 +126,11 @@ export default function SpacesSection() {
       <div className="mx-2">
         <div className="flex flex-col md:flex-row gap-2">
           {spaces.map((space) => (
-            <SpaceCard key={space.num} {...space} />
+            <SpaceCard
+              key={space.num}
+              {...space}
+              onClick={() => setModal({ type: "room-info", room: space.room })}
+            />
           ))}
         </div>
       </div>

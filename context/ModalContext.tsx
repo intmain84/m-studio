@@ -1,25 +1,20 @@
 "use client";
 
 import { createContext, useContext, useState } from "react";
-import { ModalType } from "@/types/modal";
-
-type Room = "self" | "main";
+import { ModalState } from "@/types/modal";
 
 type ModalContextType = {
-  modal: ModalType | null;
-  setModal: (modal: ModalType | null) => void;
-  room: Room | null;
-  setRoom: (room: Room | null) => void;
+  modal: ModalState;
+  setModal: (modal: ModalState) => void;
 };
 
 const ModalContext = createContext<ModalContextType | null>(null);
 
 export function ModalProvider({ children }: { children: React.ReactNode }) {
-  const [modal, setModal] = useState<ModalType | null>(null);
-  const [room, setRoom] = useState<Room | null>(null);
+  const [modal, setModal] = useState<ModalState>(null);
 
   return (
-    <ModalContext.Provider value={{ modal, setModal, room, setRoom }}>
+    <ModalContext.Provider value={{ modal, setModal }}>
       {children}
     </ModalContext.Provider>
   );

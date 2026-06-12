@@ -11,7 +11,7 @@ type Room = "self" | "main" | null;
 export default function RoomSelectorSection() {
   const [hovered, setHovered] = useState<Room>(null);
   const [isTouch, setIsTouch] = useState(false);
-  const { setModal, setRoom } = useModal();
+  const { setModal } = useModal();
 
   useEffect(() => {
     setIsTouch(window.innerWidth < 768);
@@ -36,8 +36,7 @@ export default function RoomSelectorSection() {
                 if (isTouch) {
                   setHovered("self");
                 } else {
-                  setRoom("self");
-                  setModal("book");
+                  setModal({ type: "room-info", room: "self" });
                 }
               }}
             >
@@ -126,8 +125,7 @@ export default function RoomSelectorSection() {
                 if (isTouch) {
                   setHovered("main");
                 } else {
-                  setRoom("main");
-                  setModal("book");
+                  setModal({ type: "room-info", room: "main" });
                 }
               }}
             >
