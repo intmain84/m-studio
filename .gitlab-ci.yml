@@ -1,0 +1,114 @@
+# GitLab CI/CD: develop → dev-сервер, main → prod-сервер.
+# Сборка — автоматически при пуше, деплой — вручную (кнопка ▶).
+#
+# Ветки: только develop и main.
+#
+# Переменные в GitLab → Settings → CI/CD → Variables.
+# Задайте одинаковые имена, но разные значения с scope по environment:
+#
+#   development (ветка develop):
+#     SSH_PRIVATE_KEY, DEPLOY_HOST, DEPLOY_USER, DEPLOY_PATH
+#     опционально: SSH_KNOWN_HOSTS
+#
+#   production (ветка main):
+#     SSH_PRIVATE_KEY, DEPLOY_HOST, DEPLOY_USER, DEPLOY_PATH
+#     опционально: SSH_KNOWN_HOSTS
+#
+# Общие (без scope):
+#   BUILD_RUNNER_TAG — тег runner'а на build-сервере (по умолчанию: build)
+
+workflow:
+  rules:
+    - if: $CI_COMMIT_BRANCH == "develop"
+    - if: $CI_COMMIT_BRANCH == "main"
+
+stages:
+  - build
+  - deploy
+
+variables:
+  NODE_VERSION: "20"
+  BUILD_RUNNER_TAG: "build"
+
+build:
+  stage: build
+  tags:
+    - $BUILD_RUNNER_TAG
+  image: node:${NODE_VERSION}-alpine
+  cache:
+    key:
+      files:
+        - package-lock.json
+    paths:
+      - node_modules/
+  script:
+    - npm ci
+    - npm run build
+    - test -d out && test -f out/index.html
+  artifacts:
+    name: "static-${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHORT_SHA}"
+    paths:
+      - out/
+    expire_in: 7 days
+  rules:
+    - if: $CI_COMMIT_BRANCH == "develop"
+    - if: $CI_COMMIT_BRANCH == "main"
+
+.deploy_base:
+  stage: deploy
+  tags:
+    - $BUILD_RUNNER_TAG
+  image: alpine:3.20
+  needs:
+    - job: build
+      artifacts: true
+  before_script:
+    - apk add --no-cache openssh-client rsync
+    - |
+      for var in SSH_PRIVATE_KEY DEPLOY_HOST DEPLOY_USER DEPLOY_PATH; do
+        eval "value=\$$var"
+        if [ -z "$value" ]; then
+          echo "Missing required CI variable: $var (check environment scope)"
+          exit 1
+        fi
+      done
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - |
+      if [ -f "$SSH_PRIVATE_KEY" ]; then
+        cp "$SSH_PRIVATE_KEY" ~/.ssh/deploy_key
+      else
+        printf '%s\n' "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/deploy_key
+      fi
+    - chmod 600 ~/.ssh/deploy_key
+    - |
+      if [ -n "$SSH_KNOWN_HOSTS" ]; then
+        printf '%s\n' "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+      else
+        ssh-keyscan -H "$DEPLOY_HOST" >> ~/.ssh/known_hosts
+      fi
+    - chmod 644 ~/.ssh/known_hosts
+    - export RSYNC_RSH="ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes -o UserKnownHostsFile=~/.ssh/known_hosts"
+  script:
+    - |
+      rsync -avz --delete \
+        out/ "${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/"
+    - echo "Deployed ${CI_COMMIT_SHORT_SHA} → ${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}"
+
+deploy:develop:
+  extends: .deploy_base
+  environment:
+    name: development
+    url: https://${DEPLOY_HOST}
+  rules:
+    - if: $CI_COMMIT_BRANCH == "develop"
+      when: manual
+
+deploy:main:
+  extends: .deploy_base
+  environment:
+    name: production
+    url: https://${DEPLOY_HOST}
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+      when: manual
