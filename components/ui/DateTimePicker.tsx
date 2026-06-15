@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type DateTimePickerProps = {
   selectedDate: string;
@@ -7,11 +7,14 @@ type DateTimePickerProps = {
   onDateChange: (date: string) => void;
   onTimeChange: (time: string) => void;
   reservedSlots?: string[]; // "YYYY-MM-DD HH" e.g. "2024-02-09 14"
+  className?: string;
 };
 
 const DATES_VISIBLE = 7;
 const TIMES_VISIBLE = 5;
 const TOTAL_DATES = 60;
+// how many past days before today in the dates array
+const PAST_DAYS = 3;
 
 const HOUR_SLOTS = [
   { label: "10:00 AM", hour: 10 },
@@ -55,6 +58,7 @@ export default function DateTimePicker({
   onDateChange,
   onTimeChange,
   reservedSlots = [],
+  className,
 }: DateTimePickerProps) {
   const [today] = useState<Date>(() => {
     const d = new Date();
@@ -63,23 +67,85 @@ export default function DateTimePicker({
   });
   const [currentHour] = useState<number>(() => new Date().getHours());
 
-  // dates[0] = today - 3, today is at index 3 (center of initial 7-item window)
+  // dates[0] = today - PAST_DAYS, dates[PAST_DAYS] = today
   const [dates] = useState<Date[]>(() =>
     Array.from({ length: TOTAL_DATES }, (_, i) => {
       const d = new Date(today);
-      d.setDate(today.getDate() - 3 + i);
+      d.setDate(today.getDate() - PAST_DAYS + i);
       return d;
     }),
   );
 
+  // Desktop windowed state
   const [dateWindowStart, setDateWindowStart] = useState(0);
   const [timeWindowStart, setTimeWindowStart] = useState(() => {
     const nowHour = new Date().getHours();
     const firstFutureIdx = HOUR_SLOTS.findIndex((s) => s.hour > nowHour);
     const idx = firstFutureIdx === -1 ? HOUR_SLOTS.length - 1 : firstFutureIdx;
     const center = Math.floor(TIMES_VISIBLE / 2);
-    return Math.max(0, Math.min(idx - center, HOUR_SLOTS.length - TIMES_VISIBLE));
+    return Math.max(
+      0,
+      Math.min(idx - center, HOUR_SLOTS.length - TIMES_VISIBLE),
+    );
   });
+
+  // Mobile scroll refs
+  const mobileDateRef = useRef<HTMLDivElement>(null);
+  const mobileTimeRef = useRef<HTMLDivElement>(null);
+
+  const todayStr = toDateStr(today);
+  const isFutureDate = selectedDate > todayStr;
+
+  const minTimeWindowStart = (() => {
+    const firstFutureIdx = HOUR_SLOTS.findIndex((s) => s.hour > currentHour);
+    const idx = firstFutureIdx === -1 ? HOUR_SLOTS.length - 1 : firstFutureIdx;
+    return Math.max(
+      0,
+      Math.min(
+        idx - Math.floor(TIMES_VISIBLE / 2),
+        HOUR_SLOTS.length - TIMES_VISIBLE,
+      ),
+    );
+  })();
+
+  // Desktop: reset time window on date change
+  useEffect(() => {
+    if (isFutureDate) {
+      setTimeWindowStart(0);
+    } else {
+      setTimeWindowStart(minTimeWindowStart);
+    }
+  }, [selectedDate]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Mobile: scroll time to first available slot on date change
+  useEffect(() => {
+    const el = mobileTimeRef.current;
+    if (!el) return;
+    const cellWidth = el.offsetWidth / 4.5;
+    if (isFutureDate) {
+      el.scrollLeft = 0;
+    } else {
+      const firstFutureIdx = HOUR_SLOTS.findIndex((s) => s.hour > currentHour);
+      const idx = Math.max(0, firstFutureIdx - 1);
+      el.scrollLeft = idx * cellWidth;
+    }
+  }, [selectedDate]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Mobile: initial scroll — show 2 past days before today
+  useEffect(() => {
+    const dateEl = mobileDateRef.current;
+    if (dateEl) {
+      const cellWidth = dateEl.offsetWidth / 6.5;
+      dateEl.scrollLeft = (PAST_DAYS - 2) * cellWidth;
+    }
+    const timeEl = mobileTimeRef.current;
+    if (timeEl) {
+      const cellWidth = timeEl.offsetWidth / 4.5;
+      const firstFutureIdx = HOUR_SLOTS.findIndex((s) => s.hour > currentHour);
+      const idx = Math.max(0, firstFutureIdx - 1);
+      timeEl.scrollLeft = idx * cellWidth;
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const visibleDates = dates.slice(
     dateWindowStart,
@@ -90,24 +156,8 @@ export default function DateTimePicker({
     timeWindowStart + TIMES_VISIBLE,
   );
 
-  const todayStr = toDateStr(today);
-  const minTimeWindowStart = (() => {
-    const firstFutureIdx = HOUR_SLOTS.findIndex((s) => s.hour > currentHour);
-    const idx = firstFutureIdx === -1 ? HOUR_SLOTS.length - 1 : firstFutureIdx;
-    return Math.max(0, Math.min(idx - Math.floor(TIMES_VISIBLE / 2), HOUR_SLOTS.length - TIMES_VISIBLE));
-  })();
-
-  useEffect(() => {
-    if (selectedDate > todayStr) {
-      setTimeWindowStart(0);
-    } else {
-      setTimeWindowStart(minTimeWindowStart);
-    }
-  }, [selectedDate]); // eslint-disable-line react-hooks/exhaustive-deps
-
   const canPrevDate = dateWindowStart > 0;
   const canNextDate = dateWindowStart + DATES_VISIBLE < dates.length;
-  const isFutureDate = selectedDate > todayStr;
   const canPrevTime = timeWindowStart > (isFutureDate ? 0 : minTimeWindowStart);
   const canNextTime = timeWindowStart + TIMES_VISIBLE < HOUR_SLOTS.length;
 
@@ -116,7 +166,7 @@ export default function DateTimePicker({
   }
 
   function isTimePast(dateStr: string, hour: number) {
-    if (dateStr > todayStr) return false; // выбрана будущая дата — все часы доступны
+    if (dateStr > todayStr) return false;
     return hour <= currentHour;
   }
 
@@ -124,67 +174,114 @@ export default function DateTimePicker({
     return reservedSlots.includes(`${dateStr} ${hour}`);
   }
 
+  const dateCell = (d: Date, key: string | number, mobile = false) => {
+    const dateStr = toDateStr(d);
+    const past = isDatePast(d);
+    const selected = dateStr === selectedDate;
+    return (
+      <div
+        key={key}
+        onClick={() => !past && onDateChange(dateStr)}
+        className={`flex flex-col items-center justify-center gap-2 transition-colors h-20 ${
+          mobile ? "shrink-0 w-[calc(100vw/6.5)]" : "flex-1"
+        } ${
+          past ? "text-white/20 cursor-default" : "text-white cursor-pointer"
+        } ${selected ? "bg-white/20" : !past ? "hover:bg-white/10" : ""}`}
+      >
+        <span className="text-[1.25rem] md:text-[1.5rem] leading-[1.1] uppercase select-none">
+          {d.getDate()}
+        </span>
+        <span className="text-[0.75rem] md:text-[0.875rem] leading-[1.1] select-none">
+          {MONTH_NAMES[d.getMonth()]}
+        </span>
+      </div>
+    );
+  };
+
+  const dayNameCell = (d: Date, key: string | number, mobile = false) => {
+    const past = isDatePast(d);
+    return (
+      <div
+        key={key}
+        className={`flex items-center justify-center py-4 ${
+          mobile ? "shrink-0 w-[calc(100vw/6.5)]" : "flex-1"
+        }`}
+      >
+        <span
+          className={`text-[0.75rem] md:text-[1rem] leading-[1.1] whitespace-nowrap select-none ${
+            past ? "text-white/20" : "text-white"
+          }`}
+        >
+          {DAY_NAMES[d.getDay()]}
+        </span>
+      </div>
+    );
+  };
+
+  const timeCell = (
+    slot: (typeof HOUR_SLOTS)[number],
+    key: string | number,
+    mobile = false,
+  ) => {
+    const past = isTimePast(selectedDate, slot.hour);
+    const reserved = isTimeReserved(selectedDate, slot.hour);
+    const disabled = past || reserved;
+    const selected = selectedTime === slot.label;
+    return (
+      <div
+        key={key}
+        className={`relative group h-9 flex items-center justify-center transition-colors ${
+          mobile ? "shrink-0 w-[calc(100vw/4.5)]" : "flex-1"
+        } ${selected ? "bg-white/20" : disabled ? "" : "hover:bg-white/10"} ${
+          disabled
+            ? "text-white/20 cursor-default"
+            : "text-white cursor-pointer"
+        }`}
+        onClick={() => !disabled && onTimeChange(slot.label)}
+      >
+        <span className="text-[0.75rem] md:text-[0.875rem] leading-[1.1] whitespace-nowrap select-none">
+          {slot.label}
+        </span>
+        {reserved && (
+          <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-white text-[#0f0f11] text-[0.75rem] leading-[1.1] whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity z-10">
+            Not available
+          </div>
+        )}
+      </div>
+    );
+  };
+
   return (
-    <div className="flex flex-col gap-6 md:gap-8">
-      {/* === Date Slider === */}
-      <div className="flex items-center gap-2 md:gap-3">
+    <div className={`flex flex-col gap-6 md:gap-8 ${className ?? ""}`}>
+      {/* === Mobile: swipe date scroll === */}
+      <div className="md:hidden -mx-4">
+        <div
+          ref={mobileDateRef}
+          className="overflow-x-auto [&::-webkit-scrollbar]:hidden"
+        >
+          <div className="flex">
+            {dates.map((d, i) => dayNameCell(d, `mn-${i}`, true))}
+          </div>
+          <div className="flex">
+            {dates.map((d, i) => dateCell(d, `md-${i}`, true))}
+          </div>
+        </div>
+      </div>
+
+      {/* === Desktop: windowed date slider with arrows === */}
+      <div className="hidden md:flex items-center gap-3">
         <NavButton
           onClick={() => setDateWindowStart((s) => s - 1)}
           disabled={!canPrevDate}
         />
-
         <div className="flex-1 flex flex-col min-w-0">
-          {/* Day names */}
           <div className="flex">
-            {visibleDates.map((d, i) => {
-              const past = isDatePast(d);
-              return (
-                <div
-                  key={i}
-                  className="flex-1 flex items-center justify-center py-4"
-                >
-                  <span
-                    className={`text-[0.75rem] md:text-[1rem] leading-[1.1] whitespace-nowrap select-none ${
-                      past ? "text-white/20" : "text-white"
-                    }`}
-                  >
-                    {DAY_NAMES[d.getDay()]}
-                  </span>
-                </div>
-              );
-            })}
+            {visibleDates.map((d, i) => dayNameCell(d, `dn-${i}`))}
           </div>
-
-          {/* Date cells */}
-          <div className="flex h-20">
-            {visibleDates.map((d, i) => {
-              const dateStr = toDateStr(d);
-              const past = isDatePast(d);
-              const selected = dateStr === selectedDate;
-              return (
-                <div
-                  key={i}
-                  onClick={() => !past && onDateChange(dateStr)}
-                  className={`flex-1 flex flex-col items-center justify-center gap-2 transition-colors ${
-                    past
-                      ? "text-white/20 cursor-default"
-                      : "text-white cursor-pointer"
-                  } ${
-                    selected ? "bg-white/20" : !past ? "hover:bg-white/10" : ""
-                  }`}
-                >
-                  <span className="text-[1.25rem] md:text-[1.5rem] leading-[1.1] uppercase select-none">
-                    {d.getDate()}
-                  </span>
-                  <span className="text-[0.75rem] md:text-[0.875rem] leading-[1.1] select-none">
-                    {MONTH_NAMES[d.getMonth()]}
-                  </span>
-                </div>
-              );
-            })}
+          <div className="flex">
+            {visibleDates.map((d, i) => dateCell(d, `dd-${i}`))}
           </div>
         </div>
-
         <NavButton
           onClick={() => setDateWindowStart((s) => s + 1)}
           disabled={!canNextDate}
@@ -192,49 +289,27 @@ export default function DateTimePicker({
         />
       </div>
 
-      {/* === Time Slider === */}
-      <div className="flex items-center gap-2 md:gap-3">
+      {/* === Mobile: swipe time scroll === */}
+      <div className="md:hidden -mx-4">
+        <div
+          ref={mobileTimeRef}
+          className="overflow-x-auto [&::-webkit-scrollbar]:hidden"
+        >
+          <div className="flex">
+            {HOUR_SLOTS.map((slot) => timeCell(slot, `mt-${slot.hour}`, true))}
+          </div>
+        </div>
+      </div>
+
+      {/* === Desktop: windowed time slider with arrows === */}
+      <div className="hidden md:flex items-center gap-3">
         <NavButton
           onClick={() => setTimeWindowStart((s) => s - 1)}
           disabled={!canPrevTime}
         />
-
         <div className="flex-1 flex gap-2 h-9 items-stretch min-w-0">
-          {visibleTimes.map((slot) => {
-            const past = isTimePast(selectedDate, slot.hour);
-            const reserved = isTimeReserved(selectedDate, slot.hour);
-            const disabled = past || reserved;
-            const selected = selectedTime === slot.label;
-            return (
-              <div key={slot.hour} className="relative flex-1 group">
-                <div
-                  onClick={() => !disabled && onTimeChange(slot.label)}
-                  className={`w-full h-full flex items-center justify-center transition-colors ${
-                    selected
-                      ? "bg-white/20"
-                      : disabled
-                        ? ""
-                        : "hover:bg-white/10"
-                  } ${
-                    disabled
-                      ? "text-white/20 cursor-default"
-                      : "text-white cursor-pointer"
-                  }`}
-                >
-                  <span className="text-[0.75rem] md:text-[0.875rem] leading-[1.1] whitespace-nowrap select-none">
-                    {slot.label}
-                  </span>
-                </div>
-                {reserved && (
-                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-white text-[#0f0f11] text-[0.75rem] leading-[1.1] whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity z-10">
-                    Not available
-                  </div>
-                )}
-              </div>
-            );
-          })}
+          {visibleTimes.map((slot) => timeCell(slot, `dt-${slot.hour}`))}
         </div>
-
         <NavButton
           onClick={() => setTimeWindowStart((s) => s + 1)}
           disabled={!canNextTime}
@@ -265,13 +340,16 @@ function NavButton({
           : "border-white/20 cursor-pointer hover:border-white/50"
       } ${rotate ? "rotate-180" : ""}`}
     >
-      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+      <svg
+        width="21"
+        height="20"
+        viewBox="0 0 21 20"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
         <path
-          d="M12.5 15L7.5 10L12.5 5"
-          stroke="white"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
+          d="M0.292892 9.29289C-0.0976315 9.68342 -0.0976315 10.3166 0.292892 10.7071L6.65685 17.0711C7.04738 17.4616 7.68054 17.4616 8.07107 17.0711C8.46159 16.6805 8.46159 16.0474 8.07107 15.6569L2.41421 10L8.07107 4.34315C8.46159 3.95262 8.46159 3.31946 8.07107 2.92893C7.68054 2.53841 7.04738 2.53841 6.65685 2.92893L0.292892 9.29289ZM21 10V9L1 9V10V11L21 11V10Z"
+          fill="white"
         />
       </svg>
     </button>

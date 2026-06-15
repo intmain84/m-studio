@@ -19,10 +19,10 @@ const BaseModal = ({ children, open, className }: BaseModalProps) => {
         <Dialog.Content
           className={cn(
             // Mobile: full screen, scrollable
-            "fixed inset-0 overflow-y-auto bg-background z-1000000",
+            "fixed inset-0 overflow-y-auto bg-background z-1000000 flex flex-col",
             "data-[state=open]:animate-modal-in data-[state=closed]:animate-modal-out",
             // Desktop: centered, auto-sized
-            "md:inset-auto md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:w-[25rem] md:h-auto md:overflow-hidden",
+            "md:inset-auto md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:w-100 md:h-auto md:min-h-120 md:flex md:flex-col md:overflow-hidden",
             className,
           )}
         >

@@ -22,7 +22,7 @@ export default function FormSelect({
 }: FormSelectProps) {
   return (
     <div className={`relative flex flex-col ${className}`}>
-      <div className="h-[3rem] pb-3 gap-2 flex flex-col justify-center border-b border-foreground-muted focus-within:border-white transition-colors">
+      <div className="h-12 pb-3 gap-2 flex flex-col justify-center border-b border-foreground-muted focus-within:border-white transition-colors">
         {label && (
           <span className="text-[0.75rem] text-foreground-muted leading-[1.1] shrink-0">
             {label}
@@ -39,7 +39,11 @@ export default function FormSelect({
               </option>
             )}
             {options.map((opt) => (
-              <option key={opt.value} value={opt.value} className="bg-background">
+              <option
+                key={opt.value}
+                value={opt.value}
+                className="bg-background"
+              >
                 {opt.label}
               </option>
             ))}
@@ -51,12 +55,18 @@ export default function FormSelect({
             viewBox="0 0 12 12"
             fill="none"
           >
-            <path d="M2 4L6 8L10 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            <path
+              d="M2 4L6 8L10 4"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
           </svg>
         </div>
       </div>
       {error && (
-        <span className="absolute top-full left-0 text-danger text-[0.75rem] leading-[1.1] pt-0.5">
+        <span className="absolute top-[101%] text-danger/70 left-0  text-[0.7rem] leading-[1.1] pt-0.5">
           {error}
         </span>
       )}

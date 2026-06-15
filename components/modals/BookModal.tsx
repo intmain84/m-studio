@@ -156,7 +156,7 @@ export default function BookModal() {
         fill
         className="object-cover"
       />
-      <p className="absolute inset-0 flex items-center justify-center text-2xl md:text-[3.5rem] uppercase leading-[1.1] text-white text-center pointer-events-none">
+      <p className="absolute inset-0 flex items-center justify-center text-2xl md:text-[2.5rem] uppercase leading-[1.1] text-white text-center pointer-events-none">
         {roomMeta.title}
       </p>
     </div>
@@ -167,15 +167,15 @@ export default function BookModal() {
       open={open}
       className={
         isSuccess
-          ? "md:w-[35rem]  md:overflow-hidden"
+          ? "md:w-140  md:overflow-hidden"
           : "md:w-[90vw] md:max-w-312 md:overflow-hidden"
       }
     >
       {isSuccess ? (
-        <div className="h-full md:h-auto flex flex-col items-center justify-center gap-8 md:gap-[2.625rem] px-4 md:p-16 text-center">
+        <div className="flex-1 flex flex-col items-center justify-center gap-8 md:gap-10.5 px-4 md:p-16 text-center">
           <Dialog.Title className="sr-only">Success</Dialog.Title>
           <svg
-            className="size-20 md:size-[5.625rem] shrink-0"
+            className="size-20 md:size-22.5 shrink-0"
             viewBox="0 0 90 90"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -203,11 +203,11 @@ export default function BookModal() {
         </div>
       ) : currentStep === "space" ? (
         /* ── Select Space: full width, two cards side-by-side on desktop ── */
-        <div className="flex flex-col px-6 py-6 gap-8">
+        <div className="flex flex-col flex-1 px-6 py-6 gap-8">
           <Dialog.Title className="text-[2rem] md:text-[3.5rem] uppercase leading-[1.1]">
             Select Space
           </Dialog.Title>
-          <div className="flex flex-col md:flex-row gap-6">
+          <div className="flex flex-col md:flex-row flex-1 gap-4 md:gap-6">
             {(["self", "main"] as Room[]).map((r) => {
               const meta = ROOM_META[r];
               return (
@@ -219,11 +219,26 @@ export default function BookModal() {
                     goNext();
                   }}
                 >
-                  <div className="flex-1 flex flex-col justify-between border border-white/20 md:group-hover:border-white px-6 py-4 min-h-48 md:min-h-60 transition-colors duration-200">
-                    <p className="text-[0.875rem] leading-[1.4] text-foreground-muted">
+                  <div className="flex-1 flex flex-col justify-between border border-white/20 md:group-hover:border-white p-6 transition-colors duration-300">
+                    {/* Mobile: title + price at top */}
+                    <div className="md:hidden flex flex-col gap-2">
+                      <p className="text-[1.5rem] uppercase leading-[1.1]">
+                        {meta.title}
+                      </p>
+                      <p className="text-[0.75rem] leading-[1.1]">
+                        {meta.fromPrice}
+                      </p>
+                    </div>
+                    {/* Desktop: description at top */}
+                    <p className="hidden md:block text-[0.875rem] leading-[1.4]">
                       {meta.description}
                     </p>
-                    <div className="flex items-end justify-between mt-4">
+                    {/* Mobile: description at bottom */}
+                    <p className="md:hidden text-[0.75rem] leading-[1.1]">
+                      {meta.description}
+                    </p>
+                    {/* Desktop: title + price at bottom */}
+                    <div className="hidden md:flex items-end justify-between">
                       <p className="text-[2.5rem] uppercase leading-[1.1]">
                         {meta.title}
                       </p>
@@ -232,9 +247,11 @@ export default function BookModal() {
                       </p>
                     </div>
                   </div>
-                  {/* Mobile: always visible. Desktop: space always reserved, opacity toggles on hover */}
-                  <div className="w-full bg-foreground text-background px-6 py-4 text-[1rem] leading-[1.1] text-center transition-opacity duration-200 opacity-100 md:opacity-0 md:group-hover:opacity-100 hover:bg-[#DCDCDC]">
-                    Select
+                  {/* Mobile: always visible; Desktop: slides in from bottom on hover */}
+                  <div className="overflow-hidden md:max-h-0 md:group-hover:max-h-16 md:transition-[max-height] md:duration-300 md:ease-out">
+                    <div className="w-full bg-foreground text-background px-6 py-4 text-[0.875rem] md:text-[1rem] leading-[1.1] text-center">
+                      Select
+                    </div>
                   </div>
                 </div>
               );
@@ -243,14 +260,14 @@ export default function BookModal() {
         </div>
       ) : (
         /* ── Steps with room image: content left + image right (like RoomInfoModal) ── */
-        <div className="flex flex-col md:flex-row">
+        <div className="flex flex-col md:flex-row flex-1">
           <div className="flex-1 flex flex-col px-4 py-6 gap-8">
             {currentStep === "tarif" && (
               <>
                 <Dialog.Title className="text-[1.5rem] md:text-[2.5rem] uppercase leading-[1.1]">
                   Select Tarif
                 </Dialog.Title>
-                <div className="flex flex-col">
+                <div className="flex flex-col md:gap-2">
                   {TARIFS.map((t, i) => (
                     <TarifOption
                       key={t.value}
@@ -259,7 +276,7 @@ export default function BookModal() {
                       onSelect={() =>
                         setBooking((b) => ({ ...b, tarif: t.value }))
                       }
-                      isFirst={i === 0}
+                      className="-mt-px"
                     />
                   ))}
                 </div>
@@ -301,12 +318,15 @@ export default function BookModal() {
                 <Dialog.Title className="text-[1.5rem] md:text-[2.5rem] uppercase leading-[1.1]">
                   Select Day &amp; Time
                 </Dialog.Title>
-                <DateTimePicker
-                  selectedDate={booking.date}
-                  selectedTime={booking.time}
-                  onDateChange={(d) => setBooking((b) => ({ ...b, date: d }))}
-                  onTimeChange={(t) => setBooking((b) => ({ ...b, time: t }))}
-                />
+                <div className="md:flex-1 md:flex md:items-center w-full">
+                  <DateTimePicker
+                    className="w-full"
+                    selectedDate={booking.date}
+                    selectedTime={booking.time}
+                    onDateChange={(d) => setBooking((b) => ({ ...b, date: d }))}
+                    onTimeChange={(t) => setBooking((b) => ({ ...b, time: t }))}
+                  />
+                </div>
                 <div className="flex items-center gap-6 mt-auto">
                   <Button
                     variant="ghost"
@@ -362,54 +382,62 @@ export default function BookModal() {
                   className="flex flex-col gap-6 flex-1"
                   onSubmit={handleSubmit(onSubmit)}
                 >
-                  <FormInput
-                    variant="underline"
-                    label="First Name"
-                    type="text"
-                    placeholder="Alexandra"
-                    error={errors.firstName?.message}
-                    registration={register("firstName", {
-                      required: "Required",
-                    })}
-                  />
-                  <FormInput
-                    variant="underline"
-                    label="Last Name"
-                    type="text"
-                    placeholder="Smith"
-                    error={errors.lastName?.message}
-                    registration={register("lastName", {
-                      required: "Required",
-                    })}
-                  />
-                  <FormInput
-                    variant="underline"
-                    label="Email"
-                    type="email"
-                    placeholder="example@gmail.com"
-                    error={errors.email?.message}
-                    registration={register("email", {
-                      required: "Required",
-                      pattern: {
-                        value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                        message: "Invalid email",
-                      },
-                    })}
-                  />
-                  <FormInput
-                    variant="underline"
-                    label="Phone"
-                    type="tel"
-                    placeholder="+0 0000 000 000"
-                    error={errors.phone?.message}
-                    registration={register("phone", {
-                      required: "Required",
-                      pattern: {
-                        value: /^\+[\d\s()-]+$/,
-                        message: "Start with + and country code",
-                      },
-                    })}
-                  />
+                  <div className="flex flex-col md:flex-row gap-6">
+                    <FormInput
+                      className="flex-1"
+                      variant="underline"
+                      label="First Name"
+                      type="text"
+                      placeholder="Alexandra"
+                      error={errors.firstName?.message}
+                      registration={register("firstName", {
+                        required: "Required",
+                      })}
+                    />
+                    <FormInput
+                      className="flex-1"
+                      variant="underline"
+                      label="Last Name"
+                      type="text"
+                      placeholder="Smith"
+                      error={errors.lastName?.message}
+                      registration={register("lastName", {
+                        required: "Required",
+                      })}
+                    />
+                  </div>
+                  <div className="flex flex-col md:flex-row gap-6">
+                    <FormInput
+                      className="flex-1"
+                      variant="underline"
+                      label="Email"
+                      type="email"
+                      placeholder="example@gmail.com"
+                      error={errors.email?.message}
+                      registration={register("email", {
+                        required: "Required",
+                        pattern: {
+                          value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                          message: "Invalid email",
+                        },
+                      })}
+                    />
+                    <FormInput
+                      className="flex-1"
+                      variant="underline"
+                      label="Phone"
+                      type="tel"
+                      placeholder="+0 0000 000 000"
+                      error={errors.phone?.message}
+                      registration={register("phone", {
+                        required: "Required",
+                        pattern: {
+                          value: /^\+[\d\s()-]+$/,
+                          message: "Start with + and country code",
+                        },
+                      })}
+                    />
+                  </div>
                   <FormSelect
                     label="Preset"
                     placeholder="Select Preset"

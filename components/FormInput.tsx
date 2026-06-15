@@ -38,7 +38,7 @@ const FormInput = ({
           />
         </div>
         {error && (
-          <span className="absolute top-full left-0 text-danger text-[0.75rem] leading-[1.1] pt-0.5">
+          <span className="absolute left-0 top-[101%] text-danger/70 text-[0.7rem] leading-[1.1] pt-0.5">
             {error}
           </span>
         )}
@@ -55,7 +55,7 @@ const FormInput = ({
         className={className}
         {...registration}
       />
-      {error && <span className="text-red-500">{error}</span>}
+      {error && <span>{error}</span>}
     </div>
   );
 };
