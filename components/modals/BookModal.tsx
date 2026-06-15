@@ -239,6 +239,7 @@ export default function BookModal() {
                     </p>
                     {/* Desktop: title + price at bottom */}
                     <div className="hidden md:flex items-end justify-between">
+                      {/* Title */}
                       <p className="text-[2.5rem] uppercase leading-[1.1]">
                         {meta.title}
                       </p>
