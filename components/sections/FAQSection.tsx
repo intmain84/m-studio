@@ -25,14 +25,14 @@ const faqs = [
       "Completely private. There is no staff present during your session — just you, the mirror, and the camera.",
   },
   {
-    title: "How will I receive my photos, будут ли исходники?",
+    title: "How will I receive my photos? Will I get the originals?",
     content:
       "Within 24 hours you'll receive a download link with all your high-resolution originals — no watermarks, ready to print or post.",
   },
   {
-    title: "Какого формата/качества будут мои фотографии?",
+    title: "What format and quality will my photos be in?",
     content:
-      "Фотографии в формате JPEG с высоким разрешением. Для ретуши или крупной печати исходники можно запросить отдельно.",
+      "Photos are delivered in high-resolution JPEG format. Raw files for retouching or large-format printing can be requested separately.",
   },
 ];
 
