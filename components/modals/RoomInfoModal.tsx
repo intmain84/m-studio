@@ -3,7 +3,7 @@ import Image from "next/image";
 import { Dialog } from "radix-ui";
 
 import BaseModal from "./BaseModal";
-import Button from "@/components/Button";
+import Button from "@/components/ui/Button";
 import { useModal } from "@/context/ModalContext";
 
 type Price = { amount: string; label: string };
@@ -34,7 +34,7 @@ const CONTENT: Record<"self" | "main", RoomContent> = {
     ],
     description:
       "A completely private space with just you, a large mirror, and a clicker in your hand.\n\nPremium camera and professional lighting are already perfectly tuned.",
-    image: "/spaces/selfroom.webp",
+    image: "/spaces/modal-self.webp",
   },
   main: {
     title: "Main Room",
@@ -53,7 +53,7 @@ const CONTENT: Record<"self" | "main", RoomContent> = {
     ],
     description:
       "A versatile professional studio designed for commercial shoots and editorial projects.\n\nHigh-ceiling space equipped with pro-grade gear to bring your most complex visions to life.",
-    image: "/spaces/mainroom.webp",
+    image: "/spaces/modal-main.webp",
   },
 };
 
@@ -104,21 +104,23 @@ const RoomInfoModal = () => {
             <Button
               variant="light"
               className="w-full"
-              onClick={() => setModal({ type: "book", room: room ?? undefined })}
+              onClick={() =>
+                setModal({ type: "book", room: room ?? undefined })
+              }
             >
               Book Session
             </Button>
           </div>
 
           {/* Right: image (top on mobile, right on desktop) */}
-          <div className="relative w-full aspect-[375/240] md:aspect-auto md:w-[40%] md:h-auto shrink-0 order-first md:order-last">
+          <div className="relative w-full aspect-375/240 md:aspect-auto md:w-[40%] md:h-auto shrink-0 order-first md:order-last">
             <Image
               src={content.image}
               alt={content.title}
               fill
               className="object-cover"
             />
-            <p className="absolute inset-0 flex items-center justify-center text-2xl md:text-[3.5rem] uppercase leading-[1.1] text-white text-center pointer-events-none">
+            <p className="absolute inset-0 flex items-center justify-center text-2xl md:text-[2.5rem] uppercase leading-[1.1] text-white text-center pointer-events-none">
               {content.title}
             </p>
           </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import Button from "../Button";
+import Button from "../ui/Button";
 import SpacerLarge from "../common/SpacerLarge";
 import PaddingGlobal from "../common/PaddingGlobal";
 import ContainerLarge from "../common/ContainerLarge";

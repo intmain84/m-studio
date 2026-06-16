@@ -39,7 +39,7 @@ export default function ContactsSection() {
             [Contacts]
           </h2>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-y-10 mt-16 md:mt-40 mb-34 md:mt-40">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-y-10 mt-16 md:mt-40 mb-34">
             {contacts.map(({ label, value, href, orderClass }) => (
               <div key={label} className={orderClass}>
                 <p className="text-xs md:text-base text-foreground-muted leading-[1.1] mb-1">

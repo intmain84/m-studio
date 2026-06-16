@@ -1,19 +1,22 @@
 "use client";
 
 import Image from "next/image";
-import Button from "../Button";
+import Button from "../ui/Button";
 import { useEffect, useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, EffectFade } from "swiper/modules";
 import type { Swiper as SwiperType } from "swiper";
 import "swiper/css";
 import "swiper/css/effect-fade";
+import { useModal } from "@/context/ModalContext";
+import { Room } from "@/types/modal";
 
 type Slide = {
   title: string;
   text: string;
   image: string;
   progressColor: string;
+  room?: Room;
 };
 
 // \n in title and text is rendered as a line break (requires whitespace-pre-line on the element)
@@ -29,18 +32,21 @@ const slides: Slide[] = [
     text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec suscipit auctor dui, at convallis nisl.",
     image: "/hero-slides/2.jpg",
     progressColor: "dark",
+    room: "self",
   },
   {
     title: "main\nRoom",
     text: "A completely private space with just you, a large mirror, and a clicker in your hand.\n\nPremium camera and professional lighting are already perfectly tuned.",
     image: "/hero-slides/3.jpg",
     progressColor: "light",
+    room: "main",
   },
 ];
 
 const AUTOPLAY_DELAY = 5000;
 
 export default function HeroSliderSection() {
+  const { setModal } = useModal();
   const swiperRef = useRef<SwiperType | null>(null);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [progressKey, setProgressKey] = useState(0);
@@ -117,6 +123,7 @@ export default function HeroSliderSection() {
             <Button
               variant={activeSlide.progressColor as "light" | "dark"}
               className="col-span-2 md:col-span-1 pointer-events-auto md:max-w-67.5"
+              onClick={() => setModal({ type: "book", room: activeSlide.room })}
             >
               Book Session
             </Button>
