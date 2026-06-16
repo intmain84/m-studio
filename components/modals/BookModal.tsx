@@ -5,8 +5,8 @@ import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 
 import BaseModal from "./BaseModal";
-import Button from "@/components/Button";
-import FormInput from "@/components/FormInput";
+import Button from "@/components/ui/Button";
+import FormInput from "@/components/ui/FormInput";
 import TarifOption from "@/components/ui/TarifOption";
 import Stepper from "@/components/ui/Stepper";
 import FormSelect from "@/components/ui/FormSelect";

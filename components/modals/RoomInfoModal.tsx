@@ -3,7 +3,7 @@ import Image from "next/image";
 import { Dialog } from "radix-ui";
 
 import BaseModal from "./BaseModal";
-import Button from "@/components/Button";
+import Button from "@/components/ui/Button";
 import { useModal } from "@/context/ModalContext";
 
 type Price = { amount: string; label: string };
