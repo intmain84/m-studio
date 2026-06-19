@@ -114,7 +114,7 @@ deploy:develop:
 deploy:main:
   extends: .deploy_base
   environment:
-    name: production
+    name: main
     url: https://${DEPLOY_HOST}
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
