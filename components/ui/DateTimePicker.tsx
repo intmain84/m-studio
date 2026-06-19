@@ -6,7 +6,8 @@ type DateTimePickerProps = {
   selectedTime: string;
   onDateChange: (date: string) => void;
   onTimeChange: (time: string) => void;
-  reservedSlots?: string[]; // "YYYY-MM-DD HH" e.g. "2024-02-09 14"
+  reservedSlots?: Record<string, number[]>; // { "2024-02-09": [10, 14] }
+  loading?: boolean;
   className?: string;
 };
 
@@ -28,8 +29,6 @@ const HOUR_SLOTS = [
   { label: "6:00 PM", hour: 18 },
   { label: "7:00 PM", hour: 19 },
   { label: "8:00 PM", hour: 20 },
-  { label: "9:00 PM", hour: 21 },
-  { label: "10:00 PM", hour: 22 },
 ];
 
 const DAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -57,7 +56,8 @@ export default function DateTimePicker({
   selectedTime,
   onDateChange,
   onTimeChange,
-  reservedSlots = [],
+  reservedSlots = {},
+  loading = false,
   className,
 }: DateTimePickerProps) {
   const [today] = useState<Date>(() => {
@@ -171,7 +171,7 @@ export default function DateTimePicker({
   }
 
   function isTimeReserved(dateStr: string, hour: number) {
-    return reservedSlots.includes(`${dateStr} ${hour}`);
+    return reservedSlots[dateStr]?.includes(hour) ?? false;
   }
 
   const dateCell = (d: Date, key: string | number, mobile = false) => {
@@ -252,7 +252,10 @@ export default function DateTimePicker({
   };
 
   return (
-    <div className={`flex flex-col gap-6 md:gap-8 ${className ?? ""}`}>
+    <div className={`relative flex flex-col gap-6 md:gap-8 ${className ?? ""}`}>
+      {loading && (
+        <div className="absolute inset-0 z-10 bg-black/40 pointer-events-auto" />
+      )}
       {/* === Mobile: swipe date scroll === */}
       <div className="md:hidden -mx-4">
         <div

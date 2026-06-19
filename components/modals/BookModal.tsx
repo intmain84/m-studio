@@ -41,10 +41,9 @@ const TARIFS = [
 ];
 
 const PRESETS = [
-  { value: "default", label: "Default" },
-  { value: "dark-moody", label: "Dark & Moody" },
-  { value: "light-airy", label: "Light & Airy" },
-  { value: "color-pop", label: "Color Pop" },
+  { value: "bw2", label: "Black & White" },
+  { value: "studio-moe", label: "My studio" },
+  { value: "sweaters", label: "Sweater" },
 ];
 
 type Step = "space" | "tarif" | "datetime" | "details";
@@ -87,6 +86,10 @@ export default function BookModal() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isSuccess, setIsSuccess] = useState(false);
   const [serverError, setServerError] = useState("");
+  const [reservedSlots, setReservedSlots] = useState<Record<string, number[]>>(
+    {},
+  );
+  const [slotsLoading, setSlotsLoading] = useState(false);
 
   const {
     register,
@@ -103,10 +106,21 @@ export default function BookModal() {
         : ["space", "tarif", "datetime", "details"];
       setSteps(newSteps);
       setCurrentIndex(0);
-      setBooking({ ...defaultBooking, room: preselectedRoom });
+      const todayStr = new Date().toISOString().split("T")[0];
+      setBooking({ ...defaultBooking, room: preselectedRoom, date: todayStr });
       setIsSuccess(false);
       setServerError("");
       reset({ phone: "+", preset: "" });
+
+      setSlotsLoading(true);
+      fetch("https://hooks.backend.ae/webhook/api/the-m/slots")
+        .then((r) => r.json())
+        .then((data) => {
+          console.log("[slots]", data);
+          setReservedSlots(data);
+        })
+        .catch(() => {})
+        .finally(() => setSlotsLoading(false));
     }
   }, [open]);
 
@@ -326,6 +340,8 @@ export default function BookModal() {
                     selectedTime={booking.time}
                     onDateChange={(d) => setBooking((b) => ({ ...b, date: d }))}
                     onTimeChange={(t) => setBooking((b) => ({ ...b, time: t }))}
+                    reservedSlots={reservedSlots}
+                    loading={slotsLoading}
                   />
                 </div>
                 <div className="flex items-center gap-6 mt-auto">
