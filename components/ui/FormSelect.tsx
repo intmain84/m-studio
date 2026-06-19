@@ -1,4 +1,5 @@
 "use client";
+import { useState } from "react";
 import { UseFormRegisterReturn } from "react-hook-form";
 
 type Option = { value: string; label: string };
@@ -20,17 +21,24 @@ export default function FormSelect({
   error,
   className = "",
 }: FormSelectProps) {
+  const [hasValue, setHasValue] = useState(false);
+
   return (
     <div className={`relative flex flex-col ${className}`}>
       <div className="h-12 pb-3 gap-2 flex flex-col justify-center border-b border-foreground-muted focus-within:border-white transition-colors">
         {label && (
-          <span className="text-[0.75rem] text-foreground-muted leading-[1.1] shrink-0">
+          <label htmlFor={registration.name} className={`text-[0.75rem] leading-[1.1] shrink-0 transition-colors ${hasValue ? "text-foreground-muted" : "text-foreground"}`}>
             {label}
-          </span>
+          </label>
         )}
         <div className="relative">
           <select
+            id={registration.name}
             {...registration}
+            onChange={(e) => {
+              setHasValue(e.target.value !== "");
+              registration.onChange(e);
+            }}
             className="appearance-none bg-transparent w-full text-[0.875rem] leading-[1.1] text-foreground focus:outline-none cursor-pointer pr-6"
           >
             {placeholder && (
