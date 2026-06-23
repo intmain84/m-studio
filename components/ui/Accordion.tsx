@@ -12,18 +12,18 @@ type AccordionProps = {
   className?: string;
 
   // Border
-  borderColor?: string;        // default: "border-border"
-  borderHoverColor?: string;   // default: "hover:border-foreground"
+  borderColor?: string; // default: "border-border"
+  borderHoverColor?: string; // default: "hover:border-foreground"
   borderWidth?: string | false; // default: "border", false — без бордера
 
   // Active state
-  activeBackground?: string;   // default: "bg-white"
-  activeTextColor?: string;    // default: "text-[#0f0f11]"
-  inactiveTextColor?: string;  // default: "text-white"
+  activeBackground?: string; // default: "bg-white"
+  activeTextColor?: string; // default: "text-[#0f0f11]"
+  inactiveTextColor?: string; // default: "text-white"
 
   // Typography
-  titleClassName?: string;     // default: "text-sm md:text-[1.125rem] leading-[1.1]"
-  contentClassName?: string;   // default: "text-xs md:text-sm leading-normal"
+  titleClassName?: string; // default: "text-sm md:text-[1.125rem] leading-[1.1]"
+  contentClassName?: string; // default: "text-xs md:text-sm leading-normal"
 
   // Icon
   icon?: (open: boolean) => React.ReactNode;
@@ -70,7 +70,9 @@ export default function Accordion({
           <div
             key={i}
             className={`${borderWidth ? `${borderWidth} ${borderColor} ${borderHoverColor}` : ""} -mt-px transition-colors duration-300 ${
-              isOpen ? `${activeBackground} ${activeTextColor}` : inactiveTextColor
+              isOpen
+                ? `${activeBackground} ${activeTextColor}`
+                : inactiveTextColor
             }`}
           >
             <button

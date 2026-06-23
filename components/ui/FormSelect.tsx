@@ -27,7 +27,10 @@ export default function FormSelect({
     <div className={`relative flex flex-col ${className}`}>
       <div className="h-12 pb-3 gap-2 flex flex-col justify-center border-b border-foreground-muted focus-within:border-white transition-colors">
         {label && (
-          <label htmlFor={registration.name} className={`text-[0.75rem] leading-[1.1] shrink-0 transition-colors ${hasValue ? "text-foreground-muted" : "text-foreground"}`}>
+          <label
+            htmlFor={registration.name}
+            className={`text-[0.75rem] leading-[1.1] shrink-0 transition-colors ${hasValue ? "text-foreground-muted" : "text-foreground"}`}
+          >
             {label}
           </label>
         )}

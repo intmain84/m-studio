@@ -31,7 +31,7 @@ export default function Stepper({
             x2="1"
             y2="10.9833"
             stroke="white"
-            stroke-width="1.3"
+            strokeWidth="1.3"
           />
         </svg>
       </button>
@@ -56,7 +56,7 @@ export default function Stepper({
             x2="10.65"
             y2="20.3333"
             stroke="white"
-            stroke-width="1.3"
+            strokeWidth="1.3"
           />
           <line
             x1="19"
@@ -64,7 +64,7 @@ export default function Stepper({
             x2="1"
             y2="10.9833"
             stroke="white"
-            stroke-width="1.3"
+            strokeWidth="1.3"
           />
         </svg>
       </button>

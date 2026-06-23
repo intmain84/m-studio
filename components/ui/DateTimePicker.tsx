@@ -18,6 +18,16 @@ const TOTAL_DATES = 60;
 const PAST_DAYS = 3;
 
 const HOUR_SLOTS = [
+  { label: "12:00 AM", hour: 0 },
+  { label: "1:00 AM", hour: 1 },
+  { label: "2:00 AM", hour: 2 },
+  { label: "3:00 AM", hour: 3 },
+  { label: "4:00 AM", hour: 4 },
+  { label: "5:00 AM", hour: 5 },
+  { label: "6:00 AM", hour: 6 },
+  { label: "7:00 AM", hour: 7 },
+  { label: "8:00 AM", hour: 8 },
+  { label: "9:00 AM", hour: 9 },
   { label: "10:00 AM", hour: 10 },
   { label: "11:00 AM", hour: 11 },
   { label: "12:00 PM", hour: 12 },
@@ -29,6 +39,9 @@ const HOUR_SLOTS = [
   { label: "6:00 PM", hour: 18 },
   { label: "7:00 PM", hour: 19 },
   { label: "8:00 PM", hour: 20 },
+  { label: "9:00 PM", hour: 21 },
+  { label: "10:00 PM", hour: 22 },
+  { label: "11:00 PM", hour: 23 },
 ];
 
 const DAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -60,21 +73,29 @@ export default function DateTimePicker({
   loading = false,
   className,
 }: DateTimePickerProps) {
-  const [today] = useState<Date>(() => {
-    const d = new Date();
-    d.setHours(0, 0, 0, 0);
-    return d;
-  });
-  const [currentHour] = useState<number>(() => new Date().getHours());
+  const [todayStr] = useState<string>(() =>
+    new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Dubai" }).format(new Date())
+  );
+  const [currentHour] = useState<number>(() =>
+    parseInt(
+      new Intl.DateTimeFormat("en-US", {
+        timeZone: "Asia/Dubai",
+        hour: "numeric",
+        hour12: false,
+      }).format(new Date()),
+      10,
+    )
+  );
 
   // dates[0] = today - PAST_DAYS, dates[PAST_DAYS] = today
-  const [dates] = useState<Date[]>(() =>
-    Array.from({ length: TOTAL_DATES }, (_, i) => {
-      const d = new Date(today);
-      d.setDate(today.getDate() - PAST_DAYS + i);
+  const [dates] = useState<Date[]>(() => {
+    const todayDate = new Date(todayStr + "T00:00:00");
+    return Array.from({ length: TOTAL_DATES }, (_, i) => {
+      const d = new Date(todayDate);
+      d.setDate(todayDate.getDate() - PAST_DAYS + i);
       return d;
-    }),
-  );
+    });
+  });
 
   // Desktop windowed state
   const [dateWindowStart, setDateWindowStart] = useState(0);
@@ -93,7 +114,6 @@ export default function DateTimePicker({
   const mobileDateRef = useRef<HTMLDivElement>(null);
   const mobileTimeRef = useRef<HTMLDivElement>(null);
 
-  const todayStr = toDateStr(today);
   const isFutureDate = selectedDate > todayStr;
 
   const minTimeWindowStart = (() => {
@@ -162,7 +182,7 @@ export default function DateTimePicker({
   const canNextTime = timeWindowStart + TIMES_VISIBLE < HOUR_SLOTS.length;
 
   function isDatePast(d: Date) {
-    return d < today;
+    return toDateStr(d) < todayStr;
   }
 
   function isTimePast(dateStr: string, hour: number) {

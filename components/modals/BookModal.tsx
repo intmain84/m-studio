@@ -72,6 +72,23 @@ const defaultBooking: BookingData = {
   time: "",
 };
 
+function ButtonArrow() {
+  return (
+    <svg
+      width="21"
+      height="15"
+      viewBox="0 0 21 15"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M0.292892 6.65666C-0.0976315 7.04719 -0.0976315 7.68035 0.292892 8.07088L6.65685 14.4348C7.04738 14.8254 7.68054 14.8254 8.07107 14.4348C8.46159 14.0443 8.46159 13.4111 8.07107 13.0206L2.41421 7.36377L8.07107 1.70692C8.46159 1.31639 8.46159 0.683226 8.07107 0.292702C7.68054 -0.0978227 7.04738 -0.0978227 6.65685 0.292702L0.292892 6.65666ZM21 7.36377V6.36377L1 6.36377V7.36377V8.36377L21 8.36377V7.36377Z"
+        fill="white"
+      />
+    </svg>
+  );
+}
+
 export default function BookModal() {
   const { modal, setModal } = useModal();
   const open = modal?.type === "book";
@@ -106,26 +123,27 @@ export default function BookModal() {
         : ["space", "tarif", "datetime", "details"];
       setSteps(newSteps);
       setCurrentIndex(0);
-      const _today = new Date();
-      const todayStr = `${_today.getFullYear()}-${String(_today.getMonth() + 1).padStart(2, "0")}-${String(_today.getDate()).padStart(2, "0")}`;
+      const todayStr = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Dubai" }).format(new Date());
       setBooking({ ...defaultBooking, room: preselectedRoom, date: todayStr });
       setIsSuccess(false);
       setServerError("");
       reset({ phone: "+", preset: "" });
-
-      setSlotsLoading(true);
-      fetch("https://hooks.backend.ae/webhook/api/the-m/slots")
-        .then((r) => r.json())
-        .then((data) => {
-          console.log("[slots]", data);
-          setReservedSlots(data);
-        })
-        .catch(() => {})
-        .finally(() => setSlotsLoading(false));
     }
   }, [open]);
 
   const currentStep = steps[currentIndex];
+
+  useEffect(() => {
+    if (currentStep !== "tarif" || !booking.room) return;
+    setSlotsLoading(true);
+    fetch(
+      `https://hooks.backend.ae/webhook/api/the-m/slots?type=${booking.room}`,
+    )
+      .then((r) => r.json())
+      .then((data) => setReservedSlots(data))
+      .catch(() => {})
+      .finally(() => setSlotsLoading(false));
+  }, [currentStep]);
   const canGoBack = currentIndex > 0;
 
   const goBack = () => setCurrentIndex((i) => i - 1);
@@ -230,7 +248,8 @@ export default function BookModal() {
                   key={r}
                   className="group flex-1 flex flex-col cursor-pointer"
                   onClick={() => {
-                    setBooking((b) => ({ ...b, room: r }));
+                    const todayStr = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Dubai" }).format(new Date());
+                    setBooking((b) => ({ ...b, room: r, date: todayStr, time: "" }));
                     goNext();
                   }}
                 >
@@ -314,7 +333,7 @@ export default function BookModal() {
                       className="w-31 flex items-center justify-between px-6"
                       onClick={goBack}
                     >
-                      ← Back
+                      <ButtonArrow /> Back
                     </Button>
                   )}
                   <Button
@@ -351,7 +370,7 @@ export default function BookModal() {
                     className="w-31 flex items-center justify-between px-6"
                     onClick={goBack}
                   >
-                    ← Back
+                    <ButtonArrow /> Back
                   </Button>
                   <Button
                     variant="light"
@@ -475,7 +494,7 @@ export default function BookModal() {
                       className="w-31 flex items-center justify-between px-6"
                       onClick={goBack}
                     >
-                      ← Back
+                      <ButtonArrow /> Back
                     </Button>
                     <Button
                       type="submit"
