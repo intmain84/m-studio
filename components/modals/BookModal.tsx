@@ -34,11 +34,18 @@ const ROOM_META: Record<
   },
 };
 
-const TARIFS = [
-  { value: "1h", label: "315 AED (1 hour)" },
-  { value: "5h", label: "1500 AED (5 hour)" },
-  { value: "10h", label: "2800 AED (10 hour)" },
-];
+const TARIFS: Record<Room, { value: string; label: string }[]> = {
+  self: [
+    { value: "1h", label: "315 AED (1 hour)" },
+    { value: "5h", label: "1500 AED (5 hour)" },
+    { value: "10h", label: "2800 AED (10 hour)" },
+  ],
+  main: [
+    { value: "1h", label: "1000 AED (1 hour)" },
+    { value: "5h", label: "1500 AED (5 hour)" },
+    { value: "10h", label: "2800 AED (10 hour)" },
+  ],
+};
 
 const PRESETS = [
   { value: "bw2", label: "Black & White" },
@@ -123,7 +130,9 @@ export default function BookModal() {
         : ["space", "tarif", "datetime", "details"];
       setSteps(newSteps);
       setCurrentIndex(0);
-      const todayStr = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Dubai" }).format(new Date());
+      const todayStr = new Intl.DateTimeFormat("en-CA", {
+        timeZone: "Asia/Dubai",
+      }).format(new Date());
       setBooking({ ...defaultBooking, room: preselectedRoom, date: todayStr });
       setIsSuccess(false);
       setServerError("");
@@ -144,6 +153,7 @@ export default function BookModal() {
       .catch(() => {})
       .finally(() => setSlotsLoading(false));
   }, [currentStep]);
+
   const canGoBack = currentIndex > 0;
 
   const goBack = () => setCurrentIndex((i) => i - 1);
@@ -153,7 +163,9 @@ export default function BookModal() {
     try {
       setServerError("");
       const tarifLabel =
-        TARIFS.find((t) => t.value === booking.tarif)?.label ?? booking.tarif;
+        (booking.room ? TARIFS[booking.room] : []).find(
+          (t) => t.value === booking.tarif,
+        )?.label ?? booking.tarif;
       const payload = { ...booking, ...data, tarif: tarifLabel };
       const response = await fetch(
         "https://hooks.backend.ae/webhook/api/the-m/form",
@@ -172,7 +184,7 @@ export default function BookModal() {
 
   const selectedRoom = booking.room;
   const roomMeta = selectedRoom ? ROOM_META[selectedRoom] : undefined;
-  const selectedTarifLabel = TARIFS.find(
+  const selectedTarifLabel = (selectedRoom ? TARIFS[selectedRoom] : []).find(
     (t) => t.value === booking.tarif,
   )?.label;
   const tarifAmount = selectedTarifLabel?.split("(")[0]?.trim();
@@ -248,8 +260,15 @@ export default function BookModal() {
                   key={r}
                   className="group flex-1 flex flex-col cursor-pointer"
                   onClick={() => {
-                    const todayStr = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Dubai" }).format(new Date());
-                    setBooking((b) => ({ ...b, room: r, date: todayStr, time: "" }));
+                    const todayStr = new Intl.DateTimeFormat("en-CA", {
+                      timeZone: "Asia/Dubai",
+                    }).format(new Date());
+                    setBooking((b) => ({
+                      ...b,
+                      room: r,
+                      date: todayStr,
+                      time: "",
+                    }));
                     goNext();
                   }}
                 >
@@ -303,7 +322,7 @@ export default function BookModal() {
                   Select Tarif
                 </Dialog.Title>
                 <div className="flex flex-col md:gap-2">
-                  {TARIFS.map((t, i) => (
+                  {(booking.room ? TARIFS[booking.room] : []).map((t, i) => (
                     <TarifOption
                       key={t.value}
                       label={t.label}
