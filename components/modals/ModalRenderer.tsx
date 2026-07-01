@@ -7,7 +7,7 @@ const ModalRenderer = () => (
   <>
     <BookModal />
     <RoomInfoModal />
-    <GiftModal />
+    {/* <GiftModal /> */}
   </>
 );
 

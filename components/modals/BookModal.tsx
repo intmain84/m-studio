@@ -97,8 +97,8 @@ function ButtonArrow() {
 }
 
 export default function BookModal() {
-  const { modal, setModal } = useModal();
-  const open = modal?.type === "book";
+  const { modal } = useModal();
+  const open = modal?.type === "book"; //Fires re-rendering when modal changes
 
   const [booking, setBooking] = useState<BookingData>(defaultBooking);
   const [steps, setSteps] = useState<Step[]>([
