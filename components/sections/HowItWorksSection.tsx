@@ -92,11 +92,11 @@ const rooms: Record<RoomKey, string> = {
 
 function StepCard({ step }: { step: Step }) {
   return (
-    <div className="flex flex-col gap-6 lg:gap-8 w-[150px] shrink-0 lg:w-auto lg:shrink lg:min-w-0">
+    <div className="flex flex-col gap-6 lg:gap-8 w-37.5 shrink-0 lg:w-auto lg:shrink lg:min-w-0">
       <img
         src={step.img}
         alt={step.label}
-        className="w-[150px] h-[150px] lg:w-full lg:h-auto lg:aspect-square object-contain shrink-0"
+        className="w-37.5 h-37.5 lg:w-full lg:h-auto lg:aspect-square object-contain shrink-0"
       />
       <p className="text-xs lg:text-sm leading-[1.1] grow">
         <span className="text-white">{step.label} </span>
