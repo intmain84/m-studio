@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import PaddingGlobal from "../common/PaddingGlobal";
 import ContainerLarge from "../common/ContainerLarge";
 import SpacerLarge from "../common/SpacerLarge";
+import { ROOMS } from "@/content/rooms";
 
 type Room = "self" | "main" | null;
 
@@ -71,24 +72,14 @@ export default function RoomSelectorSection() {
                 [Choose your space]
               </p>
               <p
-                className={`absolute inset-0 m-auto text-sm text-foreground leading-[1.1] transition-opacity duration-300 w-68 h-fit ${hovered === "self" ? "opacity-100" : "opacity-0"}`}
+                className={`absolute inset-0 m-auto text-sm text-foreground leading-[1.1] whitespace-pre-line transition-opacity duration-300 w-68 h-fit ${hovered === "self" ? "opacity-100" : "opacity-0"}`}
               >
-                A completely private space with just you, a large mirror, and a
-                clicker in your hand.
-                <br />
-                <br />
-                Premium camera and professional lighting are already perfectly
-                tuned for high-end results.
+                {ROOMS.self.modalDescription}
               </p>
               <p
-                className={`absolute inset-0 m-auto text-sm text-foreground leading-[1.1] transition-opacity duration-300 w-68 h-fit ${hovered === "main" ? "opacity-100" : "opacity-0"}`}
+                className={`absolute inset-0 m-auto text-sm text-foreground leading-[1.1] whitespace-pre-line transition-opacity duration-300 w-68 h-fit ${hovered === "main" ? "opacity-100" : "opacity-0"}`}
               >
-                A versatile professional studio designed for commercial shoots
-                and editorial projects.
-                <br />
-                <br />
-                High-ceiling space equipped with pro-grade gear to bring your
-                most complex visions to life.
+                {ROOMS.main.modalDescription}
               </p>
 
               {/* Mobile: bottom line indicator (main) */}

@@ -9,39 +9,7 @@ import type { Swiper as SwiperType } from "swiper";
 import "swiper/css";
 import "swiper/css/effect-fade";
 import { useModal } from "@/context/ModalContext";
-import { Room } from "@/types/modal";
-
-type Slide = {
-  title: string;
-  text: string;
-  image: string;
-  progressColor: string;
-  room?: Room;
-};
-
-// \n in title and text is rendered as a line break (requires whitespace-pre-line on the element)
-const slides: Slide[] = [
-  {
-    title: "1 studio\n2 spaces",
-    text: "A completely private space with just you, a large mirror, and a clicker in your hand.\n\nPremium camera and professional lighting are already perfectly tuned.",
-    image: "/hero-slides/1.jpg",
-    progressColor: "light",
-  },
-  {
-    title: "Self\nRoom",
-    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec suscipit auctor dui, at convallis nisl.",
-    image: "/hero-slides/2.jpg",
-    progressColor: "dark",
-    room: "self",
-  },
-  {
-    title: "main\nRoom",
-    text: "A completely private space with just you, a large mirror, and a clicker in your hand.\n\nPremium camera and professional lighting are already perfectly tuned.",
-    image: "/hero-slides/3.jpg",
-    progressColor: "light",
-    room: "main",
-  },
-];
+import { HERO_SLIDES as slides } from "@/content/hero";
 
 const AUTOPLAY_DELAY = 5000;
 

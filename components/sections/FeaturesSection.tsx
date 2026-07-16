@@ -1,51 +1,14 @@
 import ContainerLarge from "../common/ContainerLarge";
 import PaddingGlobal from "../common/PaddingGlobal";
 import SpacerLarge from "../common/SpacerLarge";
-
-const selfRoomFeatures = [
-  {
-    title: "Absolute\nPrivacy",
-    description: "Professional results in total solitude.",
-  },
-  {
-    title: "Instant\nControl",
-    description: "You are the photographer. You decide.",
-  },
-  {
-    title: "Instant\nGallery",
-    description: "Fast access to high-resolution shots.",
-  },
-  {
-    title: "Mirror\nTech",
-    description: "See your reflection, capture perfection.",
-  },
-];
-
-const mainRoomFeatures = [
-  {
-    title: "Commercial\nScale",
-    description: "Ample space for large-scale productions.",
-  },
-  {
-    title: "Pro\nEquipment",
-    description: "Top-tier lighting and technical gear.",
-  },
-  {
-    title: "Creative\nFreedom",
-    description: "Flexible setups for complex visions.",
-  },
-  {
-    title: "Expert\nSupport",
-    description: "Full assistance for seamless shooting.",
-  },
-];
+import { ROOMS } from "@/content/rooms";
 
 function RoomRow({
   label,
   features,
 }: {
   label: string;
-  features: typeof selfRoomFeatures;
+  features: (typeof ROOMS)["self"]["highlights"];
 }) {
   return (
     <div>
@@ -76,8 +39,8 @@ export default function FeaturesSection() {
       <PaddingGlobal>
         <ContainerLarge>
           <div className="flex flex-col gap-14 md:gap-30">
-            <RoomRow label="Self Room" features={selfRoomFeatures} />
-            <RoomRow label="Main Room" features={mainRoomFeatures} />
+            <RoomRow label="Self Room" features={ROOMS.self.highlights} />
+            <RoomRow label="Main Room" features={ROOMS.main.highlights} />
           </div>
         </ContainerLarge>
       </PaddingGlobal>

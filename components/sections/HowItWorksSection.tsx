@@ -4,84 +4,7 @@ import { useState } from "react";
 import ContainerLarge from "../common/ContainerLarge";
 import PaddingGlobal from "../common/PaddingGlobal";
 import SpacerLarge from "../common/SpacerLarge";
-
-const selfIllustrations = [
-  "/how-it-works/step-01.svg",
-  "/how-it-works/step-02.svg",
-  "/how-it-works/step-03.svg",
-  "/how-it-works/step-04.svg",
-  "/how-it-works/step-05.svg",
-];
-
-type Step = { img: string; label: string; desc: string; num: string };
-
-const stepsData: Record<"self" | "main", Step[]> = {
-  self: [
-    {
-      img: selfIllustrations[0],
-      label: "Book",
-      desc: "your private slot online through our intuitive system.",
-      num: "01",
-    },
-    {
-      img: selfIllustrations[1],
-      label: "Arrive",
-      desc: "at the studio and enter your dedicated space.",
-      num: "02",
-    },
-    {
-      img: selfIllustrations[2],
-      label: "Capture",
-      desc: "your best angles using the wireless remote shutter.",
-      num: "03",
-    },
-    {
-      img: selfIllustrations[3],
-      label: "Receive",
-      desc: "your high-resolution digital gallery via a secure link.",
-      num: "04",
-    },
-    {
-      img: selfIllustrations[4],
-      label: "Download",
-      desc: "your photos within 14 days after the photo shoot.",
-      num: "05",
-    },
-  ],
-  main: [
-    // TODO: replace with Main Room specific content
-    {
-      img: selfIllustrations[0],
-      label: "KKK",
-      desc: "your private slot online through our intuitive system.",
-      num: "01",
-    },
-    {
-      img: selfIllustrations[1],
-      label: "Villareal",
-      desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      num: "02",
-    },
-    {
-      img: selfIllustrations[2],
-      label: "Capture",
-      desc: "your best angles using the wireless remote shutter.",
-      num: "03",
-    },
-    {
-      img: selfIllustrations[3],
-      label: "Receive",
-      desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      num: "04",
-    },
-    {
-      img: selfIllustrations[4],
-      label: "Download",
-      desc: "your photos within 14 days after the photo shoot.",
-      num: "05",
-    },
-  ],
-};
+import { ROOMS, Step } from "@/content/rooms";
 
 type RoomKey = "self" | "main";
 
@@ -114,7 +37,7 @@ function StepCard({ step }: { step: Step }) {
 export default function HowItWorksSection() {
   const [activeRoom, setActiveRoom] = useState<RoomKey>("self");
   const [visible, setVisible] = useState(true);
-  const steps = stepsData[activeRoom];
+  const steps = ROOMS[activeRoom].steps;
 
   function switchRoom(key: RoomKey) {
     setVisible(false);

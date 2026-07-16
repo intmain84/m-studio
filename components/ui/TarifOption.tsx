@@ -1,5 +1,5 @@
 type TarifOptionProps = {
-  label: string; // e.g. "315 AED (1 hour)"
+  label: string; // e.g. "499 AED (1 hour)"
   selected: boolean;
   onSelect: () => void;
   className?: string;
@@ -11,7 +11,7 @@ export default function TarifOption({
   onSelect,
   className,
 }: TarifOptionProps) {
-  // Split "315 AED (1 hour)" → ["315 AED ", "1 hour)"]
+  // Split "499 AED (1 hour)" → ["499 AED ", "(1 hour)"]
   const parenIdx = label.indexOf("(");
   const amount = parenIdx !== -1 ? label.slice(0, parenIdx) : label;
   const duration = parenIdx !== -1 ? label.slice(parenIdx) : "";

@@ -13,45 +13,8 @@ import FormSelect from "@/components/ui/FormSelect";
 import DateTimePicker from "@/components/ui/DateTimePicker";
 import { useModal } from "@/context/ModalContext";
 import { Room } from "@/types/modal";
-
-const ROOM_META: Record<
-  Room,
-  { title: string; image: string; fromPrice: string; description: string }
-> = {
-  self: {
-    title: "Self Room",
-    image: "/spaces/selfroom.webp",
-    fromPrice: "From 315 AED",
-    description:
-      "A unique date idea, fun family photos, or simply time for yourself. Change outfits, act silly, and capture genuine emotions.",
-  },
-  main: {
-    title: "Main Room",
-    image: "/spaces/mainroom.webp",
-    fromPrice: "From 1000 AED",
-    description:
-      "A unique date idea, fun family photos, or simply time for yourself. Change outfits, act silly, and capture genuine emotions.",
-  },
-};
-
-const TARIFS: Record<Room, { value: string; label: string }[]> = {
-  self: [
-    { value: "1h", label: "315 AED (1 hour)" },
-    { value: "5h", label: "1500 AED (5 hour)" },
-    { value: "10h", label: "2800 AED (10 hour)" },
-  ],
-  main: [
-    { value: "1h", label: "1000 AED (1 hour)" },
-    { value: "5h", label: "1500 AED (5 hour)" },
-    { value: "10h", label: "2800 AED (10 hour)" },
-  ],
-};
-
-const PRESETS = [
-  { value: "bw2", label: "Black & White" },
-  { value: "studio-moe", label: "My studio" },
-  { value: "sweaters", label: "Sweater" },
-];
+import { ROOMS } from "@/content/rooms";
+import { PRESETS } from "@/content/presets";
 
 type Step = "space" | "tarif" | "datetime" | "details";
 
@@ -108,8 +71,7 @@ export default function BookModal() {
     "details",
   ]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [serverError, setServerError] = useState("");
+  const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
   const [reservedSlots, setReservedSlots] = useState<Record<string, number[]>>(
     {},
   );
@@ -134,8 +96,7 @@ export default function BookModal() {
         timeZone: "Asia/Dubai",
       }).format(new Date());
       setBooking({ ...defaultBooking, room: preselectedRoom, date: todayStr });
-      setIsSuccess(false);
-      setServerError("");
+      setStatus("idle");
       reset({ phone: "+", preset: "" });
     }
   }, [open]);
@@ -161,11 +122,12 @@ export default function BookModal() {
 
   const onSubmit = async (data: DetailsForm) => {
     try {
-      setServerError("");
-      const tarifLabel =
-        (booking.room ? TARIFS[booking.room] : []).find(
-          (t) => t.value === booking.tarif,
-        )?.label ?? booking.tarif;
+      const selectedTarif = (
+        booking.room ? ROOMS[booking.room].tarifs : []
+      ).find((t) => t.value === booking.tarif);
+      const tarifLabel = selectedTarif
+        ? `${selectedTarif.amount} (${selectedTarif.duration})`
+        : booking.tarif;
       const payload = { ...booking, ...data, tarif: tarifLabel };
       const response = await fetch(
         "https://hooks.backend.ae/webhook/api/the-m/form",
@@ -176,27 +138,25 @@ export default function BookModal() {
         },
       );
       if (!response.ok) throw new Error();
-      setIsSuccess(true);
+      setStatus("success");
     } catch {
-      setServerError("Oops! Something went wrong. Please try again later.");
+      setStatus("error");
     }
   };
 
   const selectedRoom = booking.room;
-  const roomMeta = selectedRoom ? ROOM_META[selectedRoom] : undefined;
-  const selectedTarifLabel = (selectedRoom ? TARIFS[selectedRoom] : []).find(
+  const roomMeta = selectedRoom ? ROOMS[selectedRoom] : undefined;
+  const selectedTarif = (selectedRoom ? ROOMS[selectedRoom].tarifs : []).find(
     (t) => t.value === booking.tarif,
-  )?.label;
-  const tarifAmount = selectedTarifLabel?.split("(")[0]?.trim();
-  const tarifDuration = selectedTarifLabel
-    ? `(${selectedTarifLabel.split("(")[1]}`
-    : "";
+  );
+  const tarifAmount = selectedTarif?.amount;
+  const tarifDuration = selectedTarif ? `(${selectedTarif.duration})` : "";
 
   // Room image column — same as RoomInfoModal
   const RoomImage = roomMeta ? (
     <div className="relative w-full aspect-375/240 md:aspect-auto md:w-[40%] md:h-auto shrink-0 order-first md:order-last">
       <Image
-        src={roomMeta.image}
+        src={roomMeta.cardImage}
         alt={roomMeta.title}
         fill
         className="object-cover"
@@ -211,12 +171,12 @@ export default function BookModal() {
     <BaseModal
       open={open}
       className={
-        isSuccess
+        status !== "idle"
           ? "md:w-140  md:overflow-hidden"
           : "md:w-[90vw] md:max-w-312 md:overflow-hidden"
       }
     >
-      {isSuccess ? (
+      {status === "success" ? (
         <div className="flex-1 flex flex-col items-center justify-center gap-8 md:gap-10.5 px-4 md:p-16 text-center">
           <Dialog.Title className="sr-only">Success</Dialog.Title>
           <svg
@@ -246,6 +206,33 @@ export default function BookModal() {
             </p>
           </div>
         </div>
+      ) : status === "error" ? (
+        <div className="flex-1 flex flex-col items-center justify-center gap-8 md:gap-10.5 px-4 md:p-16 text-center">
+          <Dialog.Title className="sr-only">Error</Dialog.Title>
+          <svg
+            className="size-20 md:size-22.5 shrink-0"
+            viewBox="0 0 90 90"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle cx="45" cy="45" r="44" stroke="white" strokeWidth="1.5" />
+            <path
+              d="M32 32L58 58M58 32L32 58"
+              stroke="white"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+          <div className="flex flex-col gap-4">
+            <p className="text-[1.5rem] md:text-[2.5rem] uppercase leading-[1.1] text-white">
+              An error occurred
+            </p>
+            <p className="text-[0.75rem] md:text-[0.875rem] leading-[1.1] text-[#858585]">
+              Try to verify the data you entered
+            </p>
+          </div>
+        </div>
       ) : currentStep === "space" ? (
         /* ── Select Space: full width, two cards side-by-side on desktop ── */
         <div className="flex flex-col flex-1 px-6 py-6 gap-8">
@@ -254,7 +241,8 @@ export default function BookModal() {
           </Dialog.Title>
           <div className="flex flex-col md:flex-row flex-1 gap-4 md:gap-6">
             {(["self", "main"] as Room[]).map((r) => {
-              const meta = ROOM_META[r];
+              const meta = ROOMS[r];
+              const fromPrice = `From ${meta.tarifs[0].amount}`;
               return (
                 <div
                   key={r}
@@ -279,16 +267,16 @@ export default function BookModal() {
                         {meta.title}
                       </p>
                       <p className="text-[0.75rem] leading-[1.1]">
-                        {meta.fromPrice}
+                        {fromPrice}
                       </p>
                     </div>
                     {/* Desktop: description at top */}
                     <p className="hidden md:block text-[0.875rem] leading-[1.4]">
-                      {meta.description}
+                      {meta.cardDescription}
                     </p>
                     {/* Mobile: description at bottom */}
                     <p className="md:hidden text-[0.75rem] leading-[1.1]">
-                      {meta.description}
+                      {meta.cardDescription}
                     </p>
                     {/* Desktop: title + price at bottom */}
                     <div className="hidden md:flex items-end justify-between">
@@ -297,7 +285,7 @@ export default function BookModal() {
                         {meta.title}
                       </p>
                       <p className="text-[0.875rem] whitespace-nowrap">
-                        {meta.fromPrice}
+                        {fromPrice}
                       </p>
                     </div>
                   </div>
@@ -322,17 +310,19 @@ export default function BookModal() {
                   Select Tarif
                 </Dialog.Title>
                 <div className="flex flex-col md:gap-2">
-                  {(booking.room ? TARIFS[booking.room] : []).map((t, i) => (
-                    <TarifOption
-                      key={t.value}
-                      label={t.label}
-                      selected={booking.tarif === t.value}
-                      onSelect={() =>
-                        setBooking((b) => ({ ...b, tarif: t.value }))
-                      }
-                      className="-mt-px"
-                    />
-                  ))}
+                  {(booking.room ? ROOMS[booking.room].tarifs : []).map(
+                    (t) => (
+                      <TarifOption
+                        key={t.value}
+                        label={`${t.amount} (${t.duration})`}
+                        selected={booking.tarif === t.value}
+                        onSelect={() =>
+                          setBooking((b) => ({ ...b, tarif: t.value }))
+                        }
+                        className="-mt-px"
+                      />
+                    ),
+                  )}
                 </div>
                 <div className="flex items-center justify-between">
                   <p className="text-[1rem] leading-[1.1] text-foreground">
@@ -501,11 +491,6 @@ export default function BookModal() {
                     registration={register("preset", { required: "Required" })}
                     error={errors.preset?.message}
                   />
-                  {serverError && (
-                    <span className="text-danger text-[0.75rem]">
-                      {serverError}
-                    </span>
-                  )}
                   <div className="flex items-center gap-6 mt-auto">
                     <Button
                       type="button"

@@ -7,37 +7,22 @@ import PaddingGlobal from "../common/PaddingGlobal";
 import ContainerLarge from "../common/ContainerLarge";
 import { useModal } from "@/context/ModalContext";
 import { Room } from "@/types/modal";
+import { ROOMS } from "@/content/rooms";
 
-const spaces: Array<{
-  num: string;
-  name: string;
-  description: string;
-  tag: string;
-  tags: string[];
-  image: string;
-  room: Room;
-}> = [
-  {
-    num: "01",
-    name: "SELF ROOM",
-    description:
-      "A unique date idea, fun family photos, or simply time for yourself. Change outfits, act silly, and capture genuine emotions.",
-    tag: "[Total Privacy]",
-    tags: ["Solo", "Family", "Love-Story"],
-    image: "/spaces/selfroom.webp",
-    room: "self",
-  },
-  {
-    num: "02",
-    name: "MAIN ROOM",
-    description:
-      "Clean, stylish shots for your resume, corporate website, or personal brand.",
-    tag: "[Total Privacy]",
-    tags: ["Business Portrait", "Comp Cards", "Brand Content"],
-    image: "/spaces/mainroom.webp",
-    room: "main",
-  },
-];
+const roomOrder: Room[] = ["self", "main"];
+
+const spaces = roomOrder.map((room) => {
+  const data = ROOMS[room];
+  return {
+    num: data.card.num,
+    name: data.title.toUpperCase(),
+    description: data.cardDescription,
+    tag: data.card.tag,
+    tags: data.card.tags,
+    image: data.cardImage,
+    room,
+  };
+});
 
 function SpaceCard({
   num,
