@@ -82,7 +82,7 @@ export default function RoomSelectorSection() {
                 Your crew. Your camera. Our light
               </p>
 
-              {/* Mobile: bottom line indicator (main) */}
+              {/* Mobile: bottom line indicator (main room) */}
               <div
                 className={`md:hidden absolute bottom-0 left-1/2 -translate-x-1/2 w-px bg-white transition-all duration-500 ${hovered === "main" ? "h-10" : "h-0"}`}
               >
