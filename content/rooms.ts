@@ -51,13 +51,13 @@ const sharedSteps: Step[] = [
   {
     img: selfIllustrations[3],
     label: "Receive",
-    desc: "your high-resolution digital gallery via a secure link after 24 hours.",
+    desc: "your high-resolution digital gallery via a secure link.",
     num: "04",
   },
   {
     img: selfIllustrations[4],
     label: "Download",
-    desc: "your photos within 14 weeks after the photo shoot.",
+    desc: "your photos within 14 days after the photo shoot.",
     num: "05",
   },
 ];
@@ -68,13 +68,13 @@ export const ROOMS: Record<Room, RoomData> = {
     modalImage: "/spaces/modal-self.webp",
     cardImage: "/spaces/selfroom.webp",
     modalDescription:
-      "A completely private space with just you, a large mirror, and a clicker in your hand.\n\nPremium camera and professional lighting are already perfectly tuned.",
+      "Close the door, pick up the clicker, and shoot at your own pace. Change outfits, try different angles, take a break — no one's watching and no one's rushing you.\n\nPremium camera and professional lighting are already perfectly tuned.",
     cardDescription:
       "A unique date idea, fun family photos, or simply time for yourself. Change outfits, act silly, and capture genuine emotions.",
     tarifs: [
       { value: "1h", amount: "499 AED", duration: "1 hour" },
-      { value: "5h", amount: "1500 AED", duration: "5 hour" },
-      { value: "10h", amount: "2800 AED", duration: "10 hour" },
+      { value: "2h", amount: "899 AED", duration: "2 hour" },
+      { value: "4h", amount: "1.599 AED", duration: "4 hour" },
     ],
     amenities: [
       "Gallery delivered within 24 hours",
@@ -82,28 +82,30 @@ export const ROOMS: Record<Room, RoomData> = {
       "Pro-level detail: lighting and cameras",
       "Wireless clicker — full control, no assistance needed",
       "1 hour minimal rent time",
-      "3 editing styles: Original / B&W / Film",
     ],
     highlights: [
       {
         title: "Absolute\nPrivacy",
-        description: "Professional results in total solitude.",
+        description:
+          "No staff. No strangers. No one watching. A completely private space, just for you.",
       },
       {
-        title: "Instant\nControl",
-        description: "You are the photographer. You decide.",
+        title: "Ready\nTo Shoot",
+        description:
+          "Camera set up. Lighting dialled in. Everything's ready — just pick up the clicker.",
       },
       {
-        title: "Instant\nGallery",
-        description: "Fast access to high-resolution shots.",
+        title: "See It In\nReal Time",
+        description: "Full-wall mirror — frame the shot before you take it.",
       },
       {
-        title: "Mirror\nTech",
-        description: "See your reflection, capture perfection.",
+        title: "Ready By\nEnd Of Day",
+        description:
+          "Your photos are AI-processed, edited, and delivered to you the same day",
       },
     ],
     steps: sharedSteps,
-    card: { num: "01", tag: "[Total Privacy]", tags: ["Solo", "Family", "Love-Story"] },
+    card: { num: "01", tag: "[Total Privacy]", tags: ["Solo", "Couples", "Family", "Love-Story"] },
   },
   main: {
     title: "Main Room",
@@ -112,11 +114,11 @@ export const ROOMS: Record<Room, RoomData> = {
     modalDescription:
       "Bring your camera, your crew, your vision. Profoto and Aputure lighting, a motorized rail, and a cyclorama wall are already dialed in and ready the moment you walk in.",
     cardDescription:
-      "Clean, stylish shots for your resume, corporate website, or personal brand.",
+      "Bring your camera and crew. From solo content days to full commercial productions",
     tarifs: [
       { value: "1h", amount: "400 AED", duration: "1 hour" },
-      { value: "5h", amount: "1750 AED", duration: "5 hour" },
-      { value: "10h", amount: "3500 AED", duration: "10 hour" },
+      { value: "4h", amount: "1499 AED", duration: "4 hour" },
+      { value: "8h", amount: "2799 AED", duration: "8 hour" },
     ],
     amenities: [
       "60 sqm area",
@@ -128,23 +130,25 @@ export const ROOMS: Record<Room, RoomData> = {
     ],
     highlights: [
       {
-        title: "Commercial\nScale",
-        description: "Ample space for large-scale productions.",
+        title: "Production\nSpace",
+        description: "High ceiling, cyclorama, room for your entire crew.",
       },
       {
-        title: "Pro\nEquipment",
-        description: "Top-tier lighting and technical gear.",
+        title: "Profoto\nLighting",
+        description: "Profoto strobes and a full modifier set",
       },
       {
-        title: "Creative\nFreedom",
-        description: "Flexible setups for complex visions.",
+        title: "Ceiling Rail\nSystem",
+        description:
+          "Manfrotto Sky Track — reposition lights from above without touching a stand.",
       },
       {
-        title: "Expert\nSupport",
-        description: "Full assistance for seamless shooting.",
+        title: "Total\nFlexibility",
+        description:
+          "No fixed layout. Move the lights, change the setup, run it your way.",
       },
     ],
     steps: sharedSteps,
-    card: { num: "02", tag: "", tags: ["Business Portrait", "Comp Cards", "Brand Content"] },
+    card: { num: "02", tag: "", tags: ["Brand", "Campaign Editorial", "Team Production"] },
   },
 };

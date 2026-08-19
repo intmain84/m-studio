@@ -31,7 +31,6 @@ const links = [
   { name: "About studio", href: "/#about", image: "/menu/about.jpg" },
   { name: "Spaces", href: "/#spaces", image: "/menu/spaces.jpg" },
   { name: "How it works", href: "/#howitworks", image: "/menu/how.jpg" },
-  { name: "Gallery", href: "/#gallery", image: "/menu/gallery.jpg" },
   { name: "FAQ", href: "/#faq", image: "/menu/faq.jpg" },
   { name: "Contacts", href: "/#contacts", image: "/menu/contacts.jpg" },
 ];
@@ -134,7 +133,7 @@ export default function Navbar() {
             </Link>
           ))}
         </div>
-        <div className="relative overflow-hidden hidden md:block">
+        <div className="relative overflow-hidden hidden md:invisible">
           {links.map((link, i) => (
             <Image
               key={link.image}

@@ -7,8 +7,8 @@ export const CONTACTS = [
   },
   {
     label: "Email",
-    value: "main@the-m.ae",
-    href: "mailto:main@the-m.ae",
+    value: "the.m@gmail.com",
+    href: "mailto:the.m@gmail.com",
     orderClass: "md:order-3",
   },
   {
@@ -19,7 +19,7 @@ export const CONTACTS = [
   },
   {
     label: "Address",
-    value: "Art of living mall, Al Barsha 2, Al Barsha Dubai",
+    value: "Art of living mall, Al Barsha 2, Dubai",
     href: "https://maps.google.com/?q=Art+of+Living+Mall,+Al+Barsha,+Dubai",
     orderClass: "md:order-4",
   },

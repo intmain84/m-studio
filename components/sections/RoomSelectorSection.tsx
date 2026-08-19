@@ -74,12 +74,12 @@ export default function RoomSelectorSection() {
               <p
                 className={`absolute inset-0 m-auto text-sm text-foreground leading-[1.1] whitespace-pre-line transition-opacity duration-300 w-68 h-fit ${hovered === "self" ? "opacity-100" : "opacity-0"}`}
               >
-                {ROOMS.self.modalDescription}
+                You shoot. We set the stage.
               </p>
               <p
-                className={`absolute inset-0 m-auto text-sm text-foreground leading-[1.1] whitespace-pre-line transition-opacity duration-300 w-68 h-fit ${hovered === "main" ? "opacity-100" : "opacity-0"}`}
+                className={`absolute inset-0 m-auto text-sm text-foreground leading-[1.1] whitespace-pre-line transition-opacity duration-300 w-80 h-fit ${hovered === "main" ? "opacity-100" : "opacity-0"}`}
               >
-                {ROOMS.main.modalDescription}
+                Your crew. Your camera. Our light
               </p>
 
               {/* Mobile: bottom line indicator (main) */}

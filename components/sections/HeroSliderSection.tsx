@@ -81,7 +81,7 @@ export default function HeroSliderSection() {
         <div className="relative md:h-full">
           <div className="grid grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-1 md:grid-rows-[1fr_auto_auto] md:h-full">
             <h1
-              className={`font-medium text-white uppercase leading-[100%] md:mb-3 whitespace-pre-line ${selectedIndex === 0 ? "text-[32px] md:text-[74px]" : "text-[56px] md:text-[107px]"}`}
+              className={`font-medium text-white uppercase leading-[100%] md:mb-3 whitespace-pre-line ${activeSlide.titleSize === "sm" ? "text-[32px] md:text-[40px]" : "text-[56px] md:text-[107px]"} ${activeSlide.titleAlign === "end" ? "md:self-end" : ""}`}
             >
               {activeSlide.title}
             </h1>
@@ -93,7 +93,7 @@ export default function HeroSliderSection() {
               className="col-span-2 md:col-span-1 pointer-events-auto md:max-w-67.5"
               onClick={() => setModal({ type: "book", room: activeSlide.room })}
             >
-              Book Session
+              {activeSlide.buttonText ?? "Book Session"}
             </Button>
           </div>
 
