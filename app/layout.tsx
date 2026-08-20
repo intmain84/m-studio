@@ -3,7 +3,7 @@ import { Geist_Mono } from "next/font/google";
 import "./globals.css";
 import StateWrapper from "@/components/StateWrapper";
 import UnderConstruction from "@/components/UnderConstruction";
-import { UNDER_CONSTRUCTION, NOINDEX } from "@/lib/site-config";
+import { SHOW_UNDER_CONSTRUCTION, NOINDEX } from "@/lib/site-config";
 
 const mainFont = Geist_Mono({
   variable: "--font-main",
@@ -41,7 +41,7 @@ export default function RootLayout({
             mixBlendMode: "multiply",
           }}
         />
-        {UNDER_CONSTRUCTION ? (
+        {SHOW_UNDER_CONSTRUCTION ? (
           <UnderConstruction />
         ) : (
           <StateWrapper>{children}</StateWrapper>
