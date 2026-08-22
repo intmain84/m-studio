@@ -1,5 +1,5 @@
 export const PRESETS = [
-  { value: "bw2", label: "Black & White" },
-  { value: "studio-moe", label: "My studio" },
-  { value: "sweaters", label: "Sweater" },
+  { value: "n1", label: "Original" },
+  { value: "bw1", label: "Black & White" },
+  { value: "film1", label: "Film Grain" },
 ];
