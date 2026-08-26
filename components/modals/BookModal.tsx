@@ -12,9 +12,9 @@ import Stepper from "@/components/ui/Stepper";
 import FormSelect from "@/components/ui/FormSelect";
 import DateTimePicker from "@/components/ui/DateTimePicker";
 import { useModal } from "@/context/ModalContext";
+import { usePresets } from "@/context/PresetsContext";
 import { Room } from "@/types/modal";
 import { ROOMS } from "@/content/rooms";
-import { PRESETS } from "@/content/presets";
 
 type Step = "space" | "tarif" | "datetime" | "details";
 
@@ -61,6 +61,7 @@ function ButtonArrow() {
 
 export default function BookModal() {
   const { modal } = useModal();
+  const { presets } = usePresets();
   const open = modal?.type === "book"; //Fires re-rendering when modal changes
 
   const [booking, setBooking] = useState<BookingData>(defaultBooking);
@@ -487,7 +488,7 @@ export default function BookModal() {
                   <FormSelect
                     label="Preset"
                     placeholder="Select Preset"
-                    options={PRESETS}
+                    options={presets}
                     registration={register("preset", { required: "Required" })}
                     error={errors.preset?.message}
                   />
