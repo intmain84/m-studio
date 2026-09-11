@@ -235,19 +235,21 @@ export default function BookModal() {
           </div>
         </div>
       ) : currentStep === "space" ? (
-        /* ── Select Space: full width, two cards side-by-side on desktop ── */
-        <div className="flex flex-col flex-1 px-6 py-6 gap-8">
-          <Dialog.Title className="text-[2rem] md:text-[3.5rem] uppercase leading-[1.1]">
+        /* ── Select Space: full width, two cards side-by-side on desktop.
+           The card's total height is fixed on desktop — hovering doesn't grow
+           it, the photo (flex-1) shrinks to make room for the "Select" button. ── */
+        <div className="flex flex-col flex-1 md:flex-none px-6 py-6 gap-8 md:h-137.5">
+          <Dialog.Title className="shrink-0 text-[2rem] md:text-[3.5rem] uppercase leading-[1.1]">
             Select Space
           </Dialog.Title>
-          <div className="flex flex-col md:flex-row flex-1 gap-4 md:gap-6">
+          <div className="flex flex-col md:flex-row flex-1 md:min-h-0 gap-4 md:gap-6">
             {(["self", "main"] as Room[]).map((r) => {
               const meta = ROOMS[r];
               const fromPrice = `From ${meta.tarifs[0].amount}`;
               return (
                 <div
                   key={r}
-                  className="group flex-1 flex flex-col cursor-pointer"
+                  className="group flex-1 flex flex-col cursor-pointer md:h-full"
                   onClick={() => {
                     const todayStr = new Intl.DateTimeFormat("en-CA", {
                       timeZone: "Asia/Dubai",
@@ -261,9 +263,9 @@ export default function BookModal() {
                     goNext();
                   }}
                 >
-                  <div className="flex-1 flex flex-col justify-between border border-white/20 md:group-hover:border-white p-6 transition-colors duration-300">
+                  <div className="flex-1 min-h-0 flex flex-col gap-4 border border-white/20 md:group-hover:border-white p-6 transition-colors duration-300">
                     {/* Mobile: title + price at top */}
-                    <div className="md:hidden flex flex-col gap-2">
+                    <div className="md:hidden shrink-0 flex flex-col gap-2">
                       <p className="text-[1.5rem] uppercase leading-[1.1]">
                         {meta.title}
                       </p>
@@ -271,17 +273,23 @@ export default function BookModal() {
                         {fromPrice}
                       </p>
                     </div>
-                    {/* Desktop: description at top */}
-                    <p className="hidden md:block text-[0.875rem] leading-[1.4]">
-                      {meta.cardDescription}
+
+                    <p className="shrink-0 text-[0.875rem] leading-[1.4]">
+                      {meta.selectDescription}
                     </p>
-                    {/* Mobile: description at bottom */}
-                    <p className="md:hidden text-[0.75rem] leading-[1.1]">
-                      {meta.cardDescription}
-                    </p>
+
+                    {/* Photo — fills whatever height is left; object-cover never distorts it */}
+                    <div className="relative flex-1 min-h-37.5 md:min-h-0">
+                      <Image
+                        src={meta.selectImage}
+                        alt={meta.title}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+
                     {/* Desktop: title + price at bottom */}
-                    <div className="hidden md:flex items-end justify-between">
-                      {/* Title */}
+                    <div className="hidden md:flex shrink-0 items-end justify-between">
                       <p className="text-[2.5rem] uppercase leading-[1.1]">
                         {meta.title}
                       </p>
@@ -290,10 +298,13 @@ export default function BookModal() {
                       </p>
                     </div>
                   </div>
-                  {/* Mobile: always visible; Desktop: slides in from bottom on hover */}
-                  <div className="overflow-hidden md:max-h-0 md:group-hover:max-h-16 md:transition-[max-height] md:duration-300 md:ease-out">
-                    <div className="w-full bg-foreground text-background px-6 py-4 text-[0.875rem] md:text-[1rem] leading-[1.1] text-center">
-                      Select
+                  {/* Mobile: always visible; desktop: reveals on hover, eating into
+                      the photo's flex-1 space instead of growing the card */}
+                  <div className="grid shrink-0 md:grid-rows-[0fr] md:group-hover:grid-rows-[1fr] md:transition-[grid-template-rows] md:duration-300 md:ease-out">
+                    <div className="overflow-hidden">
+                      <div className="w-full bg-foreground text-background px-6 py-4 text-[0.875rem] md:text-[1rem] leading-[1.1] text-center">
+                        Select
+                      </div>
                     </div>
                   </div>
                 </div>

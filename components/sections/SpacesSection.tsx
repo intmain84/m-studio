@@ -19,6 +19,7 @@ const spaces = roomOrder.map((room) => {
     description: data.cardDescription,
     tag: data.card.tag,
     tags: data.card.tags,
+    priceFrom: `from ${data.tarifs[0].amount}`,
     image: data.cardImage,
     room,
   };
@@ -30,6 +31,7 @@ function SpaceCard({
   description,
   tag,
   tags,
+  priceFrom,
   image,
   onClick,
 }: (typeof spaces)[number] & { onClick: () => void }) {
@@ -79,15 +81,18 @@ function SpaceCard({
               variant="light"
               className="w-full md:w-auto pointer-events-none group-hover:bg-[#DCDCDC]"
             >
-              Learn more
+              Book now
             </Button>
           </div>
         </div>
 
-        {/* Room name — always centered in the card */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <p className="text-center text-[1.25rem] md:text-[2.5rem] uppercase text-white leading-[1.1] ">
+        {/* Room name + price — always centered in the card */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 pointer-events-none">
+          <p className="text-center text-[1.25rem] md:text-[2.5rem] uppercase text-white leading-[1.1]">
             {name}
+          </p>
+          <p className="text-center text-xs md:text-sm text-white leading-[1.1]">
+            {priceFrom}
           </p>
         </div>
       </div>

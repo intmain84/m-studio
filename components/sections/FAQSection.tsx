@@ -14,7 +14,12 @@ export default function FAQSection() {
             <h2 className="md:w-1/2 mb-10 md:mb-0 text-[3.5rem] text-white uppercase leading-[1.1]">
               [FAQ]
             </h2>
-            <Accordion items={FAQS} className="md:w-1/2" />
+            <Accordion
+              items={FAQS}
+              className="md:w-1/2"
+              activeBackground="bg-[#07295C]"
+              activeTextColor="text-white"
+            />
           </div>
         </ContainerLarge>
       </PaddingGlobal>

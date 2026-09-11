@@ -18,7 +18,7 @@ function RoomRow({
       </div>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-y-8 gap-x-4">
         {features.map(({ title, description }) => (
-          <div key={title} className="flex flex-col gap-6 md:max-w-72">
+          <div key={title} className="flex flex-col gap-6 md:max-w-64">
             <p className="text-xl md:text-[2.5rem] text-white uppercase leading-[1.1]">
               {title}
             </p>
@@ -35,7 +35,7 @@ function RoomRow({
 export default function FeaturesSection() {
   return (
     <section>
-      <SpacerLarge id="about" />
+      <SpacerLarge />
       <PaddingGlobal>
         <ContainerLarge>
           <div className="flex flex-col gap-14 md:gap-30">

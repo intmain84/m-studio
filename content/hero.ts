@@ -9,29 +9,32 @@ export type HeroSlide = {
   buttonText?: string;
   titleSize?: "sm" | "lg";
   titleAlign?: "start" | "end";
+  // "split": title alone on the left, text+button+dots centered as a column on the right
+  layout?: "split";
 };
 
 // \n in title and text is rendered as a line break (requires whitespace-pre-line on the element)
 export const HERO_SLIDES: HeroSlide[] = [
   {
-    title: "THE SPACE\nBETWEEN YOUR IDEA\nAND CONTENT.",
+    title: "THE\nSPACE\nBETWEEN\nYOUR\nIDEA AND\nGREAT\nCONTENT.",
     text: "Create more. Think less.",
     image: "/hero-slides/1.jpg",
     progressColor: "light",
-    buttonText: "[ Choose Your Space ]",
+    buttonText: "Select Spaces",
     titleSize: "sm",
     titleAlign: "end",
+    layout: "split",
   },
   {
     title: "Self\nRoom",
-    text: "A completely private space with just you, a large mirror, and a clicker in your hand.\n\nPremium camera and professional lighting are already perfectly tuned.",
+    text: "A unique date idea, fun family photos, or simply time for yourself.",
     image: "/hero-slides/2.jpg",
     progressColor: "dark",
     room: "self",
   },
   {
     title: "main\nRoom",
-    text: "A completely private space with just you, a large mirror, and a clicker in your hand.\n\nPremium camera and professional lighting are already perfectly tuned.",
+    text: "Bring your own camera and crew — from solo content batches to full productions. We give you the light and the space to make it happen.",
     image: "/hero-slides/3.jpg",
     progressColor: "light",
     room: "main",

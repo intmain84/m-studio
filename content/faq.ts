@@ -7,12 +7,12 @@ export const FAQS = [
   {
     title: "How will I receive my photos?",
     content:
-      "Self Room — you'll get a fully edited gallery (Original / B&W / Film) within 24 hours. Main Room — we don't process or deliver a gallery; you leave with whatever your own camera/crew captured.",
+      "Self Room — you'll get a fully edited gallery (Original / B & W / Film & Grain) within 24 hours. Main Room — we don't process or deliver a gallery; you leave with whatever your own camera/crew captured.",
   },
   {
-    title: "Can I bring someone with me?",
+    title: "Can I bring guests to my Self Room session?",
     content:
-      "Self Room fits up to 5/7 people — great for couples, friends, or family shoots. Main Room has no guest limit; bring your full crew.",
+      "Yes — your booking covers up to 4 guests. Each additional guest is +100 AED.",
   },
   {
     title: "How private is the studio?",

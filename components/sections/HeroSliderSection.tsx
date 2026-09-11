@@ -34,6 +34,7 @@ export default function HeroSliderSection() {
   }, []);
 
   const activeSlide = slides[selectedIndex];
+  const isSplit = activeSlide.layout === "split";
 
   return (
     <section className="relative h-dvh w-full overflow-hidden">
@@ -79,26 +80,74 @@ export default function HeroSliderSection() {
         className="absolute inset-0 flex flex-col z-10 h-full px-4 mx-auto justify-end animate-fade-in pointer-events-none md:justify-between pb-4 md:pb-19.5 md:max-w-[80%] md:pt-33.25"
       >
         <div className="relative md:h-full">
-          <div className="grid grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-1 md:grid-rows-[1fr_auto_auto] md:h-full">
+          <div
+            className={`grid grid-cols-2 gap-x-4 gap-y-8 md:h-full ${isSplit ? "md:flex md:flex-row md:items-stretch" : "md:grid-cols-1 md:grid-rows-[1fr_auto_auto]"}`}
+          >
             <h1
-              className={`font-medium text-white uppercase leading-[100%] md:mb-3 whitespace-pre-line ${activeSlide.titleSize === "sm" ? "text-[32px] md:text-[40px]" : "text-[56px] md:text-[107px]"} ${activeSlide.titleAlign === "end" ? "md:self-end" : ""}`}
+              className={`font-medium text-white uppercase leading-[100%] md:mb-3 whitespace-pre-line ${isSplit ? "text-[32px] md:text-[4.625rem]" : activeSlide.titleSize === "sm" ? "text-[32px] md:text-[40px]" : "text-[56px] md:text-[107px]"} ${activeSlide.titleAlign === "end" && !isSplit ? "md:self-end" : ""} ${isSplit ? "md:flex-1 md:flex md:items-center md:mb-0" : ""}`}
             >
               {activeSlide.title}
             </h1>
-            <p className="text-white max-w-xs text-sm leading-relaxed whitespace-pre-line md:max-w-67.5">
-              {activeSlide.text}
-            </p>
-            <Button
-              variant={activeSlide.progressColor as "light" | "dark"}
-              className="col-span-2 md:col-span-1 pointer-events-auto md:max-w-67.5"
-              onClick={() => setModal({ type: "book", room: activeSlide.room })}
-            >
-              {activeSlide.buttonText ?? "Book Session"}
-            </Button>
+
+            {isSplit ? (
+              /* On mobile this wrapper is invisible (display:contents) so p/Button/dots stay
+                 flat grid children, same as the non-split layout. On desktop it becomes a
+                 real right-hand column: text+button are vertically centered in the flexible
+                 top area, and the dots (last child) sit at the bottom — sharing this column's
+                 left edge so they line up with the button, while staying at the same height
+                 as on every other slide (this column spans the full h-full section height). */
+              <div className="contents md:flex md:flex-col md:items-start md:h-full md:max-w-67.5 md:ml-auto">
+                <div className="contents md:flex-1 md:flex md:flex-col md:items-start md:justify-center md:gap-4">
+                  <p className="text-white max-w-xs text-sm leading-relaxed whitespace-pre-line md:max-w-67.5">
+                    {activeSlide.text}
+                  </p>
+                  <Button
+                    variant={activeSlide.progressColor as "light" | "dark"}
+                    className="col-span-2 pointer-events-auto md:w-full"
+                    onClick={() =>
+                      setModal({ type: "book", room: activeSlide.room })
+                    }
+                  >
+                    {activeSlide.buttonText ?? "Book Session"}
+                  </Button>
+                </div>
+                <div className="hidden md:flex gap-2 pointer-events-auto">
+                  {slides.map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => swiperRef.current?.slideToLoop(i)}
+                      className={`cursor-pointer rounded-full transition-all duration-300 w-5 h-5 ${
+                        i === selectedIndex
+                          ? "bg-background border-foreground border-3"
+                          : "bg-foreground border-background border-[1.5px]"
+                      }`}
+                    />
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <>
+                <p className="text-white max-w-xs text-sm leading-relaxed whitespace-pre-line md:max-w-67.5">
+                  {activeSlide.text}
+                </p>
+                <Button
+                  variant={activeSlide.progressColor as "light" | "dark"}
+                  className="col-span-2 md:col-span-1 pointer-events-auto md:max-w-67.5"
+                  onClick={() =>
+                    setModal({ type: "book", room: activeSlide.room })
+                  }
+                >
+                  {activeSlide.buttonText ?? "Book Session"}
+                </Button>
+              </>
+            )}
           </div>
 
-          {/* Dots */}
-          <div className="flex justify-center gap-2 mt-8 pointer-events-auto md:mt-0 md:absolute md:bottom-0 md:right-50">
+          {/* Dots — mobile always; on desktop only for non-split slides
+              (split renders its own copy inside the right column, left-aligned to the button) */}
+          <div
+            className={`flex justify-center gap-2 mt-8 pointer-events-auto md:mt-0 ${isSplit ? "md:hidden" : "md:absolute md:bottom-0 md:right-50"}`}
+          >
             {slides.map((_, i) => (
               <button
                 key={i}

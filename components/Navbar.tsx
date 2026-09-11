@@ -30,7 +30,6 @@ function scrollToAnchor(id: string, duration = 900) {
 const links = [
   { name: "About studio", href: "/#about", image: "/menu/about.jpg" },
   { name: "Spaces", href: "/#spaces", image: "/menu/spaces.jpg" },
-  { name: "How it works", href: "/#howitworks", image: "/menu/how.jpg" },
   { name: "FAQ", href: "/#faq", image: "/menu/faq.jpg" },
   { name: "Contacts", href: "/#contacts", image: "/menu/contacts.jpg" },
 ];

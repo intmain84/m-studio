@@ -15,7 +15,17 @@ export default function ContactsSection() {
             [Contacts]
           </h2>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-y-10 mt-16 md:mt-40 mb-34">
+          <div className="relative w-full aspect-[3/2] md:aspect-[5/1] overflow-hidden mt-10 md:mt-16">
+            <iframe
+              src="https://www.google.com/maps?q=Art+of+Living+Mall,+Al+Barsha+2,+Dubai&output=embed"
+              className="absolute inset-0 w-full h-full border-0 invert-[.9] hue-rotate-180"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              title="The M Studio location"
+            />
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-y-10 mt-16 md:mt-24 mb-34">
             {CONTACTS.map(({ label, value, href, orderClass }) => (
               <div key={label} className={orderClass}>
                 <p className="text-xs md:text-base text-foreground-muted leading-[1.1] mb-1">
@@ -25,7 +35,7 @@ export default function ContactsSection() {
                   href={href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-xs md:text-base text-white leading-[1.1]"
+                  className="text-xs md:text-base text-white leading-[1.1] whitespace-pre-line"
                 >
                   {value}
                 </a>

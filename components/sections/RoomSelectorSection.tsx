@@ -74,12 +74,16 @@ export default function RoomSelectorSection() {
               <p
                 className={`absolute inset-0 m-auto text-sm text-foreground leading-[1.1] whitespace-pre-line transition-opacity duration-300 w-68 h-fit ${hovered === "self" ? "opacity-100" : "opacity-0"}`}
               >
-                You shoot. We set the stage.
+                You take your own photos — no photographer needed. Camera,
+                lighting, and a mirror are all set up. Just press the remote and
+                shoot.
               </p>
               <p
                 className={`absolute inset-0 m-auto text-sm text-foreground leading-[1.1] whitespace-pre-line transition-opacity duration-300 w-80 h-fit ${hovered === "main" ? "opacity-100" : "opacity-0"}`}
               >
-                Your crew. Your camera. Our light
+                No camera or photographer included — you bring your own. You get
+                the space and pro equipment: Profoto lighting, a clean curved
+                wall, high ceilings.
               </p>
 
               {/* Mobile: bottom line indicator (main room) */}
