@@ -1,13 +1,13 @@
 "use client";
 import Image from "next/image";
 import { Dialog } from "radix-ui";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 
 import BaseModal from "./BaseModal";
 import Button from "@/components/ui/Button";
 import FormInput from "@/components/ui/FormInput";
-import TarifOption from "@/components/ui/TarifOption";
+import BirthdayInput from "@/components/ui/BirthdayInput";
 import Stepper from "@/components/ui/Stepper";
 import FormSelect from "@/components/ui/FormSelect";
 import DateTimePicker from "@/components/ui/DateTimePicker";
@@ -16,14 +16,14 @@ import { usePresets } from "@/context/PresetsContext";
 import { Room } from "@/types/modal";
 import { ROOMS } from "@/content/rooms";
 
-type Step = "space" | "tarif" | "datetime" | "details";
+type Step = "space" | "presets" | "datetime" | "details";
 
 type BookingData = {
   room: Room | undefined;
-  tarif: string;
+  preset: string;
   people: number;
   date: string;
-  time: string;
+  times: string[];
 };
 
 type DetailsForm = {
@@ -31,16 +31,58 @@ type DetailsForm = {
   lastName: string;
   email: string;
   phone: string;
-  preset: string; // managed by react-hook-form via FormSelect
+  birthday: string;
+  occasion: string; // Self Room only
 };
 
 const defaultBooking: BookingData = {
   room: undefined,
-  tarif: "",
+  preset: "",
   people: 1,
   date: "",
-  time: "",
+  times: [],
 };
+
+// Backend only sends { value, label } for presets — these images are matched
+// locally by value. A preset with no match falls back to a "No photo" tile.
+const PRESET_IMAGES: Record<string, string> = {
+  n1: "/presets/original.png",
+  bw1: "/presets/bw.png",
+  film1: "/presets/film-grain.png",
+};
+
+const OCCASIONS = [
+  "Just because",
+  "Birthday",
+  "Couple / Date",
+  "Friends",
+  "Family",
+  "Maternity",
+  "Engagement",
+  "Anniversary",
+  "Graduation",
+  "Personal branding / Content",
+  "Other",
+].map((label) => ({ value: label, label }));
+
+function stepsForRoom(room: Room): Step[] {
+  return room === "main"
+    ? ["datetime", "details"]
+    : ["presets", "datetime", "details"];
+}
+
+function parseAED(amount: string): number {
+  return parseInt(amount.replace(/[^\d]/g, ""), 10) || 0;
+}
+
+function mainRateForHours(hours: number): number {
+  const brackets = ROOMS.main.pricingBrackets ?? [];
+  let rate = brackets[0]?.ratePerHour ?? 0;
+  for (const b of brackets) {
+    if (hours >= b.minHours) rate = b.ratePerHour;
+  }
+  return rate;
+}
 
 function ButtonArrow() {
   return (
@@ -59,28 +101,43 @@ function ButtonArrow() {
   );
 }
 
+function StepProgress({ index, total }: { index: number; total: number }) {
+  return (
+    <div className="flex gap-3.5 items-center w-full shrink-0">
+      <p className="text-xs leading-[1.1] whitespace-nowrap">
+        <span className="text-white">{index + 1}</span>
+        <span className="text-foreground-muted">/{total} step</span>
+      </p>
+      <div className="flex-1 h-px bg-white/20 relative">
+        <div
+          className="absolute inset-y-0 left-0 bg-white"
+          style={{ width: `${((index + 1) / total) * 100}%` }}
+        />
+      </div>
+    </div>
+  );
+}
+
 export default function BookModal() {
   const { modal } = useModal();
   const { presets } = usePresets();
   const open = modal?.type === "book"; //Fires re-rendering when modal changes
 
   const [booking, setBooking] = useState<BookingData>(defaultBooking);
-  const [steps, setSteps] = useState<Step[]>([
-    "space",
-    "tarif",
-    "datetime",
-    "details",
-  ]);
+  const [steps, setSteps] = useState<Step[]>(["space"]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
   const [reservedSlots, setReservedSlots] = useState<Record<string, number[]>>(
     {},
   );
   const [slotsLoading, setSlotsLoading] = useState(false);
+  const [presetError, setPresetError] = useState(false);
+  const [timeError, setTimeError] = useState(false);
 
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
     reset,
   } = useForm<DetailsForm>({ defaultValues: { phone: "+" } });
@@ -88,24 +145,23 @@ export default function BookModal() {
   useEffect(() => {
     if (modal?.type === "book") {
       const preselectedRoom = modal.room;
-      const newSteps: Step[] = preselectedRoom
-        ? ["tarif", "datetime", "details"]
-        : ["space", "tarif", "datetime", "details"];
-      setSteps(newSteps);
+      setSteps(preselectedRoom ? stepsForRoom(preselectedRoom) : ["space"]);
       setCurrentIndex(0);
       const todayStr = new Intl.DateTimeFormat("en-CA", {
         timeZone: "Asia/Dubai",
       }).format(new Date());
       setBooking({ ...defaultBooking, room: preselectedRoom, date: todayStr });
       setStatus("idle");
-      reset({ phone: "+", preset: "" });
+      setPresetError(false);
+      setTimeError(false);
+      reset({ phone: "+", birthday: "", occasion: "" });
     }
-  }, [open]);
+  }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const currentStep = steps[currentIndex];
 
   useEffect(() => {
-    if (currentStep !== "tarif" || !booking.room) return;
+    if (currentStep !== "datetime" || !booking.room) return;
     setSlotsLoading(true);
     fetch(
       `https://hooks.backend.ae/webhook/api/the-m/slots?type=${booking.room}`,
@@ -114,22 +170,60 @@ export default function BookModal() {
       .then((data) => setReservedSlots(data))
       .catch(() => {})
       .finally(() => setSlotsLoading(false));
-  }, [currentStep]);
+  }, [currentStep]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const canGoBack = currentIndex > 0;
 
   const goBack = () => setCurrentIndex((i) => i - 1);
   const goNext = () => setCurrentIndex((i) => i + 1);
 
+  const isSelf = booking.room === "self";
+  const hasSpaceStep = steps[0] === "space";
+  const stepIndex = currentIndex - (hasSpaceStep ? 1 : 0);
+  const stepTotal = steps.length - (hasSpaceStep ? 1 : 0);
+
+  const slotCount = booking.times.length;
+  const selfUnitAmount = parseAED(ROOMS.self.tarifs[0].amount);
+  const selfUnitMinutes = parseInt(ROOMS.self.tarifs[0].duration, 10) || 0;
+  const includedGuests = ROOMS.self.includedGuests ?? 0;
+  const extraGuestFee = ROOMS.self.extraGuestFee ?? 0;
+  const extraGuests = isSelf ? Math.max(0, booking.people - includedGuests) : 0;
+
+  const sessionAmount = isSelf
+    ? selfUnitAmount * slotCount
+    : slotCount * mainRateForHours(slotCount);
+  const sessionMinutes = selfUnitMinutes * slotCount;
+  const totalAmount = sessionAmount + (isSelf ? extraGuests * extraGuestFee : 0);
+
+  const priceAmountText = `${totalAmount} AED`;
+  const priceDetailText = isSelf
+    ? extraGuests > 0
+      ? `(${sessionMinutes}min + ${extraGuests} guest${extraGuests > 1 ? "s" : ""})`
+      : `(${sessionMinutes}min)`
+    : `(${slotCount} hour${slotCount > 1 ? "s" : ""})`;
+
+  const selectedPreset = presets.find((p) => p.value === booking.preset);
+
   const onSubmit = async (data: DetailsForm) => {
     try {
-      const selectedTarif = (
-        booking.room ? ROOMS[booking.room].tarifs : []
-      ).find((t) => t.value === booking.tarif);
-      const tarifLabel = selectedTarif
-        ? `${selectedTarif.amount} (${selectedTarif.duration})`
-        : booking.tarif;
-      const payload = { ...booking, ...data, tarif: tarifLabel };
+      const tarifLabel =
+        slotCount > 0 ? `${priceAmountText} ${priceDetailText}` : "";
+      const payload: Record<string, unknown> = {
+        room: booking.room,
+        tarif: tarifLabel,
+        people: booking.people,
+        date: booking.date,
+        time: booking.times.join(" / "),
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.email,
+        phone: data.phone,
+        birthday: data.birthday,
+      };
+      if (isSelf) {
+        payload.preset = booking.preset;
+        payload.occasion = data.occasion;
+      }
       const response = await fetch(
         "https://hooks.backend.ae/webhook/api/the-m/form",
         {
@@ -147,11 +241,6 @@ export default function BookModal() {
 
   const selectedRoom = booking.room;
   const roomMeta = selectedRoom ? ROOMS[selectedRoom] : undefined;
-  const selectedTarif = (selectedRoom ? ROOMS[selectedRoom].tarifs : []).find(
-    (t) => t.value === booking.tarif,
-  );
-  const tarifAmount = selectedTarif?.amount;
-  const tarifDuration = selectedTarif ? `(${selectedTarif.duration})` : "";
 
   // Room image column — same as RoomInfoModal
   const RoomImage = roomMeta ? (
@@ -174,7 +263,7 @@ export default function BookModal() {
       className={
         status !== "idle"
           ? "md:w-140  md:overflow-hidden"
-          : "md:w-[90vw] md:max-w-312 md:overflow-hidden"
+          : "md:w-[90vw] md:max-w-312 md:h-170 md:overflow-hidden"
       }
     >
       {status === "success" ? (
@@ -238,7 +327,7 @@ export default function BookModal() {
         /* ── Select Space: full width, two cards side-by-side on desktop.
            The card's total height is fixed on desktop — hovering doesn't grow
            it, the photo (flex-1) shrinks to make room for the "Select" button. ── */
-        <div className="flex flex-col flex-1 md:flex-none px-6 py-6 gap-8 md:h-137.5">
+        <div className="flex flex-col flex-1 md:min-h-0 px-6 py-6 gap-8">
           <Dialog.Title className="shrink-0 text-[2rem] md:text-[3.5rem] uppercase leading-[1.1]">
             Select Space
           </Dialog.Title>
@@ -258,8 +347,9 @@ export default function BookModal() {
                       ...b,
                       room: r,
                       date: todayStr,
-                      time: "",
+                      times: [],
                     }));
+                    setSteps(["space", ...stepsForRoom(r)]);
                     goNext();
                   }}
                 >
@@ -314,38 +404,167 @@ export default function BookModal() {
         </div>
       ) : (
         /* ── Steps with room image: content left + image right (like RoomInfoModal) ── */
-        <div className="flex flex-col md:flex-row flex-1">
-          <div className="flex-1 flex flex-col px-4 py-6 gap-8">
-            {currentStep === "tarif" && (
+        <div className="flex flex-col md:flex-row flex-1 md:min-h-0">
+          <div className="flex-1 flex flex-col px-4 py-6 gap-6 md:min-h-0">
+            {currentStep === "presets" && (
               <>
+                <StepProgress index={stepIndex} total={stepTotal} />
                 <Dialog.Title className="text-[1.5rem] md:text-[2.5rem] uppercase leading-[1.1]">
-                  Select Tarif
+                  Select Presets
                 </Dialog.Title>
-                <div className="flex flex-col md:gap-2">
-                  {(booking.room ? ROOMS[booking.room].tarifs : []).map(
-                    (t) => (
-                      <TarifOption
-                        key={t.value}
-                        label={`${t.amount} (${t.duration})`}
-                        selected={booking.tarif === t.value}
-                        onSelect={() =>
-                          setBooking((b) => ({ ...b, tarif: t.value }))
-                        }
-                        className="-mt-px"
-                      />
-                    ),
+                <div className="flex-1 md:min-h-0 flex flex-col justify-center gap-13.5">
+                  <div className="relative">
+                  <div className="grid grid-cols-3 gap-2">
+                    {presets.map((p) => {
+                      const img = PRESET_IMAGES[p.value];
+                      const selected = booking.preset === p.value;
+                      return (
+                        <button
+                          type="button"
+                          key={p.value}
+                          onClick={() => {
+                            setBooking((b) => ({ ...b, preset: p.value }));
+                            setPresetError(false);
+                          }}
+                          className={`flex flex-col gap-2 items-start p-2 text-left border cursor-pointer transition-colors ${
+                            selected
+                              ? "border-white"
+                              : "border-white/20 hover:border-white/50"
+                          }`}
+                        >
+                          <div className="relative aspect-square w-full bg-[#d9dbda] overflow-hidden">
+                            {img ? (
+                              <Image
+                                src={img}
+                                alt={p.label}
+                                fill
+                                className="object-cover"
+                              />
+                            ) : (
+                              <div className="absolute inset-0 flex items-center justify-center text-foreground-muted text-xs text-center px-2">
+                                No photo
+                              </div>
+                            )}
+                          </div>
+                          <p className="text-xs md:text-sm text-white">
+                            {p.label}
+                          </p>
+                        </button>
+                      );
+                    })}
+                  </div>
+                  {presetError && (
+                    <p className="absolute left-0 top-[101%] pt-1 text-xs text-danger leading-[1.1]">
+                      Please select a preset
+                    </p>
+                  )}
+                  </div>
+                  <div className="flex items-center justify-between gap-4">
+                    <div className="flex flex-col gap-2">
+                      <p className="text-base md:text-xl uppercase leading-[1.1]">
+                        Number of people
+                      </p>
+                      <p className="text-xs text-foreground-muted leading-[1.1]">
+                        Price includes up to {includedGuests} guests.
+                        <br />
+                        Each additional guest is +{extraGuestFee} AED.
+                      </p>
+                    </div>
+                    <Stepper
+                      value={booking.people}
+                      onChange={(v) =>
+                        setBooking((b) => ({ ...b, people: v }))
+                      }
+                    />
+                  </div>
+                </div>
+                <div className="flex items-center gap-6 shrink-0">
+                  {canGoBack && (
+                    <Button
+                      variant="ghost"
+                      className="w-31 flex items-center justify-between px-6"
+                      onClick={goBack}
+                    >
+                      <ButtonArrow /> Back
+                    </Button>
+                  )}
+                  <Button
+                    variant="light"
+                    className="flex-1 px-6"
+                    onClick={() =>
+                      booking.preset ? goNext() : setPresetError(true)
+                    }
+                  >
+                    Next
+                  </Button>
+                </div>
+              </>
+            )}
+
+            {currentStep === "datetime" && (
+              <>
+                <StepProgress index={stepIndex} total={stepTotal} />
+                <div className="flex flex-col gap-2">
+                  <Dialog.Title className="text-[1.5rem] md:text-[2.5rem] uppercase leading-[1.1]">
+                    Select Day &amp; Time
+                  </Dialog.Title>
+                  {isSelf ? (
+                    <p className="text-xs md:text-base leading-[1.1]">
+                      <span className="text-foreground-muted">
+                        Minimum session duration:{" "}
+                      </span>
+                      <span className="text-white">
+                        {ROOMS.self.minDuration}
+                      </span>
+                    </p>
+                  ) : (
+                    <div className="flex items-start justify-between gap-4 text-xs md:text-base text-white">
+                      {ROOMS.main.tarifs.map((t) => (
+                        <div
+                          key={t.value}
+                          className="flex flex-col gap-1 leading-[1.1] whitespace-nowrap"
+                        >
+                          <span>{t.value}r</span>
+                          <span>
+                            {t.amount}
+                            {t.perHour && (
+                              <span className="text-foreground-muted">
+                                {" "}
+                                ({t.perHour})
+                              </span>
+                            )}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
                   )}
                 </div>
-                <div className="flex items-center justify-between">
-                  <p className="text-[1rem] leading-[1.1] text-foreground">
-                    NUMBER
-                    <br />
-                    OF PEOPLE
-                  </p>
-                  <Stepper
-                    value={booking.people}
-                    onChange={(v) => setBooking((b) => ({ ...b, people: v }))}
-                  />
+                <div className="md:flex-1 md:flex md:items-center w-full">
+                  <div className="relative w-full flex flex-col gap-2">
+                    <DateTimePicker
+                      className="w-full"
+                      selectedDate={booking.date}
+                      selectedTimes={booking.times}
+                      onDateChange={(d) => {
+                        setBooking((b) => ({ ...b, date: d, times: [] }));
+                        setTimeError(false);
+                      }}
+                      onTimesChange={(t) => {
+                        setBooking((b) => ({ ...b, times: t }));
+                        setTimeError(false);
+                      }}
+                      reservedSlots={reservedSlots}
+                      loading={slotsLoading}
+                    />
+                    <p className="text-xs text-foreground-muted leading-[1.1] text-center">
+                      For specific timing requests, please contact us directly
+                    </p>
+                    {timeError && (
+                      <p className="absolute left-0 top-[101%] pt-1 w-full text-center text-xs text-danger leading-[1.1]">
+                        Please select a time
+                      </p>
+                    )}
+                  </div>
                 </div>
                 <div className="flex items-center gap-6 mt-auto">
                   {canGoBack && (
@@ -359,47 +578,19 @@ export default function BookModal() {
                   )}
                   <Button
                     variant="light"
-                    className="flex-1 px-6"
-                    onClick={goNext}
-                    disabled={!booking.tarif}
+                    className="flex-1 px-6 flex items-center justify-between"
+                    onClick={() =>
+                      booking.date && slotCount > 0
+                        ? goNext()
+                        : setTimeError(true)
+                    }
                   >
-                    Next
-                  </Button>
-                </div>
-              </>
-            )}
-
-            {currentStep === "datetime" && (
-              <>
-                <Dialog.Title className="text-[1.5rem] md:text-[2.5rem] uppercase leading-[1.1]">
-                  Select Day &amp; Time
-                </Dialog.Title>
-                <div className="md:flex-1 md:flex md:items-center w-full">
-                  <DateTimePicker
-                    className="w-full"
-                    selectedDate={booking.date}
-                    selectedTime={booking.time}
-                    onDateChange={(d) => setBooking((b) => ({ ...b, date: d }))}
-                    onTimeChange={(t) => setBooking((b) => ({ ...b, time: t }))}
-                    reservedSlots={reservedSlots}
-                    loading={slotsLoading}
-                  />
-                </div>
-                <div className="flex items-center gap-6 mt-auto">
-                  <Button
-                    variant="ghost"
-                    className="w-31 flex items-center justify-between px-6"
-                    onClick={goBack}
-                  >
-                    <ButtonArrow /> Back
-                  </Button>
-                  <Button
-                    variant="light"
-                    className="flex-1 px-6"
-                    onClick={goNext}
-                    disabled={!booking.date || !booking.time}
-                  >
-                    Next
+                    <span>Next</span>
+                    {slotCount > 0 && (
+                      <span className="text-sm">
+                        {priceAmountText} {priceDetailText}
+                      </span>
+                    )}
                   </Button>
                 </div>
               </>
@@ -407,23 +598,23 @@ export default function BookModal() {
 
             {currentStep === "details" && (
               <>
+                <StepProgress index={stepIndex} total={stepTotal} />
                 <div className="flex flex-col gap-4">
                   <Dialog.Title className="text-[1.5rem] md:text-[2.5rem] uppercase leading-[1.1]">
                     Fill in Your Details
                   </Dialog.Title>
                   <div className="flex items-center justify-between text-[0.75rem] whitespace-nowrap">
-                    {tarifAmount && (
+                    {slotCount > 0 && (
                       <p className="leading-[1.1]">
-                        <span className="text-foreground">{tarifAmount}</span>
-                        {tarifDuration && (
-                          <span className="text-foreground-muted">
-                            {" "}
-                            {tarifDuration}
-                          </span>
-                        )}
+                        <span className="text-foreground">
+                          {priceAmountText}
+                        </span>{" "}
+                        <span className="text-foreground-muted">
+                          {priceDetailText}
+                        </span>
                       </p>
                     )}
-                    {booking.date && booking.time && (
+                    {booking.date && slotCount > 0 && (
                       <div className="flex items-center gap-6 text-foreground leading-[1.1]">
                         <span>
                           {new Date(booking.date).toLocaleDateString("en-US", {
@@ -431,16 +622,30 @@ export default function BookModal() {
                             day: "numeric",
                           })}
                         </span>
-                        <span>{booking.time}</span>
+                        <span>{booking.times.join(" / ")}</span>
                       </div>
                     )}
                   </div>
+                  {isSelf && (
+                    <>
+                      <div className="h-px w-full bg-white/20" />
+                      <div className="flex items-center justify-between text-[0.75rem]">
+                        <span className="text-foreground-muted">
+                          Selected preset
+                        </span>
+                        <span className="text-white">
+                          {selectedPreset?.label ?? ""}
+                        </span>
+                      </div>
+                    </>
+                  )}
                 </div>
                 <form
-                  className="flex flex-col gap-6 flex-1"
+                  className="flex flex-col flex-1 md:min-h-0"
                   onSubmit={handleSubmit(onSubmit)}
                 >
-                  <div className="flex flex-col md:flex-row gap-6">
+                  <div className="flex-1 md:min-h-0 flex flex-col justify-center gap-8">
+                  <div className="flex flex-col md:flex-row gap-y-8 gap-x-10">
                     <FormInput
                       className="flex-1"
                       variant="underline"
@@ -464,7 +669,7 @@ export default function BookModal() {
                       })}
                     />
                   </div>
-                  <div className="flex flex-col md:flex-row gap-6">
+                  <div className="flex flex-col md:flex-row gap-y-8 gap-x-10">
                     <FormInput
                       className="flex-1"
                       variant="underline"
@@ -496,14 +701,77 @@ export default function BookModal() {
                       })}
                     />
                   </div>
-                  <FormSelect
-                    label="Preset"
-                    placeholder="Select Preset"
-                    options={presets}
-                    registration={register("preset", { required: "Required" })}
-                    error={errors.preset?.message}
-                  />
-                  <div className="flex items-center gap-6 mt-auto">
+                  {isSelf ? (
+                    <div className="flex flex-col md:flex-row gap-y-8 gap-x-10">
+                      <Controller
+                        name="birthday"
+                        control={control}
+                        rules={{
+                          validate: (v) =>
+                            v.replace(/\D/g, "").length === 8 ||
+                            "Enter a full date",
+                        }}
+                        render={({ field }) => (
+                          <BirthdayInput
+                            className="flex-1"
+                            label="Birthday"
+                            name={field.name}
+                            value={field.value}
+                            onChange={field.onChange}
+                            onBlur={field.onBlur}
+                            error={errors.birthday?.message}
+                          />
+                        )}
+                      />
+                      <FormSelect
+                        className="flex-1"
+                        label="Select occasion"
+                        placeholder="Select occasion"
+                        options={OCCASIONS}
+                        registration={register("occasion", {
+                          required: "Required",
+                        })}
+                        error={errors.occasion?.message}
+                      />
+                    </div>
+                  ) : (
+                    <>
+                      <Controller
+                        name="birthday"
+                        control={control}
+                        rules={{
+                          validate: (v) =>
+                            v.replace(/\D/g, "").length === 8 ||
+                            "Enter a full date",
+                        }}
+                        render={({ field }) => (
+                          <BirthdayInput
+                            label="Birthday"
+                            name={field.name}
+                            value={field.value}
+                            onChange={field.onChange}
+                            onBlur={field.onBlur}
+                            error={errors.birthday?.message}
+                          />
+                        )}
+                      />
+                      <div className="flex items-center justify-between gap-4">
+                        <p className="text-base md:text-xl uppercase leading-[1.1]">
+                          Number
+                          <br />
+                          of people
+                        </p>
+                        <Stepper
+                          value={booking.people}
+                          onChange={(v) =>
+                            setBooking((b) => ({ ...b, people: v }))
+                          }
+                        />
+                      </div>
+                    </>
+                  )}
+                  </div>
+                  <div className="flex items-center gap-6 shrink-0">
                     <Button
                       type="button"
                       variant="ghost"

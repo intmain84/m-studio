@@ -68,7 +68,45 @@ const RoomInfoModal = () => {
                 <Dialog.Title className="text-2xl md:text-[3.5rem] uppercase leading-[1.1] text-white">
                   {content.title}
                 </Dialog.Title>
-                {content.minDuration ? (
+                {content.promo ? (
+                  <div className="flex items-start justify-between gap-4 w-full text-xs md:text-base">
+                    <div className="flex flex-col leading-[1.1]">
+                      {content.promo.originalAmount && (
+                        <span className="text-foreground-muted text-[0.75em] line-through">
+                          {content.promo.originalAmount}
+                        </span>
+                      )}
+                      <span className="text-white">
+                        {content.tarifs[0].amount}
+                        {content.promo.note && (
+                          <span className="text-white">
+                            {" "}
+                            ({content.promo.note})
+                          </span>
+                        )}
+                      </span>
+                    </div>
+                    {content.promo.guestsIncluded && (
+                      <p className="text-foreground-muted leading-[1.1]">
+                        Up to{" "}
+                        <span className="text-white">
+                          {content.promo.guestsIncluded} guests
+                        </span>
+                        <br />
+                        included.
+                      </p>
+                    )}
+                    {content.minDuration && (
+                      <p className="text-foreground-muted leading-[1.1]">
+                        Minimum session duration:
+                        <br />
+                        <span className="text-white">
+                          {content.minDuration}
+                        </span>
+                      </p>
+                    )}
+                  </div>
+                ) : content.minDuration ? (
                   <p className="text-xs md:text-base leading-[1.1]">
                     <span className="text-foreground-muted">
                       Minimum session duration:{" "}
@@ -99,13 +137,18 @@ const RoomInfoModal = () => {
               </div>
 
               <ul className="flex flex-col gap-2">
-                {content.amenities.map((f) => (
+                {content.amenities.map((f, i) => (
                   <li
                     key={f}
                     className="flex gap-2 items-center text-xs md:text-sm text-white"
                   >
                     <span className="size-1 rounded-full bg-white shrink-0" />
-                    {f}
+                    {content.highlightLastAmenity &&
+                    i === content.amenities.length - 1 ? (
+                      <span className="bg-[#072859] px-1">{f}</span>
+                    ) : (
+                      f
+                    )}
                   </li>
                 ))}
               </ul>

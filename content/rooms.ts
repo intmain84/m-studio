@@ -30,17 +30,28 @@ export type RoomData = {
   selectDescription: string;
   tarifs: Tarif[];
   amenities: string[];
+  // Highlight the last amenity with a colored tag background
+  highlightLastAmenity?: boolean;
   highlights: { title: string; description: string }[];
   card: { num: string; tag: string; tags: string[] };
   // Everything below is optional — each room's RoomInfoModal layout is a bit
   // different, so a room only renders the sections it has data for.
-  // Shown under the title: a room has either a minimum-duration line or a
-  // price breakdown (falls back to `tarifs`) — never both.
+  // Shown under the title, in priority order: `promo` (price/guests/duration
+  // row) > `minDuration` (duration only) > `tarifs` price breakdown.
   minDuration?: string; // e.g. "50 minutes"
+  // Promo price row — current price always comes from tarifs[0].amount,
+  // this only adds the struck-through original price / guest count on top.
+  promo?: { originalAmount?: string; note?: string; guestsIncluded?: string };
   steps?: Step[];
   presets?: Preset[];
   equipment?: { groups: EquipmentGroup[]; note?: string };
   downloadGuide?: boolean;
+  // Self Room booking: guest fee on top of the flat per-slot session price
+  includedGuests?: number; // guests covered by the base price, e.g. 4
+  extraGuestFee?: number; // AED per guest beyond includedGuests, e.g. 100
+  // Main Room booking: per-hour rate depends on total hours booked — the
+  // applicable bracket is the last one whose minHours <= hours booked.
+  pricingBrackets?: { minHours: number; ratePerHour: number }[];
 };
 
 const selfIllustrations = [
@@ -96,7 +107,7 @@ export const ROOMS: Record<Room, RoomData> = {
       "A unique date idea, fun family photos, or simply time for yourself...",
     selectDescription:
       "A unique date idea, fun family photos, or simply time for yourself. Change outfits, act silly, and capture genuine emotions.",
-    tarifs: [{ value: "50m", amount: "350 AED", duration: "50 minutes" }],
+    tarifs: [{ value: "50m", amount: "550 AED", duration: "50 minutes" }],
     amenities: [
       "~17 sqm space, 3.9m ceiling height",
       "Three-sided cyclorama, 3x4 m",
@@ -104,10 +115,16 @@ export const ROOMS: Record<Room, RoomData> = {
       "Sony A7R V — 61MP professional camera",
       "Godox studio lighting, pre-tuned and ready",
       "Wireless clicker — full control, no assistance needed",
-      "1 hour minimum rent time",
+      "50 minutes - minimum rent time",
       "3 editing options: Original / B&W / Film & Grain (choose in advance)",
     ],
+    highlightLastAmenity: true,
     minDuration: "50 minutes",
+    promo: {
+      originalAmount: "650 AED",
+      note: "Soft Opening",
+      guestsIncluded: "4",
+    },
     presets: [
       { label: "Original", image: "/presets/original.png" },
       { label: "B&W", image: "/presets/bw.png" },
@@ -138,6 +155,8 @@ export const ROOMS: Record<Room, RoomData> = {
       note: "Camera, lighting, and mirror are already set up and ready to shoot.",
     },
     downloadGuide: true,
+    includedGuests: 4,
+    extraGuestFee: 100,
     steps: sharedSteps,
     highlights: [
       {
@@ -194,6 +213,12 @@ export const ROOMS: Record<Room, RoomData> = {
         duration: "8 hour",
         perHour: "280/hr",
       },
+    ],
+    pricingBrackets: [
+      { minHours: 1, ratePerHour: 400 },
+      { minHours: 2, ratePerHour: 350 },
+      { minHours: 4, ratePerHour: 300 },
+      { minHours: 8, ratePerHour: 280 },
     ],
     amenities: [
       "~20 sqm space + 15 sqm reception area, 3.9m ceiling height",

@@ -12,9 +12,9 @@ import {
 
 type DateTimePickerProps = {
   selectedDate: string;
-  selectedTime: string;
+  selectedTimes: string[];
   onDateChange: (date: string) => void;
-  onTimeChange: (time: string) => void;
+  onTimesChange: (times: string[]) => void;
   reservedSlots?: Record<string, number[]>; // { "2024-02-09": [10, 14] }
   loading?: boolean;
   className?: string;
@@ -26,9 +26,9 @@ function toDateStr(d: Date): string {
 
 export default function DateTimePicker({
   selectedDate,
-  selectedTime,
+  selectedTimes,
   onDateChange,
-  onTimeChange,
+  onTimesChange,
   reservedSlots = {},
   loading = false,
   className,
@@ -206,7 +206,7 @@ export default function DateTimePicker({
     const past = isTimePast(selectedDate, slot.hour);
     const reserved = isTimeReserved(selectedDate, slot.hour);
     const disabled = past || reserved;
-    const selected = selectedTime === slot.label;
+    const selected = selectedTimes.includes(slot.label);
     return (
       <div
         key={key}
@@ -217,7 +217,14 @@ export default function DateTimePicker({
             ? "text-white/20 cursor-default"
             : "text-white cursor-pointer"
         }`}
-        onClick={() => !disabled && onTimeChange(slot.label)}
+        onClick={() =>
+          !disabled &&
+          onTimesChange(
+            selected
+              ? selectedTimes.filter((t) => t !== slot.label)
+              : [...selectedTimes, slot.label],
+          )
+        }
       >
         <span className="text-[0.75rem] md:text-[0.875rem] leading-[1.1] whitespace-nowrap select-none">
           {slot.label}
