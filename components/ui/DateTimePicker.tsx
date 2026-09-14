@@ -154,6 +154,37 @@ export default function DateTimePicker({
     return reservedSlots[dateStr]?.includes(hour) ?? false;
   }
 
+  function hourOf(label: string): number {
+    return HOUR_SLOTS.find((s) => s.label === label)?.hour ?? -1;
+  }
+
+  // Keeps selectedTimes a contiguous run of hours — picking a slot that isn't
+  // adjacent to the current range starts a new selection instead of leaving a
+  // gap over a booked/unavailable hour; clicking an already-selected slot
+  // trims the range to end there (drops everything after it).
+  function handleTimeClick(slot: (typeof HOUR_SLOTS)[number]) {
+    const selected = selectedTimes.includes(slot.label);
+    if (selected) {
+      const idx = selectedTimes.indexOf(slot.label);
+      onTimesChange(selectedTimes.slice(0, idx + 1));
+      return;
+    }
+    if (selectedTimes.length === 0) {
+      onTimesChange([slot.label]);
+      return;
+    }
+    const hours = selectedTimes.map(hourOf);
+    const min = Math.min(...hours);
+    const max = Math.max(...hours);
+    if (slot.hour === max + 1) {
+      onTimesChange([...selectedTimes, slot.label]);
+    } else if (slot.hour === min - 1) {
+      onTimesChange([slot.label, ...selectedTimes]);
+    } else {
+      onTimesChange([slot.label]);
+    }
+  }
+
   const dateCell = (d: Date, key: string | number, mobile = false) => {
     const dateStr = toDateStr(d);
     const past = isDatePast(d);
@@ -217,14 +248,7 @@ export default function DateTimePicker({
             ? "text-white/20 cursor-default"
             : "text-white cursor-pointer"
         }`}
-        onClick={() =>
-          !disabled &&
-          onTimesChange(
-            selected
-              ? selectedTimes.filter((t) => t !== slot.label)
-              : [...selectedTimes, slot.label],
-          )
-        }
+        onClick={() => !disabled && handleTimeClick(slot)}
       >
         <span className="text-[0.75rem] md:text-[0.875rem] leading-[1.1] whitespace-nowrap select-none">
           {slot.label}
