@@ -1,6 +1,7 @@
 "use client";
 
 import Navbar from "./Navbar";
+import FloatingButton from "./FloatingButton";
 import { ModalProvider } from "@/context/ModalContext";
 import { PresetsProvider } from "@/context/PresetsContext";
 import ModalRenderer from "./modals/ModalRenderer";
@@ -11,6 +12,7 @@ const StateWrapper = ({ children }: { children: React.ReactNode }) => {
       <ModalProvider>
         <Navbar />
         <main className="flex-1">{children}</main>
+        <FloatingButton />
         <ModalRenderer /> {/* Always keep it here */}
       </ModalProvider>
     </PresetsProvider>

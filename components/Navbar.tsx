@@ -115,9 +115,11 @@ export default function Navbar() {
               }`}
               onClick={(e) => {
                 setIsOpen(false);
-                if (link.href.startsWith("/#")) {
+                // "/#id" links only exist on "/" — if the target isn't on this page, let Link navigate there normally
+                const id = link.href.startsWith("/#") ? link.href.slice(2) : null;
+                if (id && document.getElementById(id)) {
                   e.preventDefault();
-                  scrollToAnchor(link.href.slice(2));
+                  scrollToAnchor(id);
                 }
               }}
               onMouseEnter={() => {
