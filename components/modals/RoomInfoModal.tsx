@@ -145,7 +145,7 @@ const RoomInfoModal = () => {
                     <span className="size-1 rounded-full bg-white shrink-0" />
                     {content.highlightLastAmenity &&
                     i === content.amenities.length - 1 ? (
-                      <span className="bg-[#072859] px-1">{f}</span>
+                      <span className="bg-accent px-1">{f}</span>
                     ) : (
                       f
                     )}
@@ -254,7 +254,7 @@ const RoomInfoModal = () => {
               {content.downloadGuide && (
                 <button
                   type="button"
-                  className="flex-1 flex items-center justify-center gap-4 py-4 px-5 text-sm md:text-[1rem] cursor-pointer transition-all duration-300 bg-[#072859] border border-white/20 text-white hover:bg-[#0a3a7a]"
+                  className="flex-1 flex items-center justify-center gap-4 py-4 px-5 text-sm md:text-[1rem] cursor-pointer transition-all duration-300 bg-accent border border-white/20 text-white hover:bg-[#0a3a7a]"
                 >
                   <Image
                     src="/icons/download-guide.svg"
@@ -270,7 +270,11 @@ const RoomInfoModal = () => {
                 variant="light"
                 className="flex-1"
                 onClick={() =>
-                  setModal({ type: "book", room: room ?? undefined })
+                  setModal({
+                    type: "book",
+                    room: room ?? undefined,
+                    from: "room-info",
+                  })
                 }
               >
                 Book Session

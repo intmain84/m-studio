@@ -13,6 +13,9 @@
   --primary: #281c1a;
   --primary-foreground: #ffffff;
 
+  /* Accent */
+  --accent: #072859;
+
   /* Border */
   --border: rgba(255, 255, 255, 0.12);
 
@@ -38,6 +41,9 @@
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
 
+  /* Accent */
+  --color-accent: var(--accent);
+
   /* Border */
   --color-border: var(--border);
 
@@ -60,13 +66,21 @@ body {
 }
 
 @keyframes modal-fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes modal-fade-out {
-  from { opacity: 1; }
-  to { opacity: 0; }
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }
 
 @theme inline {

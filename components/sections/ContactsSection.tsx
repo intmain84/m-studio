@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import ContainerLarge from "../common/ContainerLarge";
 import PaddingGlobal from "../common/PaddingGlobal";
 import SpacerLarge from "../common/SpacerLarge";
@@ -43,9 +44,10 @@ export default function ContactsSection() {
             ))}
           </div>
 
-          <p className="mb-4 md:mb-6 text-xs text-foreground-muted leading-[1.1] text-center">
-            Copyright © {new Date().getFullYear()} The M Studio
-          </p>
+          <div className="flex items-center justify-center gap-4 mb-4 md:mb-6 text-xs text-foreground-muted leading-[1.1]">
+            <p>Copyright © {new Date().getFullYear()} The M Studio</p>
+            <Link href="/terms">Terms &amp; Agreement</Link>
+          </div>
         </ContainerLarge>
       </PaddingGlobal>
     </section>

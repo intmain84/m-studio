@@ -77,7 +77,7 @@ export default function FormSelect({
         </div>
       </div>
       {error && (
-        <span className="absolute top-[101%] text-danger/70 left-0  text-[0.7rem] leading-[1.1] pt-0.5">
+        <span className="absolute top-[101%] left-0 mt-1 bg-accent text-white text-[0.7rem] leading-[1.1] px-1">
           {error}
         </span>
       )}

@@ -119,7 +119,7 @@ function StepProgress({ index, total }: { index: number; total: number }) {
 }
 
 export default function BookModal() {
-  const { modal } = useModal();
+  const { modal, setModal } = useModal();
   const { presets } = usePresets();
   const open = modal?.type === "book"; //Fires re-rendering when modal changes
 
@@ -173,9 +173,19 @@ export default function BookModal() {
   }, [currentStep]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const canGoBack = currentIndex > 0;
+  // Opened straight into a room's steps from RoomInfoModal — step 0 has no
+  // in-modal step to go back to, so "Back" should return there instead.
+  const cameFromRoomInfo = modal?.type === "book" && modal.from === "room-info";
 
   const goBack = () => setCurrentIndex((i) => i - 1);
   const goNext = () => setCurrentIndex((i) => i + 1);
+  const goBackOrToRoomInfo = () => {
+    if (canGoBack) {
+      goBack();
+    } else if (booking.room) {
+      setModal({ type: "room-info", room: booking.room });
+    }
+  };
 
   const isSelf = booking.room === "self";
   const hasSpaceStep = steps[0] === "space";
@@ -455,7 +465,7 @@ export default function BookModal() {
                     })}
                   </div>
                   {presetError && (
-                    <p className="absolute left-0 top-[101%] pt-1 text-xs text-danger leading-[1.1]">
+                    <p className="absolute left-0 top-[101%] mt-1 w-full bg-accent text-white px-1 py-0.5 text-xs text-center leading-[1.1]">
                       Please select a preset
                     </p>
                   )}
@@ -480,11 +490,11 @@ export default function BookModal() {
                   </div>
                 </div>
                 <div className="flex items-center gap-6 shrink-0">
-                  {canGoBack && (
+                  {(canGoBack || cameFromRoomInfo) && (
                     <Button
                       variant="ghost"
                       className="w-31 flex items-center justify-between px-6"
-                      onClick={goBack}
+                      onClick={goBackOrToRoomInfo}
                     >
                       <ButtonArrow /> Back
                     </Button>
@@ -561,18 +571,18 @@ export default function BookModal() {
                       For specific timing requests, please contact us directly
                     </p>
                     {timeError && (
-                      <p className="absolute left-0 top-[101%] pt-1 w-full text-center text-xs text-danger leading-[1.1]">
+                      <p className="absolute left-0 top-[101%] mt-1 w-full bg-accent text-white text-center py-0.5 text-xs leading-[1.1]">
                         Please select a time
                       </p>
                     )}
                   </div>
                 </div>
                 <div className="flex items-center gap-6 mt-auto">
-                  {canGoBack && (
+                  {(canGoBack || cameFromRoomInfo) && (
                     <Button
                       variant="ghost"
                       className="w-31 flex items-center justify-between px-6"
-                      onClick={goBack}
+                      onClick={goBackOrToRoomInfo}
                     >
                       <ButtonArrow /> Back
                     </Button>

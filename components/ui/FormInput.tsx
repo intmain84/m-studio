@@ -46,7 +46,7 @@ const FormInput = ({
           />
         </div>
         {error && (
-          <span className="absolute left-0 top-[101%] text-danger/70 text-[0.7rem] leading-[1.1] pt-0.5">
+          <span className="absolute left-0 top-[101%] mt-1 bg-accent text-white text-[0.7rem] leading-[1.1] px-1">
             {error}
           </span>
         )}
