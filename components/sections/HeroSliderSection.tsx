@@ -22,7 +22,7 @@ export default function HeroSliderSection() {
   useEffect(() => {
     const observer = new MutationObserver(() => {
       if (document.body.style.overflow !== "hidden") {
-        swiperRef.current?.autoplay.start();
+        swiperRef.current?.autoplay?.start();
         setProgressKey((k) => k + 1);
       }
     });
@@ -33,6 +33,7 @@ export default function HeroSliderSection() {
     return () => observer.disconnect();
   }, []);
 
+  const hasMultipleSlides = slides.length > 1;
   const activeSlide = slides[selectedIndex];
   const isSplit = activeSlide.layout === "split";
 
@@ -41,8 +42,12 @@ export default function HeroSliderSection() {
       <Swiper
         modules={[Autoplay, EffectFade]}
         effect="fade"
-        loop
-        autoplay={{ delay: AUTOPLAY_DELAY, disableOnInteraction: false }}
+        loop={hasMultipleSlides}
+        autoplay={
+          hasMultipleSlides
+            ? { delay: AUTOPLAY_DELAY, disableOnInteraction: false }
+            : false
+        }
         onSwiper={(swiper) => {
           swiperRef.current = swiper;
         }}
@@ -54,13 +59,15 @@ export default function HeroSliderSection() {
       >
         {slides.map((slide, i) => (
           <SwiperSlide key={i} className="relative h-full">
-            <Image
-              src={slide.image}
-              alt={slide.title}
-              fill
-              className="object-cover"
-              priority={i === 0}
-            />
+            {slide.image && (
+              <Image
+                src={slide.image}
+                alt={slide.title}
+                fill
+                className="object-cover"
+                priority={i === 0}
+              />
+            )}
           </SwiperSlide>
         ))}
       </Swiper>
@@ -112,7 +119,7 @@ export default function HeroSliderSection() {
                   </Button>
                 </div>
                 <div className="hidden md:flex gap-2 pointer-events-auto">
-                  {slides.map((_, i) => (
+                  {hasMultipleSlides && slides.map((_, i) => (
                     <button
                       key={i}
                       onClick={() => swiperRef.current?.slideToLoop(i)}
@@ -145,35 +152,39 @@ export default function HeroSliderSection() {
 
           {/* Dots — mobile always; on desktop only for non-split slides
               (split renders its own copy inside the right column, left-aligned to the button) */}
-          <div
-            className={`flex justify-center gap-2 mt-8 pointer-events-auto md:mt-0 ${isSplit ? "md:hidden" : "md:absolute md:bottom-0 md:right-50"}`}
-          >
-            {slides.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => swiperRef.current?.slideToLoop(i)}
-                className={`cursor-pointer rounded-full transition-all duration-300 w-4 h-4 md:w-5 md:h-5 ${
-                  i === selectedIndex
-                    ? "bg-background border-foreground border-3"
-                    : "bg-foreground border-background border-[1.5px]"
-                }`}
-              />
-            ))}
-          </div>
+          {hasMultipleSlides && (
+            <div
+              className={`flex justify-center gap-2 mt-8 pointer-events-auto md:mt-0 ${isSplit ? "md:hidden" : "md:absolute md:bottom-0 md:right-50"}`}
+            >
+              {slides.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => swiperRef.current?.slideToLoop(i)}
+                  className={`cursor-pointer rounded-full transition-all duration-300 w-4 h-4 md:w-5 md:h-5 ${
+                    i === selectedIndex
+                      ? "bg-background border-foreground border-3"
+                      : "bg-foreground border-background border-[1.5px]"
+                  }`}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
       {/* Progress bar */}
-      <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/20 z-10">
-        <div
-          key={progressKey}
-          className={`h-full ${activeSlide.progressColor === "light" ? "bg-foreground text-background" : "bg-background text-foreground"}`}
-          style={{
-            backgroundColor: activeSlide.progressColor,
-            animation: `progress ${AUTOPLAY_DELAY}ms linear forwards`,
-          }}
-        />
-      </div>
+      {hasMultipleSlides && (
+        <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/20 z-10">
+          <div
+            key={progressKey}
+            className={`h-full ${activeSlide.progressColor === "light" ? "bg-foreground text-background" : "bg-background text-foreground"}`}
+            style={{
+              backgroundColor: activeSlide.progressColor,
+              animation: `progress ${AUTOPLAY_DELAY}ms linear forwards`,
+            }}
+          />
+        </div>
+      )}
 
       <style>{`
         @keyframes progress {

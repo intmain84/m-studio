@@ -72,14 +72,14 @@ export default function RoomSelectorSection() {
                 [Choose your space]
               </p>
               <p
-                className={`absolute inset-0 m-auto text-sm text-foreground leading-[1.1] whitespace-pre-line transition-opacity duration-300 w-68 h-fit ${hovered === "self" ? "opacity-100" : "opacity-0"}`}
+                className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-sm text-foreground leading-[1.1] whitespace-pre-line transition-opacity duration-300 w-[17.125rem] ${hovered === "self" ? "opacity-100" : "opacity-0"}`}
               >
-                You take your own photos — no photographer needed. Camera,
-                lighting, and a mirror are all set up. Just press the remote and
-                shoot.
+                You take your own photos — no photographer needed. <br />
+                Camera, lighting, and a mirror are all set up. Just press the
+                remote and shoot.
               </p>
               <p
-                className={`absolute inset-0 m-auto text-sm text-foreground leading-[1.1] whitespace-pre-line transition-opacity duration-300 w-80 h-fit ${hovered === "main" ? "opacity-100" : "opacity-0"}`}
+                className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-sm text-foreground leading-[1.1] whitespace-pre-line transition-opacity duration-300 w-[17.125rem] ${hovered === "main" ? "opacity-100" : "opacity-0"}`}
               >
                 No camera or photographer included — you bring your own. You get
                 the space and pro equipment: Profoto lighting, a clean curved

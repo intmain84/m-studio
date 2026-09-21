@@ -14,13 +14,13 @@ export const CONTACTS = [
   {
     label: "Instagram",
     value: "the.m_studio",
-    href: "https://www.instagram.com/the.m_studio",
+    href: "https://www.instagram.com/the.m__studio",
     orderClass: "md:order-1",
   },
   {
     label: "Address",
     value: "Art of living mall\nAl Barsha 2\nDubai",
-    href: "https://maps.google.com/?q=Art+of+Living+Mall,+Al+Barsha,+Dubai",
+    href: "https://www.google.com/maps/search/?api=1&query=Art+of+Living+Mall%2C+Al+Barsha+2%2C+Dubai",
     orderClass: "md:order-4",
   },
 ];

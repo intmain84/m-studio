@@ -2,7 +2,7 @@ export const FAQS = [
   {
     title: "Do I need to bring my own camera?",
     content:
-      "Self Room — no, everything is provided and pre-tuned. Main Room — yes, you bring your own camera, crew, and creative direction; we provide the space, lighting, and equipment.",
+      "Self Room — no, everything is provided and pre-tuned. Main Room — yes, you bring your own camera, crew, and creative direction; we provide the space, lighting.",
   },
   {
     title: "How will I receive my photos?",
@@ -27,11 +27,6 @@ export const FAQS = [
   {
     title: "What equipment is included?",
     content:
-      "Self Room — Sony A7R V (61MP), Godox lighting, mirror wall, wireless clicker. Main Room — 3 Profoto D3 strobes, 2 Aputure 300x continuous lights, motorized ceiling rail, cyclorama wall.",
-  },
-  {
-    title: "Is there makeup/styling space?",
-    content:
-      "Yes — 1 hour of makeup area use is complimentary with every booking, in either room.",
+      "Self Room — Sony A7R V (61MP), Godox lighting, mirror wall, wireless clicker. Main Room — 3 Profoto D3 strobes, 2 Aputure 300x continuous lights, motorized ceiling rail, cyclorama wall. Full list available in each room description.",
   },
 ];

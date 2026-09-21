@@ -6,6 +6,7 @@ import Link from "next/link";
 import Logo from "./Logo";
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { UNDERLINE_HOVER } from "@/lib/utils";
 
 //Scroll to anchor
 function scrollToAnchor(id: string, duration = 900) {
@@ -79,11 +80,12 @@ export default function Navbar() {
 
         {/* ADDITIONAL LINKS */}
         <div className="flex gap-8">
-          <a href="#" className="hidden md:block">
+          <a href="#" className={`hidden md:block ${UNDERLINE_HOVER}`}>
             Gift Certificate
           </a>
           <Link
             href="#"
+            className={UNDERLINE_HOVER}
             onClick={() => {
               setModal({ type: "book" });
             }}
