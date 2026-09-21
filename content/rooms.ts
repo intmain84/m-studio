@@ -55,11 +55,11 @@ export type RoomData = {
 };
 
 const selfIllustrations = [
-  "/how-it-works-v2/01-reserve.png",
-  "/how-it-works-v2/02-arrive.png",
-  "/how-it-works-v2/03-shoot.png",
+  "/how-it-works-v2/01-reserve.avif",
+  "/how-it-works-v2/02-arrive.avif",
+  "/how-it-works-v2/03-shoot.avif",
   "/how-it-works-v2/04-receive.svg",
-  "/how-it-works-v2/05-download.png",
+  "/how-it-works-v2/05-download.avif",
 ];
 
 const sharedSteps: Step[] = [
@@ -98,9 +98,9 @@ const sharedSteps: Step[] = [
 export const ROOMS: Record<Room, RoomData> = {
   self: {
     title: "Self Room",
-    modalImages: ["/spaces/modal-self.webp", "/spaces/selfroom.webp"],
-    cardImage: "/spaces/selfroom.webp",
-    selectImage: "/spaces/spaces_self.png",
+    modalImages: ["/spaces/modal-self.avif", "/spaces/selfroom.avif"],
+    cardImage: "/spaces/selfroom.avif",
+    selectImage: "/spaces/spaces_self.avif",
     modalDescription:
       "Close the door, pick up the clicker, and shoot at your own pace. Change outfits, try different angles, take a break — no one's watching and no one's rushing you.\n\nPremium camera and professional lighting are already perfectly tuned.",
     cardDescription:
@@ -126,9 +126,9 @@ export const ROOMS: Record<Room, RoomData> = {
       guestsIncluded: "4",
     },
     presets: [
-      { label: "Original", image: "/presets/original.png" },
-      { label: "B&W", image: "/presets/bw.png" },
-      { label: "Film & Grain", image: "/presets/film-grain.png" },
+      { label: "Original", image: "/presets/original.avif" },
+      { label: "B&W", image: "/presets/bw.avif" },
+      { label: "Film & Grain", image: "/presets/film-grain.avif" },
     ],
     equipment: {
       groups: [
@@ -184,9 +184,9 @@ export const ROOMS: Record<Room, RoomData> = {
   },
   main: {
     title: "Main Room",
-    modalImages: ["/spaces/modal-main.webp", "/spaces/mainroom.webp"],
-    cardImage: "/spaces/mainroom.webp",
-    selectImage: "/spaces/spaces_main.png",
+    modalImages: ["/spaces/modal-main.avif", "/spaces/mainroom.avif"],
+    cardImage: "/spaces/mainroom.avif",
+    selectImage: "/spaces/spaces_main.avif",
     modalDescription:
       "A full production space, built for your own vision. Bring your camera, your team, your style — the room adapts to how you want to shoot.",
     cardDescription:

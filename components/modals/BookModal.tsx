@@ -46,9 +46,9 @@ const defaultBooking: BookingData = {
 // Backend only sends { value, label } for presets — these images are matched
 // locally by value. A preset with no match falls back to a "No photo" tile.
 const PRESET_IMAGES: Record<string, string> = {
-  n1: "/presets/original.png",
-  bw1: "/presets/bw.png",
-  film1: "/presets/film-grain.png",
+  n1: "/presets/original.avif",
+  bw1: "/presets/bw.avif",
+  film1: "/presets/film-grain.avif",
 };
 
 const OCCASIONS = [

@@ -29,10 +29,10 @@ function scrollToAnchor(id: string, duration = 900) {
 }
 
 const links = [
-  { name: "About studio", href: "/#about", image: "/menu/about.jpg" },
-  { name: "Spaces", href: "/#spaces", image: "/menu/spaces.jpg" },
-  { name: "FAQ", href: "/#faq", image: "/menu/faq.jpg" },
-  { name: "Contacts", href: "/#contacts", image: "/menu/contacts.jpg" },
+  { name: "About studio", href: "/#about", image: "/menu/about.avif" },
+  { name: "Spaces", href: "/#spaces", image: "/menu/spaces.avif" },
+  { name: "FAQ", href: "/#faq", image: "/menu/faq.avif" },
+  { name: "Contacts", href: "/#contacts", image: "/menu/contacts.avif" },
 ];
 
 export default function Navbar() {

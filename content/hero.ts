@@ -18,7 +18,7 @@ export const HERO_SLIDES: HeroSlide[] = [
   {
     title: "THE\nSPACE\nBETWEEN\nYOUR\nIDEA AND\nGREAT\nCONTENT.",
     text: "Create more. Think less.",
-    // image: "/hero-slides/1.jpg",
+    // image: "/hero-slides/1.avif",
     progressColor: "light",
     buttonText: "Select Spaces",
     titleSize: "sm",
@@ -28,14 +28,14 @@ export const HERO_SLIDES: HeroSlide[] = [
   // {
   //   title: "Self\nRoom",
   //   text: "A unique date idea, fun family photos, or simply time for yourself.",
-  //   image: "/hero-slides/2.jpg",
+  //   image: "/hero-slides/2.avif",
   //   progressColor: "dark",
   //   room: "self",
   // },
   // {
   //   title: "main\nRoom",
   //   text: "Bring your own camera and crew — from solo content batches to full productions. We give you the light and the space to make it happen.",
-  //   image: "/hero-slides/3.jpg",
+  //   image: "/hero-slides/3.avif",
   //   progressColor: "light",
   //   room: "main",
   // },

@@ -6,11 +6,7 @@ const nextConfig: NextConfig = {
     unoptimized: true,
   },
   trailingSlash: true,
+  allowedDevOrigins: ["192.168.3.5"],
 };
 
 export default nextConfig;
-
-
-module.exports = {
-  allowedDevOrigins: ['192.168.3.5'],
-}
