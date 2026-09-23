@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import ContainerLarge from "@/components/common/ContainerLarge";
+import ContainerMedium from "@/components/common/ContainerMedium";
 import PaddingGlobal from "@/components/common/PaddingGlobal";
 import SpacerLarge from "@/components/common/SpacerLarge";
 import ContactsSection from "@/components/sections/ContactsSection";
@@ -15,7 +15,7 @@ export default function TermsPage() {
     <>
       <section className="mt-24 lg:mt-32">
         <PaddingGlobal>
-          <ContainerLarge>
+          <ContainerMedium>
             <div className="flex flex-col gap-8 md:gap-14">
               <div className="flex flex-col gap-6 md:gap-10">
                 <h1 className="text-2xl md:text-[3.5rem] text-white uppercase leading-[1.1]">
@@ -418,7 +418,7 @@ export default function TermsPage() {
                 </aside>
               </section>
             </div>
-          </ContainerLarge>
+          </ContainerMedium>
         </PaddingGlobal>
         <SpacerLarge />
       </section>

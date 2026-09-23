@@ -1,4 +1,4 @@
-import ContainerLarge from "../common/ContainerLarge";
+import ContainerMedium from "../common/ContainerMedium";
 import PaddingGlobal from "../common/PaddingGlobal";
 import SpacerLarge from "../common/SpacerLarge";
 import { ROOMS } from "@/content/rooms";
@@ -37,12 +37,12 @@ export default function FeaturesSection() {
     <section>
       <SpacerLarge />
       <PaddingGlobal>
-        <ContainerLarge>
+        <ContainerMedium>
           <div className="flex flex-col gap-14 md:gap-30">
             <RoomRow label="Self Room" features={ROOMS.self.highlights} />
             <RoomRow label="Main Room" features={ROOMS.main.highlights} />
           </div>
-        </ContainerLarge>
+        </ContainerMedium>
       </PaddingGlobal>
     </section>
   );

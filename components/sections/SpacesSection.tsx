@@ -4,7 +4,7 @@ import Image from "next/image";
 import Button from "../ui/Button";
 import SpacerLarge from "../common/SpacerLarge";
 import PaddingGlobal from "../common/PaddingGlobal";
-import ContainerLarge from "../common/ContainerLarge";
+import ContainerMedium from "../common/ContainerMedium";
 import { useModal } from "@/context/ModalContext";
 import { Room } from "@/types/modal";
 import { ROOMS } from "@/content/rooms";
@@ -107,11 +107,11 @@ export default function SpacesSection() {
     <section>
       <SpacerLarge id="spaces" />
       <PaddingGlobal>
-        <ContainerLarge>
+        <ContainerMedium>
           <h2 className="text-[1.5rem] md:text-[3.5rem] text-white uppercase leading-[1.1] mb-6 md:mb-10">
             [Spaces]
           </h2>
-        </ContainerLarge>
+        </ContainerMedium>
       </PaddingGlobal>
       <div className="mx-2">
         <div className="flex flex-col md:flex-row gap-2">

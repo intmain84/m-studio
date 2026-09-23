@@ -7,7 +7,7 @@ import Image from "next/image";
 import "swiper/css";
 import SpacerLarge from "../common/SpacerLarge";
 import PaddingGlobal from "../common/PaddingGlobal";
-import ContainerLarge from "../common/ContainerLarge";
+import ContainerMedium from "../common/ContainerMedium";
 
 const rooms = {
   self: {
@@ -85,7 +85,7 @@ export default function GallerySection() {
     <section className="flex flex-col">
       <SpacerLarge id="gallery" />
       <PaddingGlobal>
-        <ContainerLarge>
+        <ContainerMedium>
           <h2 className="text-[1.5rem] md:text-[3.5rem] text-white uppercase leading-[1.1] mb-6 md:mb-10">
             [How It Looks]
           </h2>
@@ -107,7 +107,7 @@ export default function GallerySection() {
               );
             })}
           </div>
-        </ContainerLarge>
+        </ContainerMedium>
       </PaddingGlobal>
 
       <div

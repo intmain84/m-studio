@@ -3,7 +3,7 @@
 import { useModal } from "@/context/ModalContext";
 import { useEffect, useState } from "react";
 import PaddingGlobal from "../common/PaddingGlobal";
-import ContainerLarge from "../common/ContainerLarge";
+import ContainerMedium from "../common/ContainerMedium";
 import SpacerLarge from "../common/SpacerLarge";
 import { ROOMS } from "@/content/rooms";
 
@@ -22,7 +22,7 @@ export default function RoomSelectorSection() {
     <section>
       <SpacerLarge />
       <PaddingGlobal>
-        <ContainerLarge>
+        <ContainerMedium>
           <div className="relative flex items-center w-full overflow-hidden flex-col justify-center md:flex-row md:justify-between px-0 md:px-[calc(20.83%-7.9375rem)]">
             {/* Self Room circle */}
             <button
@@ -129,7 +129,7 @@ export default function RoomSelectorSection() {
               </span>
             </button>
           </div>
-        </ContainerLarge>
+        </ContainerMedium>
       </PaddingGlobal>
     </section>
   );

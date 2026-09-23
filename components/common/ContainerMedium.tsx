@@ -1,11 +1,11 @@
 // Define width classes for different screen sizes. By default, the container will take the full width of its parent.
 const widths = {
   mobile: "w-full",
-  md: "md:w-[90%]",
-  lg: "lg:w-[90%]",
+  md: "md:w-[80%]",
+  lg: "lg:w-[80%]",
 };
 
-export default function ContainerLarge({
+export default function ContainerMedium({
   children,
 }: {
   children: React.ReactNode;

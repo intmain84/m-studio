@@ -1,4 +1,4 @@
-import ContainerLarge from "../common/ContainerLarge";
+import ContainerMedium from "../common/ContainerMedium";
 import PaddingGlobal from "../common/PaddingGlobal";
 import SpacerLarge from "../common/SpacerLarge";
 import Accordion from "../ui/Accordion";
@@ -9,19 +9,19 @@ export default function FAQSection() {
     <section>
       <SpacerLarge id="faq" />
       <PaddingGlobal>
-        <ContainerLarge>
+        <ContainerMedium>
           <div className="flex flex-col md:flex-row">
-            <h2 className="md:w-1/2 mb-10 md:mb-0 text-[3.5rem] text-white uppercase leading-[1.1]">
+            <h2 className="md:w-2/5 mb-10 md:mb-0 text-[3.5rem] text-white uppercase leading-[1.1]">
               [FAQ]
             </h2>
             <Accordion
               items={FAQS}
-              className="md:w-1/2"
+              className="md:w-3/5"
               activeBackground="bg-[#07295C]"
               activeTextColor="text-white"
             />
           </div>
-        </ContainerLarge>
+        </ContainerMedium>
       </PaddingGlobal>
     </section>
   );
