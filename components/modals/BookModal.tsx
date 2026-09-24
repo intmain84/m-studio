@@ -38,7 +38,7 @@ type DetailsForm = {
 const defaultBooking: BookingData = {
   room: undefined,
   preset: "",
-  people: 1,
+  people: 0,
   date: "",
   times: [],
 };
@@ -132,6 +132,7 @@ export default function BookModal() {
   );
   const [slotsLoading, setSlotsLoading] = useState(false);
   const [presetError, setPresetError] = useState(false);
+  const [peopleError, setPeopleError] = useState(false);
   const [timeError, setTimeError] = useState(false);
 
   const {
@@ -153,6 +154,7 @@ export default function BookModal() {
       setBooking({ ...defaultBooking, room: preselectedRoom, date: todayStr });
       setStatus("idle");
       setPresetError(false);
+      setPeopleError(false);
       setTimeError(false);
       reset({ phone: "+", birthday: "", occasion: "" });
     }
@@ -215,6 +217,7 @@ export default function BookModal() {
   const selectedPreset = presets.find((p) => p.value === booking.preset);
 
   const onSubmit = async (data: DetailsForm) => {
+    if (booking.people < 1) return;
     try {
       const tarifLabel =
         slotCount > 0 ? `${priceAmountText} ${priceDetailText}` : "";
@@ -470,7 +473,7 @@ export default function BookModal() {
                     </p>
                   )}
                   </div>
-                  <div className="flex items-center justify-between gap-4">
+                  <div className="relative flex items-center justify-between gap-4">
                     <div className="flex flex-col gap-2">
                       <p className="text-base md:text-xl uppercase leading-[1.1]">
                         Number of people
@@ -483,10 +486,17 @@ export default function BookModal() {
                     </div>
                     <Stepper
                       value={booking.people}
-                      onChange={(v) =>
-                        setBooking((b) => ({ ...b, people: v }))
-                      }
+                      min={0}
+                      onChange={(v) => {
+                        setBooking((b) => ({ ...b, people: v }));
+                        setPeopleError(false);
+                      }}
                     />
+                    {peopleError && (
+                      <p className="absolute left-0 top-[101%] mt-1 w-full bg-accent text-white px-1 py-0.5 text-xs text-center leading-[1.1]">
+                        Please select number of guests
+                      </p>
+                    )}
                   </div>
                 </div>
                 <div className="flex items-center gap-6 shrink-0">
@@ -502,9 +512,16 @@ export default function BookModal() {
                   <Button
                     variant="light"
                     className="flex-1 px-6"
-                    onClick={() =>
-                      booking.preset ? goNext() : setPresetError(true)
-                    }
+                    onClick={() => {
+                      const presetOk = !!booking.preset;
+                      const peopleOk = booking.people > 0;
+                      if (presetOk && peopleOk) {
+                        goNext();
+                      } else {
+                        setPresetError(!presetOk);
+                        setPeopleError(!peopleOk);
+                      }
+                    }}
                   >
                     Next
                   </Button>
@@ -653,7 +670,10 @@ export default function BookModal() {
                 </div>
                 <form
                   className="flex flex-col gap-6 md:gap-0 flex-1 md:min-h-0"
-                  onSubmit={handleSubmit(onSubmit)}
+                  onSubmit={(e) => {
+                    if (!isSelf && booking.people < 1) setPeopleError(true);
+                    return handleSubmit(onSubmit)(e);
+                  }}
                 >
                   <div className="flex-1 md:min-h-0 flex flex-col justify-center gap-8">
                   <div className="flex flex-col md:flex-row gap-y-8 gap-x-10">
@@ -766,7 +786,7 @@ export default function BookModal() {
                           />
                         )}
                       />
-                      <div className="flex items-center justify-between gap-4">
+                      <div className="relative flex items-center justify-between gap-4">
                         <p className="text-base md:text-xl uppercase leading-[1.1]">
                           Number
                           <br />
@@ -774,10 +794,17 @@ export default function BookModal() {
                         </p>
                         <Stepper
                           value={booking.people}
-                          onChange={(v) =>
-                            setBooking((b) => ({ ...b, people: v }))
-                          }
+                          min={0}
+                          onChange={(v) => {
+                            setBooking((b) => ({ ...b, people: v }));
+                            setPeopleError(false);
+                          }}
                         />
+                        {peopleError && (
+                          <p className="absolute left-0 top-[101%] mt-1 w-full bg-accent text-white px-1 py-0.5 text-xs text-center leading-[1.1]">
+                            Please select number of guests
+                          </p>
+                        )}
                       </div>
                     </>
                   )}
