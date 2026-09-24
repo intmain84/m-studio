@@ -104,8 +104,8 @@ export default function SpacesSection() {
   const { setModal } = useModal();
 
   return (
-    <section>
-      <SpacerLarge id="spaces" />
+    <section id="spaces">
+      <SpacerLarge />
       <PaddingGlobal>
         <ContainerMedium>
           <h2 className="text-[1.5rem] md:text-[3.5rem] text-white uppercase leading-[1.1] mb-6 md:mb-10">

@@ -652,7 +652,7 @@ export default function BookModal() {
                   )}
                 </div>
                 <form
-                  className="flex flex-col flex-1 md:min-h-0"
+                  className="flex flex-col gap-6 md:gap-0 flex-1 md:min-h-0"
                   onSubmit={handleSubmit(onSubmit)}
                 >
                   <div className="flex-1 md:min-h-0 flex flex-col justify-center gap-8">

@@ -249,8 +249,8 @@ const RoomInfoModal = () => {
               )}
             </div>
 
-            {/* Buttons — always pinned to the bottom, never scroll away */}
-            <div className="shrink-0 flex gap-4 px-6 py-4 border-t border-foreground-muted">
+            {/* Buttons — always pinned to the bottom, never scroll away (sticky on mobile) */}
+            <div className="shrink-0 flex gap-4 px-6 py-4 border-t border-foreground-muted sticky bottom-0 z-10 bg-background md:static">
               {content.downloadGuide && (
                 <button
                   type="button"

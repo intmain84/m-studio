@@ -19,10 +19,10 @@ function RoomRow({
       <div className="grid grid-cols-2 md:grid-cols-4 gap-y-8 gap-x-4">
         {features.map(({ title, description }) => (
           <div key={title} className="flex flex-col gap-6 md:max-w-64">
-            <p className="text-xl md:text-[2.5rem] text-white uppercase leading-[1.1]">
+            <p className="text-xl md:text-[2.5rem] text-white uppercase leading-[1.1] whitespace-pre-line">
               {title}
             </p>
-            <p className="text-sm text-foreground-muted leading-[1.1]">
+            <p className="text-sm text-foreground-muted leading-[1.1] whitespace-pre-line">
               {description}
             </p>
           </div>

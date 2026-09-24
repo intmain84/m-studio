@@ -75,15 +75,15 @@ export default function RoomSelectorSection() {
                 className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-sm text-foreground leading-[1.1] whitespace-pre-line transition-opacity duration-300 w-[17.125rem] ${hovered === "self" ? "opacity-100" : "opacity-0"}`}
               >
                 You take your own photos — no photographer needed. <br />
-                Camera, lighting, and a mirror are all set up. Just press the
-                remote and shoot.
+                Camera, lighting, and a mirror are all set up. <br />
+                Just press the remote and shoot.
               </p>
               <p
                 className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-sm text-foreground leading-[1.1] whitespace-pre-line transition-opacity duration-300 w-[17.125rem] ${hovered === "main" ? "opacity-100" : "opacity-0"}`}
               >
                 No camera or photographer included — you bring your own. You get
-                the space and pro equipment: Profoto lighting, a clean curved
-                wall, high ceilings.
+                the space and pro equipment: Profoto lighting, <br />a clean
+                curved wall, high ceilings.
               </p>
 
               {/* Mobile: bottom line indicator (main room) */}

@@ -98,9 +98,13 @@ const sharedSteps: Step[] = [
 export const ROOMS: Record<Room, RoomData> = {
   self: {
     title: "Self Room",
-    modalImages: ["/spaces/modal-self.avif", "/spaces/selfroom.avif"],
-    cardImage: "/spaces/selfroom.avif",
-    selectImage: "/spaces/spaces_self.avif",
+    modalImages: [
+      "/rooms/self-room/2.avif",
+      "/rooms/self-room/3.avif",
+      "/rooms/self-room/4.avif",
+    ],
+    cardImage: "/rooms/self-room/1.avif",
+    selectImage: "/rooms/select-self.avif",
     modalDescription:
       "Close the door, pick up the clicker, and shoot at your own pace. Change outfits, try different angles, take a break — no one's watching and no one's rushing you.\n\nPremium camera and professional lighting are already perfectly tuned.",
     cardDescription:
@@ -161,19 +165,19 @@ export const ROOMS: Record<Room, RoomData> = {
     highlights: [
       {
         title: "Absolute\nPrivacy",
-        description: "A completely private space, just for you",
+        description: "A completely private space, just for you.",
       },
       {
         title: "Instant\nControl",
-        description: "You are the photographer. You decide.",
+        description: "You are the photographer.\nYou decide.",
       },
       {
         title: "Mirror\nTech",
-        description: "See your reflection, capture perfection",
+        description: "See your reflection,\ncapture perfection.",
       },
       {
         title: "Ready In\n24 Hours",
-        description: "High-resolution photos, ready to download",
+        description: "High-resolution photos,\nready to download.",
       },
     ],
     card: {
@@ -184,9 +188,14 @@ export const ROOMS: Record<Room, RoomData> = {
   },
   main: {
     title: "Main Room",
-    modalImages: ["/spaces/modal-main.avif", "/spaces/mainroom.avif"],
-    cardImage: "/spaces/mainroom.avif",
-    selectImage: "/spaces/spaces_main.avif",
+    modalImages: [
+      "/rooms/main-room/2.avif",
+      "/rooms/main-room/3.avif",
+      "/rooms/main-room/4.avif",
+      "/rooms/main-room/5.avif",
+    ],
+    cardImage: "/rooms/main-room/1.avif",
+    selectImage: "/rooms/select-main.avif",
     modalDescription:
       "A full production space, built for your own vision. Bring your camera, your team, your style — the room adapts to how you want to shoot.",
     cardDescription:
@@ -277,19 +286,19 @@ export const ROOMS: Record<Room, RoomData> = {
     highlights: [
       {
         title: "Pro\nEquipment",
-        description: "Profoto D30 strobes, full modifier set",
+        description: "Profoto D30 strobes,\nfull modifier set.",
       },
       {
         title: "Manfrotto\nSystem",
-        description: "Ceiling rail — move lights with precision",
+        description: "Ceiling rail — move lights with precision.",
       },
       {
         title: "Cyclorama\nWall",
-        description: "Three-sided, seamless from every angle",
+        description: "Three-sided, seamless\nfrom every angle.",
       },
       {
         title: "Bring\nYour Own",
-        description: "Your camera, your crew",
+        description: "Your camera,\nyour crew.",
       },
     ],
     card: {

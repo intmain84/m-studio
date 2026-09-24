@@ -9,7 +9,7 @@ export default function AboutStudioSection() {
       <PaddingGlobal>
         <ContainerMedium>
           <div className="flex flex-col gap-6 md:flex-row md:justify-between md:items-start">
-            <h2 className="text-2xl md:text-[3.5rem] text-white uppercase leading-[1.1]">
+            <h2 className="text-2xl md:text-[3.5rem] text-white uppercase leading-[1.1] md:whitespace-nowrap md:shrink-0">
               [About Studio]
             </h2>
             <div className="flex flex-col gap-6 text-sm text-foreground-muted leading-[1.1] md:max-w-153">
