@@ -7,7 +7,13 @@ const CONTACT_LINKS = [
     name: "WhatsApp",
     href: "https://wa.me/971557070329",
     icon: (
-      <svg width={30} height={30} viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg
+        width={30}
+        height={30}
+        viewBox="0 0 30 30"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
         <path
           fillRule="evenodd"
           clipRule="evenodd"
@@ -21,7 +27,13 @@ const CONTACT_LINKS = [
     name: "Telegram",
     href: "https://t.me/TheMStudio2026",
     icon: (
-      <svg width={30} height={30} viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg
+        width={30}
+        height={30}
+        viewBox="0 0 30 30"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
         <path
           d="M25.8871 4.56812C25.8871 4.56812 28.3154 3.62124 28.113 5.9208C28.0456 6.86769 27.4385 10.1817 26.9663 13.7664L25.3474 24.3849C25.3474 24.3849 25.2126 25.9405 23.9984 26.2111C22.7842 26.4816 20.963 25.2642 20.6257 24.9936C20.3559 24.7907 15.5667 21.7472 13.8804 20.2592C13.4082 19.8534 12.8686 19.0418 13.9478 18.0949L21.0304 11.3316C21.8399 10.5199 22.6493 8.62619 19.2766 10.9257L9.83319 17.351C9.83319 17.351 8.75394 18.0273 6.73037 17.4186L2.34589 16.0659C2.34589 16.0659 0.727006 15.0514 3.49259 14.0369C10.2379 10.8581 18.5347 7.61162 25.8871 4.56812Z"
           fill="#072657"
@@ -56,12 +68,16 @@ const FloatingButton = () => {
               style={{
                 // Closed: collapsed to the main button's spot and shrunk, so it visually hides under it.
                 // Open: slides up to its resting spot and pops back to full size.
-                transform: isOpen ? `translateY(-${offsetRem}rem) scale(1)` : "translateY(0) scale(0.4)",
+                transform: isOpen
+                  ? `translateY(-${offsetRem}rem) scale(1)`
+                  : "translateY(0) scale(0.4)",
                 // Staggers each button in turn: bottom-most (index 0) leads on open, top-most leads on close
                 transitionDelay: `${(isOpen ? index : CONTACT_LINKS.length - 1 - index) * 80}ms`,
               }}
               className={`absolute inset-0 z-0 flex items-center justify-center rounded-full bg-white transition-all duration-300 ease-out ${
-                isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+                isOpen
+                  ? "opacity-100 pointer-events-auto"
+                  : "opacity-0 pointer-events-none"
               }`}
             >
               {link.icon}
@@ -73,13 +89,27 @@ const FloatingButton = () => {
           onClick={() => setIsOpen((prev) => !prev)}
           aria-expanded={isOpen}
           aria-label={isOpen ? "Close contact options" : "Open contact options"}
-          className={`relative z-10 flex items-center justify-center size-full rounded-full border border-white/20 transition-colors duration-300 cursor-pointer ${
+          className={`relative z-10 flex items-center justify-center size-full rounded-full border border-white/20 transition-all  cursor-pointer duration-300 hover:scale-115 ${
             isOpen ? "bg-[#072657]" : "bg-white"
           }`}
         >
           {isOpen ? (
-            <svg width={30} height={30} viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <line x1="5.06066" y1="4" x2="26" y2="24.9393" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
+            <svg
+              width={30}
+              height={30}
+              viewBox="0 0 30 30"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <line
+                x1="5.06066"
+                y1="4"
+                x2="26"
+                y2="24.9393"
+                stroke="white"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+              />
               <line
                 x1="0.75"
                 y1="-0.75"
@@ -92,7 +122,13 @@ const FloatingButton = () => {
               />
             </svg>
           ) : (
-            <svg width={30} height={30} viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg
+              width={30}
+              height={30}
+              viewBox="0 0 30 30"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
               <path
                 fillRule="evenodd"
                 clipRule="evenodd"

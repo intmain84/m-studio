@@ -266,11 +266,14 @@ export default function BookModal() {
   const selectedRoom = booking.room;
   const roomMeta = selectedRoom ? ROOMS[selectedRoom] : undefined;
 
+  // Self Room: once a preset is picked, its photo replaces the room's default image for all later steps.
+  const presetImage = isSelf ? PRESET_IMAGES[booking.preset] : undefined;
+
   // Room image column — same as RoomInfoModal
   const RoomImage = roomMeta ? (
     <div className="relative w-full aspect-375/240 md:aspect-auto md:w-[40%] md:h-auto shrink-0 order-first md:order-last">
       <Image
-        src={roomMeta.cardImage}
+        src={presetImage ?? roomMeta.cardImage}
         alt={roomMeta.title}
         fill
         className="object-cover"
