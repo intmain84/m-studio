@@ -8,9 +8,9 @@ import { ABOUT_PHOTOS } from "@/content/about-photos";
 // Keeps the scroll speed the same no matter how many photos there are (was 40s for 9).
 const SECONDS_PER_PHOTO = 4.5;
 
-// Mobile shows 3 photos across, desktop 6 (gap 0.5rem / 1.5rem).
+// Mobile shows 3 photos across, desktop 6 (gap 0.75rem / 1.5rem).
 const SLIDE_CLASS =
-  "relative shrink-0 aspect-2/3 mr-2 w-[calc((100vw_-_1rem)_/_3)] md:mr-6 md:w-[calc((100vw_-_7.5rem)_/_6)]";
+  "relative shrink-0 aspect-2/3 mr-3 w-[calc((100vw_-_1.5rem)_/_3)] md:mr-6 md:w-[calc((100vw_-_7.5rem)_/_6)]";
 
 export default function AboutGallery() {
   const [open, setOpen] = useState(false);

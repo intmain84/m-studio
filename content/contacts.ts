@@ -13,7 +13,7 @@ export const CONTACTS = [
   },
   {
     label: "Instagram",
-    value: "the.m_studio",
+    value: "the.m__studio",
     href: "https://www.instagram.com/the.m__studio",
     orderClass: "md:order-1",
   },
