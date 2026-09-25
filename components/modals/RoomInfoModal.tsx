@@ -8,7 +8,7 @@ import Button from "@/components/ui/Button";
 import { useModal } from "@/context/ModalContext";
 import { ROOMS } from "@/content/rooms";
 
-const SLIDE_INTERVAL = 4000;
+const SLIDE_INTERVAL = 3500;
 
 function ImageFader({ images, alt }: { images: string[]; alt: string }) {
   const [index, setIndex] = useState(0);

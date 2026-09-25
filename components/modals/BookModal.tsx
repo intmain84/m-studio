@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import { Dialog } from "radix-ui";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useForm, useWatch } from "react-hook-form";
 import { useEffect, useState } from "react";
 
 import BaseModal from "./BaseModal";
@@ -142,6 +142,7 @@ export default function BookModal() {
     formState: { errors },
     reset,
   } = useForm<DetailsForm>({ defaultValues: { phone: "+" } });
+  const details = useWatch({ control });
 
   useEffect(() => {
     if (modal?.type === "book") {
@@ -213,6 +214,15 @@ export default function BookModal() {
       ? `(${sessionMinutes}min + ${extraGuests} guest${extraGuests > 1 ? "s" : ""})`
       : `(${sessionMinutes}min)`
     : `(${slotCount} hour${slotCount > 1 ? "s" : ""})`;
+
+  // "Book" looks inactive until every required field is filled (validation itself runs on submit).
+  const detailsFilled =
+    !!details.firstName?.trim() &&
+    !!details.lastName?.trim() &&
+    !!details.email?.trim() &&
+    (details.phone?.replace(/\D/g, "").length ?? 0) > 0 &&
+    (details.birthday?.replace(/\D/g, "").length ?? 0) === 8 &&
+    (isSelf ? !!details.occasion : booking.people > 0);
 
   const selectedPreset = presets.find((p) => p.value === booking.preset);
 
@@ -511,6 +521,7 @@ export default function BookModal() {
                   )}
                   <Button
                     variant="light"
+                    inactive={!booking.preset || booking.people < 1}
                     className="flex-1 px-6"
                     onClick={() => {
                       const presetOk = !!booking.preset;
@@ -606,6 +617,7 @@ export default function BookModal() {
                   )}
                   <Button
                     variant="light"
+                    inactive={!booking.date || slotCount < 1}
                     className="flex-1 px-6 flex items-center justify-between"
                     onClick={() =>
                       booking.date && slotCount > 0
@@ -613,7 +625,7 @@ export default function BookModal() {
                         : setTimeError(true)
                     }
                   >
-                    <span>Next</span>
+                    <span className="only:mx-auto">Next</span>
                     {slotCount > 0 && (
                       <span className="text-sm">
                         {priceAmountText} {priceDetailText}
@@ -821,6 +833,7 @@ export default function BookModal() {
                     <Button
                       type="submit"
                       variant="light"
+                      inactive={!detailsFilled}
                       className="flex-1 px-6"
                     >
                       Book

@@ -1,3 +1,4 @@
+import AboutGallery from "./AboutGallery";
 import ContainerMedium from "../common/ContainerMedium";
 import PaddingGlobal from "../common/PaddingGlobal";
 import SpacerLarge from "../common/SpacerLarge";
@@ -39,6 +40,9 @@ export default function AboutStudioSection() {
           </div>
         </ContainerMedium>
       </PaddingGlobal>
+      <div className="mt-10 md:mt-14">
+        <AboutGallery />
+      </div>
     </section>
   );
 }

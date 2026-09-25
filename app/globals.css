@@ -83,7 +83,14 @@ body {
   }
 }
 
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
 @theme inline {
   --animate-modal-in: modal-fade-in 300ms ease;
   --animate-modal-out: modal-fade-out 300ms ease;
+  --animate-marquee: marquee 40s linear infinite;
 }

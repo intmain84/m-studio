@@ -99,11 +99,12 @@ export const ROOMS: Record<Room, RoomData> = {
   self: {
     title: "Self Room",
     modalImages: [
+      "/rooms/self-room/1.avif",
       "/rooms/self-room/2.avif",
       "/rooms/self-room/3.avif",
       "/rooms/self-room/4.avif",
     ],
-    cardImage: "/rooms/self-room/1.avif",
+    cardImage: "/rooms/self-room/self-room_spaces.jpg",
     selectImage: "/rooms/select-self.avif",
     modalDescription:
       "Close the door, pick up the clicker, and shoot at your own pace. Change outfits, try different angles, take a break — no one's watching and no one's rushing you.\n\nPremium camera and professional lighting are already perfectly tuned.",
@@ -189,12 +190,13 @@ export const ROOMS: Record<Room, RoomData> = {
   main: {
     title: "Main Room",
     modalImages: [
+      "/rooms/main-room/1.avif",
       "/rooms/main-room/2.avif",
       "/rooms/main-room/3.avif",
       "/rooms/main-room/4.avif",
       "/rooms/main-room/5.avif",
     ],
-    cardImage: "/rooms/main-room/1.avif",
+    cardImage: "/rooms/main-room/main-room_spaces.jpg",
     selectImage: "/rooms/select-main.avif",
     modalDescription:
       "A full production space, built for your own vision. Bring your camera, your team, your style — the room adapts to how you want to shoot.",
