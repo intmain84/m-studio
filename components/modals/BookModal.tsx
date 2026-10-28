@@ -134,6 +134,10 @@ export default function BookModal() {
   const [presetError, setPresetError] = useState(false);
   const [peopleError, setPeopleError] = useState(false);
   const [timeError, setTimeError] = useState(false);
+  const [promoCode, setPromoCode] = useState("");
+  const [promoStatus, setPromoStatus] = useState<
+    "idle" | "checking" | "valid" | "invalid"
+  >("idle");
 
   const {
     register,
@@ -157,6 +161,8 @@ export default function BookModal() {
       setPresetError(false);
       setPeopleError(false);
       setTimeError(false);
+      setPromoCode("");
+      setPromoStatus("idle");
       reset({ phone: "+", birthday: "", occasion: "" });
     }
   }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -190,6 +196,26 @@ export default function BookModal() {
     }
   };
 
+  const applyPromo = async () => {
+    if (!promoCode.trim() || promoStatus === "checking") return;
+    setPromoStatus("checking");
+    try {
+      const response = await fetch("https://studio.the-m.ae/api/the-m/promo", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code: promoCode.trim() }),
+      });
+      const data = await response.json();
+      const valid = response.ok && data.valid === true;
+      setPromoStatus(valid ? "valid" : "invalid");
+      if (valid) {
+        setBooking((b) => ({ ...b, times: b.times.slice(0, 1) }));
+      }
+    } catch {
+      setPromoStatus("invalid");
+    }
+  };
+
   const isSelf = booking.room === "self";
   const hasSpaceStep = steps[0] === "space";
   const stepIndex = currentIndex - (hasSpaceStep ? 1 : 0);
@@ -208,12 +234,15 @@ export default function BookModal() {
   const sessionMinutes = selfUnitMinutes * slotCount;
   const totalAmount = sessionAmount + (isSelf ? extraGuests * extraGuestFee : 0);
 
-  const priceAmountText = `${totalAmount} AED`;
-  const priceDetailText = isSelf
-    ? extraGuests > 0
-      ? `(${sessionMinutes}min + ${extraGuests} guest${extraGuests > 1 ? "s" : ""})`
-      : `(${sessionMinutes}min)`
-    : `(${slotCount} hour${slotCount > 1 ? "s" : ""})`;
+  const promoValid = promoStatus === "valid";
+  const priceAmountText = promoValid ? "0 AED" : `${totalAmount} AED`;
+  const priceDetailText = promoValid
+    ? "(25min)"
+    : isSelf
+      ? extraGuests > 0
+        ? `(${sessionMinutes}min + ${extraGuests} guest${extraGuests > 1 ? "s" : ""})`
+        : `(${sessionMinutes}min)`
+      : `(${slotCount} hour${slotCount > 1 ? "s" : ""})`;
 
   // "Book" looks inactive until every required field is filled (validation itself runs on submit).
   const detailsFilled =
@@ -248,6 +277,9 @@ export default function BookModal() {
         payload.preset = booking.preset;
         payload.occasion = data.occasion;
       }
+      // Sent as-is so the backend re-validates it itself — the frontend's
+      // "valid" state is only for showing the discount, never trusted as-is.
+      if (promoCode.trim()) payload.promo = promoCode.trim();
       const response = await fetch(
         "https://hooks.backend.ae/webhook/api/the-m/form",
         {
@@ -376,6 +408,8 @@ export default function BookModal() {
                       date: todayStr,
                       times: [],
                     }));
+                    setPromoCode("");
+                    setPromoStatus("idle");
                     setSteps(["space", ...stepsForRoom(r)]);
                     goNext();
                   }}
@@ -581,12 +615,69 @@ export default function BookModal() {
                     </div>
                   )}
                 </div>
-                <div className="md:flex-1 md:flex md:items-center w-full">
+
+                <div className="relative flex flex-col gap-2">
+                  <div className="flex gap-4">
+                    <input
+                      type="text"
+                      value={promoCode}
+                      disabled={
+                        promoStatus === "checking" || promoStatus === "valid"
+                      }
+                      onChange={(e) => {
+                        setPromoCode(e.target.value.toUpperCase());
+                        if (promoStatus === "invalid") setPromoStatus("idle");
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          applyPromo();
+                        }
+                      }}
+                      placeholder="Promo code"
+                      className="flex-1 h-14 px-4 bg-transparent border border-white/20 focus:border-white text-sm text-white placeholder:text-foreground-muted leading-[1.1] focus:outline-none transition-colors disabled:opacity-50"
+                    />
+                    <Button
+                      type="button"
+                      variant="light"
+                      className="w-31 shrink-0"
+                      inactive={
+                        !promoCode.trim() ||
+                        promoStatus === "checking" ||
+                        promoStatus === "valid"
+                      }
+                      disabled={promoStatus === "checking"}
+                      onClick={applyPromo}
+                    >
+                      {promoStatus === "checking" ? "Checking…" : "Apply"}
+                    </Button>
+                  </div>
+                  {promoStatus === "valid" && (
+                    <p className="absolute left-0 top-[101%] mt-1 w-full bg-[#07295C] text-white px-3 py-2 text-xs text-center leading-[1.1]">
+                      Your promo code {promoCode.trim()} has been applied!
+                      Enjoy your free 25-minute session
+                    </p>
+                  )}
+                  {promoStatus === "invalid" && (
+                    <p className="absolute left-0 top-[101%] mt-1 w-full bg-danger text-white px-3 py-2 text-xs text-center leading-[1.1]">
+                      Sorry, this promo code is invalid.
+                    </p>
+                  )}
+                </div>
+
+                <div
+                  className={`md:flex-1 md:flex md:items-center w-full ${
+                    promoStatus === "checking"
+                      ? "pointer-events-none opacity-50"
+                      : ""
+                  }`}
+                >
                   <div className="relative w-full flex flex-col gap-2">
                     <DateTimePicker
                       className="w-full"
                       selectedDate={booking.date}
                       selectedTimes={booking.times}
+                      singleSelect={promoValid}
                       onDateChange={(d) => {
                         setBooking((b) => ({ ...b, date: d, times: [] }));
                         setTimeError(false);
@@ -613,6 +704,7 @@ export default function BookModal() {
                     <Button
                       variant="ghost"
                       className="w-31 flex items-center justify-between px-6"
+                      disabled={promoStatus === "checking"}
                       onClick={goBackOrToRoomInfo}
                     >
                       <ButtonArrow /> Back
@@ -621,6 +713,7 @@ export default function BookModal() {
                   <Button
                     variant="light"
                     inactive={!booking.date || slotCount < 1}
+                    disabled={promoStatus === "checking"}
                     className="flex-1 px-6 flex items-center justify-between"
                     onClick={() =>
                       booking.date && slotCount > 0

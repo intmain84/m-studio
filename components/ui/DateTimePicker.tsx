@@ -18,6 +18,8 @@ type DateTimePickerProps = {
   reservedSlots?: Record<string, number[]>; // { "2024-02-09": [10, 14] }
   loading?: boolean;
   className?: string;
+  // Promo-code flow: only one hour slot may be picked instead of a range.
+  singleSelect?: boolean;
 };
 
 function toDateStr(d: Date): string {
@@ -32,6 +34,7 @@ export default function DateTimePicker({
   reservedSlots = {},
   loading = false,
   className,
+  singleSelect = false,
 }: DateTimePickerProps) {
   const [todayStr] = useState<string>(() =>
     new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Dubai" }).format(new Date())
@@ -164,6 +167,10 @@ export default function DateTimePicker({
   // trims the range to end there (drops everything after it).
   function handleTimeClick(slot: (typeof HOUR_SLOTS)[number]) {
     const selected = selectedTimes.includes(slot.label);
+    if (singleSelect) {
+      onTimesChange(selected ? [] : [slot.label]);
+      return;
+    }
     if (selected) {
       const idx = selectedTimes.indexOf(slot.label);
       onTimesChange(selectedTimes.slice(0, idx + 1));
