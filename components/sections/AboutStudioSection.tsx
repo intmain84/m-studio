@@ -28,14 +28,14 @@ export default function AboutStudioSection() {
                 </span>{" "}
                 <span className="text-white">The Self Room</span> puts you
                 behind the lens and in front of it — shoot yourself, in total
-                privacy. <span className="text-white">The Main Room</span> is a
-                full production space for your own crew — Profoto lighting, high
+                privacy. <span className="text-white">The Main Room</span>{" "}
+                is a full production space for your own crew — Profoto lighting, high
                 ceilings, room to work at scale. Even our Reception doubles as a
                 third shooting spot. Whether it&apos;s a personal moment, a
                 portfolio, or content for a brand — The M Studio gives you the
                 space to do it your way.
               </p>
-              <p className="mt-8">Create more. Think less.</p>
+              <p>Create more. Think less.</p>
             </div>
           </div>
         </ContainerMedium>
