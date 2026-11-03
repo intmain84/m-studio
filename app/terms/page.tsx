@@ -3,6 +3,7 @@ import ContainerMedium from "@/components/common/ContainerMedium";
 import PaddingGlobal from "@/components/common/PaddingGlobal";
 import SpacerLarge from "@/components/common/SpacerLarge";
 import ContactsSection from "@/components/sections/ContactsSection";
+import { ROOMS } from "@/content/rooms";
 
 export const metadata: Metadata = {
   title: "Terms of Service & Studio Rental Agreement — The M Studio",
@@ -114,8 +115,9 @@ export default function TermsPage() {
                     2.3 Guest Limits
                   </h3>
                   <p className="text-xs md:text-sm text-white leading-[1.1]">
-                    Self Room sessions include up to 4 guests. Each additional
-                    guest is charged at AED 100 per person. Main Room bookings
+                    Self Room sessions include up to {ROOMS.self.includedGuests}{" "}
+                    guests. Each additional guest is charged at AED{" "}
+                    {ROOMS.self.extraGuestFee} per person. Main Room bookings
                     have no guest limit or additional guest fee.
                   </p>
                 </div>

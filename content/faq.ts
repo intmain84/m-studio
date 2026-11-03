@@ -1,3 +1,5 @@
+import { ROOMS } from "@/content/rooms";
+
 export const FAQS = [
   {
     title: "Do I need to bring my own camera?",
@@ -11,8 +13,7 @@ export const FAQS = [
   },
   {
     title: "Can I bring guests to my Self Room session?",
-    content:
-      "Yes — your booking covers up to 4 guests. Each additional guest is +100 AED.",
+    content: `Yes — your booking covers up to ${ROOMS.self.includedGuests} guests. Each additional guest is +${ROOMS.self.extraGuestFee} AED.`,
   },
   {
     title: "How private is the studio?",

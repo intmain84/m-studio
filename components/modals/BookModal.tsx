@@ -33,6 +33,7 @@ type DetailsForm = {
   phone: string;
   birthday: string;
   occasion: string; // Self Room only
+  photoConsent: boolean;
 };
 
 const defaultBooking: BookingData = {
@@ -145,7 +146,9 @@ export default function BookModal() {
     control,
     formState: { errors },
     reset,
-  } = useForm<DetailsForm>({ defaultValues: { phone: "+" } });
+  } = useForm<DetailsForm>({
+    defaultValues: { phone: "+", photoConsent: false },
+  });
   const details = useWatch({ control });
 
   useEffect(() => {
@@ -163,7 +166,7 @@ export default function BookModal() {
       setTimeError(false);
       setPromoCode("");
       setPromoStatus("idle");
-      reset({ phone: "+", birthday: "", occasion: "" });
+      reset({ phone: "+", birthday: "", occasion: "", photoConsent: false });
     }
   }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -272,6 +275,7 @@ export default function BookModal() {
         email: data.email,
         phone: data.phone,
         birthday: data.birthday,
+        photoConsent: data.photoConsent,
       };
       if (isSelf) {
         payload.preset = booking.preset;
@@ -917,6 +921,32 @@ export default function BookModal() {
                     </>
                   )}
                   </div>
+                  <label className="flex items-center gap-2 cursor-pointer select-none w-fit shrink-0 mb-4 md:mb-6">
+                    <span className="relative flex items-center justify-center size-4 shrink-0">
+                      <input
+                        type="checkbox"
+                        className="peer sr-only"
+                        {...register("photoConsent")}
+                      />
+                      <span className="absolute inset-0 rounded-[0.1875rem] border border-white/20 peer-checked:bg-accent peer-checked:border-accent transition-colors" />
+                      <svg
+                        className="relative size-2.5 opacity-0 peer-checked:opacity-100"
+                        viewBox="0 0 16 16"
+                        fill="none"
+                      >
+                        <path
+                          d="M4 7.14286L6.90909 10L12 5"
+                          stroke="white"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    </span>
+                    <span className="text-xs text-foreground-muted leading-[1.1]">
+                      I agree to the use of my photos for promotional purposes
+                    </span>
+                  </label>
                   <div className="flex items-center gap-6 shrink-0">
                     <Button
                       type="button"

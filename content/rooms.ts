@@ -95,6 +95,33 @@ const sharedSteps: Step[] = [
   },
 ];
 
+// Main Room's displayed price per duration ("700 AED", "350/hr", ...) is always
+// hours × the bracket's hourly rate — derived here so the number lives only
+// once, in `pricingBrackets`.
+function tarifsFromBrackets(
+  brackets: { minHours: number; ratePerHour: number }[],
+): Tarif[] {
+  return brackets.map(({ minHours, ratePerHour }, i) => ({
+    value: `${minHours}h`,
+    amount: `${(minHours * ratePerHour).toLocaleString("en-US")} AED`,
+    duration: `${minHours} hour`,
+    ...(i > 0 ? { perHour: `${ratePerHour}/hr` } : {}),
+  }));
+}
+
+// ─── PRICING — ONE PLACE TO RULE THEM ALL ───
+const selfSessionAmount = 550; // AED per 50-minute session
+const selfPromoOriginalAmount = 650; // AED — struck-through "was" price
+const selfIncludedGuests = 4;
+const selfExtraGuestFee = 100; // AED per guest beyond selfIncludedGuests
+
+const mainPricingBrackets = [
+  { minHours: 1, ratePerHour: 400 },
+  { minHours: 2, ratePerHour: 350 },
+  { minHours: 4, ratePerHour: 300 },
+  { minHours: 8, ratePerHour: 280 },
+];
+
 export const ROOMS: Record<Room, RoomData> = {
   self: {
     title: "Self Room",
@@ -112,7 +139,9 @@ export const ROOMS: Record<Room, RoomData> = {
       "A unique date idea, fun family photos, or simply time for yourself...",
     selectDescription:
       "A unique date idea, fun family photos, or simply time for yourself. Change outfits, act silly, and capture genuine emotions.",
-    tarifs: [{ value: "50m", amount: "550 AED", duration: "50 minutes" }],
+    tarifs: [
+      { value: "50m", amount: `${selfSessionAmount} AED`, duration: "50 minutes" },
+    ],
     amenities: [
       "~17 sqm space, 3.9m ceiling height",
       "Three-sided cyclorama, 3x4 m",
@@ -126,9 +155,9 @@ export const ROOMS: Record<Room, RoomData> = {
     highlightLastAmenity: true,
     minDuration: "50 minutes",
     promo: {
-      originalAmount: "650 AED",
+      originalAmount: `${selfPromoOriginalAmount} AED`,
       note: "Soft Opening",
-      guestsIncluded: "4",
+      guestsIncluded: `${selfIncludedGuests}`,
     },
     presets: [
       { label: "Original", image: "/presets/original.avif" },
@@ -160,8 +189,8 @@ export const ROOMS: Record<Room, RoomData> = {
       note: "Camera, lighting, and mirror are already set up and ready to shoot.",
     },
     downloadGuide: true,
-    includedGuests: 4,
-    extraGuestFee: 100,
+    includedGuests: selfIncludedGuests,
+    extraGuestFee: selfExtraGuestFee,
     steps: sharedSteps,
     highlights: [
       {
@@ -204,33 +233,8 @@ export const ROOMS: Record<Room, RoomData> = {
       "Bring your own camera and crew — from solo content batches to full productions",
     selectDescription:
       "Bring your own camera and crew — from solo content batches to full productions. Profoto lighting, high ceilings, and the space to make it happen.",
-    tarifs: [
-      { value: "1h", amount: "400 AED", duration: "1 hour" },
-      {
-        value: "2h",
-        amount: "700 AED",
-        duration: "2 hour",
-        perHour: "350/hr",
-      },
-      {
-        value: "4h",
-        amount: "1,200 AED",
-        duration: "4 hour",
-        perHour: "300/hr",
-      },
-      {
-        value: "8h",
-        amount: "2,240 AED",
-        duration: "8 hour",
-        perHour: "280/hr",
-      },
-    ],
-    pricingBrackets: [
-      { minHours: 1, ratePerHour: 400 },
-      { minHours: 2, ratePerHour: 350 },
-      { minHours: 4, ratePerHour: 300 },
-      { minHours: 8, ratePerHour: 280 },
-    ],
+    tarifs: tarifsFromBrackets(mainPricingBrackets),
+    pricingBrackets: mainPricingBrackets,
     amenities: [
       "~20 sqm space + 15 sqm reception area, 3.9m ceiling height",
       "Three-sided cyclorama, 4x4 m",
