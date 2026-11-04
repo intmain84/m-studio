@@ -14,7 +14,7 @@ import DateTimePicker from "@/components/ui/DateTimePicker";
 import { useModal } from "@/context/ModalContext";
 import { usePresets } from "@/context/PresetsContext";
 import { Room } from "@/types/modal";
-import { ROOMS } from "@/content/rooms";
+import { ROOMS, mainRateForHours } from "@/content/rooms";
 
 type Step = "space" | "presets" | "datetime" | "details";
 
@@ -74,15 +74,6 @@ function stepsForRoom(room: Room): Step[] {
 
 function parseAED(amount: string): number {
   return parseInt(amount.replace(/[^\d]/g, ""), 10) || 0;
-}
-
-function mainRateForHours(hours: number): number {
-  const brackets = ROOMS.main.pricingBrackets ?? [];
-  let rate = brackets[0]?.ratePerHour ?? 0;
-  for (const b of brackets) {
-    if (hours >= b.minHours) rate = b.ratePerHour;
-  }
-  return rate;
 }
 
 function ButtonArrow() {

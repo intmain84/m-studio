@@ -1,10 +1,18 @@
 import { Dialog } from "radix-ui";
+import { cn } from "@/lib/utils";
 
-export default function ModalClose() {
+type ModalCloseProps = {
+  className?: string;
+};
+
+export default function ModalClose({ className }: ModalCloseProps) {
   return (
     <Dialog.Close asChild>
       <button
-        className="absolute top-4 right-4 text-white z-10 cursor-pointer"
+        className={cn(
+          "absolute top-4 right-4 text-white z-10 cursor-pointer",
+          className,
+        )}
         aria-label="Close"
       >
         <svg
@@ -20,7 +28,7 @@ export default function ModalClose() {
               y1="19.2192"
               x2="20.2931"
               y2="-2.31423"
-              stroke="white"
+              stroke="currentColor"
               strokeWidth="2"
             />
             <line
@@ -28,7 +36,7 @@ export default function ModalClose() {
               y1="-1.31453"
               x2="20.7068"
               y2="20.6695"
-              stroke="white"
+              stroke="currentColor"
               strokeWidth="2"
             />
           </g>

@@ -314,3 +314,15 @@ export const ROOMS: Record<Room, RoomData> = {
     },
   },
 };
+
+// Main Room's per-hour rate depends on total hours booked — the applicable
+// bracket is the last one whose minHours <= hours. Shared by BookModal and
+// GiftModal so both price off the same brackets.
+export function mainRateForHours(hours: number): number {
+  const brackets = ROOMS.main.pricingBrackets ?? [];
+  let rate = brackets[0]?.ratePerHour ?? 0;
+  for (const b of brackets) {
+    if (hours >= b.minHours) rate = b.ratePerHour;
+  }
+  return rate;
+}

@@ -8,9 +8,15 @@ type BaseModalProps = {
   children: React.ReactNode;
   open: boolean;
   className?: string;
+  closeClassName?: string;
 };
 
-const BaseModal = ({ children, open, className }: BaseModalProps) => {
+const BaseModal = ({
+  children,
+  open,
+  className,
+  closeClassName,
+}: BaseModalProps) => {
   const { setModal } = useModal();
 
   return (
@@ -28,7 +34,7 @@ const BaseModal = ({ children, open, className }: BaseModalProps) => {
           )}
         >
           {children}
-          <ModalClose />
+          <ModalClose className={closeClassName} />
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>
