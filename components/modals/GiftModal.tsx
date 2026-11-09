@@ -35,8 +35,11 @@ export default function GiftModal() {
   } = useForm<GiftForm>({ defaultValues: { name: "", email: "" } });
   const details = useWatch({ control });
 
+  // Resets the form when the modal is opened — reaction to an external
+  // trigger, not state derivable during render.
   useEffect(() => {
     if (open) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setHours(GIFT_DURATIONS[0]);
       setStatus("idle");
       reset({ name: "", email: "" });

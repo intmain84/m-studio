@@ -1,22 +1,19 @@
 "use client";
 
 import { useModal } from "@/context/ModalContext";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import PaddingGlobal from "../common/PaddingGlobal";
 import ContainerMedium from "../common/ContainerMedium";
 import SpacerLarge from "../common/SpacerLarge";
-import { ROOMS } from "@/content/rooms";
 
 type Room = "self" | "main" | null;
 
 export default function RoomSelectorSection() {
   const [hovered, setHovered] = useState<Room>(null);
-  const [isTouch, setIsTouch] = useState(false);
+  const [isTouch] = useState(
+    () => typeof window !== "undefined" && window.innerWidth < 768,
+  );
   const { setModal } = useModal();
-
-  useEffect(() => {
-    setIsTouch(window.innerWidth < 768);
-  }, []);
 
   return (
     <section>

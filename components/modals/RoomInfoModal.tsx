@@ -196,11 +196,14 @@ const RoomInfoModal = () => {
                         key={step.num}
                         className="flex flex-col gap-6 w-30 shrink-0 md:w-auto md:flex-1 md:shrink md:min-w-0"
                       >
-                        <img
-                          src={step.img}
-                          alt={step.label}
-                          className="aspect-square w-full object-contain"
-                        />
+                        <div className="relative aspect-square w-full">
+                          <Image
+                            src={step.img}
+                            alt={step.label}
+                            fill
+                            className="object-contain"
+                          />
+                        </div>
                         <div className="flex flex-col justify-between gap-6 flex-1">
                           <p className="text-xs leading-[1.1]">
                             <span className="text-white">{step.label} </span>

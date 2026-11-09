@@ -91,9 +91,12 @@ export default function DateTimePicker({
     );
   })();
 
-  // Desktop: reset time window on date change
+  // Desktop: reset time window on date change. timeWindowStart is also
+  // driven independently by the prev/next arrows, so it can't be replaced
+  // with a value computed during render — it has to stay its own state.
   useEffect(() => {
     if (isFutureDate) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setTimeWindowStart(0);
     } else {
       setTimeWindowStart(minTimeWindowStart);

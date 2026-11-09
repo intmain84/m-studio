@@ -143,9 +143,13 @@ export default function BookModal() {
   });
   const details = useWatch({ control });
 
+  // Resets the whole form/booking state when the modal is opened — this is a
+  // reaction to an external trigger (the modal being opened), not state that
+  // can be computed during render, so the effect is intentional here.
   useEffect(() => {
     if (modal?.type === "book") {
       const preselectedRoom = modal.room;
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setSteps(preselectedRoom ? stepsForRoom(preselectedRoom) : ["space"]);
       setCurrentIndex(0);
       const todayStr = new Intl.DateTimeFormat("en-CA", {
@@ -170,8 +174,11 @@ export default function BookModal() {
 
   const currentStep = steps[currentIndex];
 
+  // Fetches reserved slots for the room when the datetime step is reached —
+  // a genuine external data fetch, not state derivable during render.
   useEffect(() => {
     if (currentStep !== "datetime" || !booking.room) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSlotsLoading(true);
     fetch(
       `https://hooks.backend.ae/webhook/api/the-m/slots?type=${booking.room}`,
