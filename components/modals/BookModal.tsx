@@ -33,6 +33,7 @@ type DetailsForm = {
   phone: string;
   birthday: string;
   occasion: string; // Self Room only
+  instagram: string;
   photoConsent: boolean;
 };
 
@@ -138,7 +139,7 @@ export default function BookModal() {
     formState: { errors },
     reset,
   } = useForm<DetailsForm>({
-    defaultValues: { phone: "+", photoConsent: false },
+    defaultValues: { phone: "+", instagram: "", photoConsent: false },
   });
   const details = useWatch({ control });
 
@@ -157,7 +158,13 @@ export default function BookModal() {
       setTimeError(false);
       setPromoCode("");
       setPromoStatus("idle");
-      reset({ phone: "+", birthday: "", occasion: "", photoConsent: false });
+      reset({
+        phone: "+",
+        birthday: "",
+        occasion: "",
+        instagram: "",
+        photoConsent: false,
+      });
     }
   }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -226,7 +233,8 @@ export default function BookModal() {
     ? selfUnitAmount * slotCount
     : slotCount * mainRateForHours(slotCount);
   const sessionMinutes = selfUnitMinutes * slotCount;
-  const totalAmount = sessionAmount + (isSelf ? extraGuests * extraGuestFee : 0);
+  const totalAmount =
+    sessionAmount + (isSelf ? extraGuests * extraGuestFee : 0);
 
   const promoValid = promoStatus === "valid";
   const priceAmountText = promoValid ? "0 AED" : `${totalAmount} AED`;
@@ -266,7 +274,9 @@ export default function BookModal() {
         email: data.email,
         phone: data.phone,
         birthday: data.birthday,
-        photoConsent: data.photoConsent,
+        instagram: data.instagram,
+        // Checkbox is temporarily hidden — not sending it until it's back
+        // photoConsent: data.photoConsent,
       };
       if (isSelf) {
         payload.preset = booking.preset;
@@ -470,50 +480,50 @@ export default function BookModal() {
                 </Dialog.Title>
                 <div className="flex-1 md:min-h-0 flex flex-col justify-center gap-13.5">
                   <div className="relative">
-                  <div className="grid grid-cols-3 gap-2">
-                    {presets.map((p) => {
-                      const img = PRESET_IMAGES[p.value];
-                      const selected = booking.preset === p.value;
-                      return (
-                        <button
-                          type="button"
-                          key={p.value}
-                          onClick={() => {
-                            setBooking((b) => ({ ...b, preset: p.value }));
-                            setPresetError(false);
-                          }}
-                          className={`flex flex-col gap-2 items-start p-2 text-left border cursor-pointer transition-colors ${
-                            selected
-                              ? "border-white"
-                              : "border-white/20 hover:border-white/50"
-                          }`}
-                        >
-                          <div className="relative aspect-square w-full bg-[#d9dbda] overflow-hidden">
-                            {img ? (
-                              <Image
-                                src={img}
-                                alt={p.label}
-                                fill
-                                className="object-cover"
-                              />
-                            ) : (
-                              <div className="absolute inset-0 flex items-center justify-center text-foreground-muted text-xs text-center px-2">
-                                No photo
-                              </div>
-                            )}
-                          </div>
-                          <p className="text-xs md:text-sm text-white">
-                            {p.label}
-                          </p>
-                        </button>
-                      );
-                    })}
-                  </div>
-                  {presetError && (
-                    <p className="absolute left-0 top-[101%] mt-1 w-full bg-accent text-white px-1 py-0.5 text-xs text-center leading-[1.1]">
-                      Please select a preset
-                    </p>
-                  )}
+                    <div className="grid grid-cols-3 gap-2">
+                      {presets.map((p) => {
+                        const img = PRESET_IMAGES[p.value];
+                        const selected = booking.preset === p.value;
+                        return (
+                          <button
+                            type="button"
+                            key={p.value}
+                            onClick={() => {
+                              setBooking((b) => ({ ...b, preset: p.value }));
+                              setPresetError(false);
+                            }}
+                            className={`flex flex-col gap-2 items-start p-2 text-left border cursor-pointer transition-colors ${
+                              selected
+                                ? "border-white"
+                                : "border-white/20 hover:border-white/50"
+                            }`}
+                          >
+                            <div className="relative aspect-square w-full bg-[#d9dbda] overflow-hidden">
+                              {img ? (
+                                <Image
+                                  src={img}
+                                  alt={p.label}
+                                  fill
+                                  className="object-cover"
+                                />
+                              ) : (
+                                <div className="absolute inset-0 flex items-center justify-center text-foreground-muted text-xs text-center px-2">
+                                  No photo
+                                </div>
+                              )}
+                            </div>
+                            <p className="text-xs md:text-sm text-white">
+                              {p.label}
+                            </p>
+                          </button>
+                        );
+                      })}
+                    </div>
+                    {presetError && (
+                      <p className="absolute left-0 top-[101%] mt-1 w-full bg-accent text-white px-1 py-0.5 text-xs text-center leading-[1.1]">
+                        Please select a preset
+                      </p>
+                    )}
                   </div>
                   <div className="relative flex items-center justify-between gap-4">
                     <div className="flex flex-col gap-2">
@@ -649,8 +659,8 @@ export default function BookModal() {
                   </div>
                   {promoStatus === "valid" && (
                     <p className="absolute left-0 top-[101%] mt-1 w-full bg-[#07295C] text-white px-3 py-2 text-xs text-center leading-[1.1]">
-                      Your promo code {promoCode.trim()} has been applied!
-                      Enjoy your free 25-minute session
+                      Your promo code {promoCode.trim()} has been applied! Enjoy
+                      your free 25-minute session
                     </p>
                   )}
                   {promoStatus === "invalid" && (
@@ -779,165 +789,186 @@ export default function BookModal() {
                   }}
                 >
                   <div className="flex-1 md:min-h-0 flex flex-col justify-center gap-8">
-                  <div className="flex flex-col md:flex-row gap-y-8 gap-x-10">
-                    <FormInput
-                      className="flex-1"
-                      variant="underline"
-                      label="First Name"
-                      type="text"
-                      placeholder="Alexandra"
-                      error={errors.firstName?.message}
-                      registration={register("firstName", {
-                        required: "Required",
-                      })}
-                    />
-                    <FormInput
-                      className="flex-1"
-                      variant="underline"
-                      label="Last Name"
-                      type="text"
-                      placeholder="Smith"
-                      error={errors.lastName?.message}
-                      registration={register("lastName", {
-                        required: "Required",
-                      })}
-                    />
-                  </div>
-                  <div className="flex flex-col md:flex-row gap-y-8 gap-x-10">
-                    <FormInput
-                      className="flex-1"
-                      variant="underline"
-                      label="Email"
-                      type="email"
-                      placeholder="example@gmail.com"
-                      error={errors.email?.message}
-                      registration={register("email", {
-                        required: "Required",
-                        pattern: {
-                          value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                          message: "Invalid email",
-                        },
-                      })}
-                    />
-                    <FormInput
-                      className="flex-1"
-                      variant="underline"
-                      label="Phone"
-                      type="tel"
-                      placeholder="+0 0000 000 000"
-                      error={errors.phone?.message}
-                      registration={register("phone", {
-                        required: "Required",
-                        pattern: {
-                          value: /^\+[\d\s()-]+$/,
-                          message: "Start with + and country code",
-                        },
-                      })}
-                    />
-                  </div>
-                  {isSelf ? (
                     <div className="flex flex-col md:flex-row gap-y-8 gap-x-10">
-                      <Controller
-                        name="birthday"
-                        control={control}
-                        rules={{
-                          validate: (v) =>
-                            v.replace(/\D/g, "").length === 8 ||
-                            "Enter a full date",
-                        }}
-                        render={({ field }) => (
-                          <BirthdayInput
-                            className="flex-1"
-                            label="Birthday"
-                            name={field.name}
-                            value={field.value}
-                            onChange={field.onChange}
-                            onBlur={field.onBlur}
-                            error={errors.birthday?.message}
-                          />
-                        )}
-                      />
-                      <FormSelect
+                      <FormInput
                         className="flex-1"
-                        label="Select occasion"
-                        placeholder="Select occasion"
-                        options={OCCASIONS}
-                        registration={register("occasion", {
+                        variant="underline"
+                        label="First Name"
+                        type="text"
+                        placeholder="Alexandra"
+                        error={errors.firstName?.message}
+                        registration={register("firstName", {
                           required: "Required",
                         })}
-                        error={errors.occasion?.message}
+                      />
+                      <FormInput
+                        className="flex-1"
+                        variant="underline"
+                        label="Last Name"
+                        type="text"
+                        placeholder="Smith"
+                        error={errors.lastName?.message}
+                        registration={register("lastName", {
+                          required: "Required",
+                        })}
                       />
                     </div>
-                  ) : (
-                    <>
-                      <Controller
-                        name="birthday"
-                        control={control}
-                        rules={{
-                          validate: (v) =>
-                            v.replace(/\D/g, "").length === 8 ||
-                            "Enter a full date",
-                        }}
-                        render={({ field }) => (
-                          <BirthdayInput
-                            label="Birthday"
-                            name={field.name}
-                            value={field.value}
-                            onChange={field.onChange}
-                            onBlur={field.onBlur}
-                            error={errors.birthday?.message}
+                    <div className="flex flex-col md:flex-row gap-y-8 gap-x-10">
+                      <FormInput
+                        className="flex-1"
+                        variant="underline"
+                        label="Email"
+                        type="email"
+                        placeholder="example@gmail.com"
+                        error={errors.email?.message}
+                        registration={register("email", {
+                          required: "Required",
+                          pattern: {
+                            value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                            message: "Invalid email",
+                          },
+                        })}
+                      />
+                      <FormInput
+                        className="flex-1"
+                        variant="underline"
+                        label="Phone"
+                        type="tel"
+                        placeholder="+0 0000 000 000"
+                        error={errors.phone?.message}
+                        registration={register("phone", {
+                          required: "Required",
+                          pattern: {
+                            value: /^\+[\d\s()-]+$/,
+                            message: "Start with + and country code",
+                          },
+                        })}
+                      />
+                    </div>
+                    {isSelf ? (
+                      <>
+                        <div className="flex flex-col md:flex-row gap-y-8 gap-x-10">
+                          <Controller
+                            name="birthday"
+                            control={control}
+                            rules={{
+                              validate: (v) =>
+                                v.replace(/\D/g, "").length === 8 ||
+                                "Enter a full date",
+                            }}
+                            render={({ field }) => (
+                              <BirthdayInput
+                                className="flex-1"
+                                label="Birthday"
+                                name={field.name}
+                                value={field.value}
+                                onChange={field.onChange}
+                                onBlur={field.onBlur}
+                                error={errors.birthday?.message}
+                              />
+                            )}
                           />
-                        )}
-                      />
-                      <div className="relative flex items-center justify-between gap-4">
-                        <p className="text-base md:text-xl uppercase leading-[1.1]">
-                          Number
-                          <br />
-                          of people
-                        </p>
-                        <Stepper
-                          value={booking.people}
-                          min={0}
-                          onChange={(v) => {
-                            setBooking((b) => ({ ...b, people: v }));
-                            setPeopleError(false);
+                          <FormSelect
+                            className="flex-1"
+                            label="Select occasion"
+                            placeholder="Select occasion"
+                            options={OCCASIONS}
+                            registration={register("occasion", {
+                              required: "Required",
+                            })}
+                            error={errors.occasion?.message}
+                          />
+                        </div>
+                        <FormInput
+                          variant="underline"
+                          label="Your Instagram"
+                          type="text"
+                          placeholder="instagram.com/username or @username"
+                          error={errors.instagram?.message}
+                          registration={register("instagram")}
+                        />
+                      </>
+                    ) : (
+                      <>
+                        <Controller
+                          name="birthday"
+                          control={control}
+                          rules={{
+                            validate: (v) =>
+                              v.replace(/\D/g, "").length === 8 ||
+                              "Enter a full date",
                           }}
+                          render={({ field }) => (
+                            <BirthdayInput
+                              label="Birthday"
+                              name={field.name}
+                              value={field.value}
+                              onChange={field.onChange}
+                              onBlur={field.onBlur}
+                              error={errors.birthday?.message}
+                            />
+                          )}
                         />
-                        {peopleError && (
-                          <p className="absolute left-0 top-[101%] mt-1 w-full bg-accent text-white px-1 py-0.5 text-xs text-center leading-[1.1]">
-                            Please select number of guests
+                        <FormInput
+                          variant="underline"
+                          label="Your Instagram"
+                          type="text"
+                          placeholder="@username or instagram.com/username"
+                          error={errors.instagram?.message}
+                          registration={register("instagram")}
+                        />
+                        <div className="relative flex items-center justify-between gap-4">
+                          <p className="text-base md:text-xl uppercase leading-[1.1]">
+                            Number
+                            <br />
+                            of people
                           </p>
-                        )}
-                      </div>
-                    </>
-                  )}
+                          <Stepper
+                            value={booking.people}
+                            min={0}
+                            onChange={(v) => {
+                              setBooking((b) => ({ ...b, people: v }));
+                              setPeopleError(false);
+                            }}
+                          />
+                          {peopleError && (
+                            <p className="absolute left-0 top-[101%] mt-1 w-full bg-accent text-white px-1 py-0.5 text-xs text-center leading-[1.1]">
+                              Please select number of guests
+                            </p>
+                          )}
+                        </div>
+                      </>
+                    )}
                   </div>
-                  <label className="flex items-center gap-2 cursor-pointer select-none w-fit shrink-0 mb-4 md:mb-6">
-                    <span className="relative flex items-center justify-center size-4 shrink-0">
-                      <input
-                        type="checkbox"
-                        className="peer sr-only"
-                        {...register("photoConsent")}
-                      />
-                      <span className="absolute inset-0 rounded-[0.1875rem] border border-white/20 peer-checked:bg-accent peer-checked:border-accent transition-colors" />
-                      <svg
-                        className="relative size-2.5 opacity-0 peer-checked:opacity-100"
-                        viewBox="0 0 16 16"
-                        fill="none"
-                      >
-                        <path
-                          d="M4 7.14286L6.90909 10L12 5"
-                          stroke="white"
-                          strokeWidth="1.5"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
+                  {/* Photo-use consent checkbox — temporarily hidden, see onSubmit for the matching payload comment */}
+                  {false && (
+                    <label className="flex items-center gap-2 cursor-pointer select-none w-fit shrink-0 mb-4 md:mb-6">
+                      <span className="relative flex items-center justify-center size-4 shrink-0">
+                        <input
+                          type="checkbox"
+                          className="peer sr-only"
+                          {...register("photoConsent")}
                         />
-                      </svg>
-                    </span>
-                    <span className="text-xs text-foreground-muted leading-[1.1]">
-                      I agree to the use of my photos for promotional purposes
-                    </span>
-                  </label>
+                        <span className="absolute inset-0 rounded-[0.1875rem] border border-white/20 peer-checked:bg-accent peer-checked:border-accent transition-colors" />
+                        <svg
+                          className="relative size-2.5 opacity-0 peer-checked:opacity-100"
+                          viewBox="0 0 16 16"
+                          fill="none"
+                        >
+                          <path
+                            d="M4 7.14286L6.90909 10L12 5"
+                            stroke="white"
+                            strokeWidth="1.5"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                      </span>
+                      <span className="text-xs text-foreground-muted leading-[1.1]">
+                        I agree to the use of my photos for promotional purposes
+                      </span>
+                    </label>
+                  )}
                   <div className="flex items-center gap-6 shrink-0">
                     <Button
                       type="button"
