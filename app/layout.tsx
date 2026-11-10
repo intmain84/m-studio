@@ -12,6 +12,7 @@ const mainFont = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://the-m.ae"),
   title: "The M Studio",
   description:
     "A completely private space with just you, a large mirror, and a clicker in your hand. Premium camera and professional lighting are already perfectly tuned.",
