@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist_Mono } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import StateWrapper from "@/components/StateWrapper";
 import UnderConstruction from "@/components/UnderConstruction";
@@ -26,6 +27,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${mainFont.variable} h-full antialiased`}>
+      <Script
+        id="gtm-script"
+        src="https://www.googletagmanager.com/gtm.js?id=GTM-T8FVZPS2"
+        strategy="beforeInteractive"
+      />
+      <Script id="gtm-datalayer" strategy="beforeInteractive">
+        {`window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());`}
+      </Script>
       <body className="min-h-full flex flex-col bg-background">
         <div
           style={{
