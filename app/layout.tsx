@@ -4,7 +4,8 @@ import Script from "next/script";
 import "./globals.css";
 import StateWrapper from "@/components/StateWrapper";
 import UnderConstruction from "@/components/UnderConstruction";
-import { SHOW_UNDER_CONSTRUCTION, NOINDEX } from "@/lib/site-config";
+import { SHOW_UNDER_CONSTRUCTION, NOINDEX, SITE_URL } from "@/lib/site-config";
+import { CONTACTS } from "@/content/contacts";
 
 const mainFont = Geist_Mono({
   variable: "--font-main",
@@ -12,12 +13,45 @@ const mainFont = Geist_Mono({
   weight: ["400"],
 });
 
+const businessName = "The M Studio";
+const pageTitle = "Photo Studio Dubai | THE M STUDIO";
+const description =
+  "A completely private space with just you, a large mirror, and a clicker in your hand. Premium camera and professional lighting are already perfectly tuned.";
+
 export const metadata: Metadata = {
-  metadataBase: new URL("https://the-m.ae"),
-  title: "The M Studio",
-  description:
-    "A completely private space with just you, a large mirror, and a clicker in your hand. Premium camera and professional lighting are already perfectly tuned.",
+  metadataBase: new URL(SITE_URL),
+  title: pageTitle,
+  description,
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    url: "/",
+    siteName: businessName,
+    locale: "en_US",
+  },
   robots: NOINDEX ? { index: false, follow: false } : undefined,
+};
+
+// Local business structured data — same contact details shown in ContactsSection,
+// kept in sync by pulling from the one shared CONTACTS list.
+const localBusinessJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  name: businessName,
+  description,
+  image: `${SITE_URL}/opengraph-image.jpg`,
+  url: SITE_URL,
+  telephone: CONTACTS.find((c) => c.label === "Phone")?.value,
+  email: CONTACTS.find((c) => c.label === "Email")?.value,
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: "Art of Living Mall, Al Barsha 2",
+    addressLocality: "Dubai",
+    addressCountry: "AE",
+  },
+  sameAs: [CONTACTS.find((c) => c.label === "Instagram")?.href].filter(
+    Boolean,
+  ),
 };
 
 export default function RootLayout({
@@ -38,6 +72,15 @@ export default function RootLayout({
           gtag('js', new Date());`}
       </Script>
       <body className="min-h-full flex flex-col bg-background">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(localBusinessJsonLd).replace(
+              /</g,
+              "\\u003c",
+            ),
+          }}
+        />
         <div
           style={{
             backgroundImage: "url('/noise.gif')",

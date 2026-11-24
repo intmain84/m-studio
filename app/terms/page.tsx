@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   title: "Terms of Service & Studio Rental Agreement — The M Studio",
   description:
     "Terms of Service and Studio Rental Agreement for The M Studio — Self Room and Main Room bookings in Dubai.",
+  alternates: { canonical: "/terms" },
 };
 
 export default function TermsPage() {
