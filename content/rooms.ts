@@ -110,8 +110,7 @@ function tarifsFromBrackets(
 }
 
 // ─── PRICING — ONE PLACE TO RULE THEM ALL ───
-const selfSessionAmount = 550; // AED per 50-minute session
-const selfPromoOriginalAmount = 650; // AED — struck-through "was" price
+const selfSessionAmount = 650; // AED per 50-minute session
 const selfIncludedGuests = 4;
 const selfExtraGuestFee = 100; // AED per guest beyond selfIncludedGuests
 
@@ -155,8 +154,6 @@ export const ROOMS: Record<Room, RoomData> = {
     highlightLastAmenity: true,
     minDuration: "50 minutes",
     promo: {
-      originalAmount: `${selfPromoOriginalAmount} AED`,
-      note: "Soft Opening",
       guestsIncluded: `${selfIncludedGuests}`,
     },
     presets: [
